@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Classes
 {
-    internal class MemberShipRepository : ImemberShipRepostory
+    internal class MemberShipRepository : ImemberShipRepository
     {
         private readonly GymDBContext _dbContext = new GymDBContext();
         public int Add(MemberShip memberShip)

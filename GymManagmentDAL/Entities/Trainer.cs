@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Entities
 {
-    internal class Trainer : GymUser
+    public class Trainer : GymUser
     {
         // hierdate ==> createdat of baseentity
         public Specialies Specialies { get; set; }

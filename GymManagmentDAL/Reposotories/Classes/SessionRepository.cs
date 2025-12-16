@@ -9,32 +9,11 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Classes
 {
-    internal class SessionRepository : IsessionRepository
+    internal class SessionRepository : GenericRepository<Session>
     {
-        private readonly GymDBContext _dbContext = new GymDBContext();
-        public int Add(Session session)
+        private readonly GymDBContext _dbContext;
+        public SessionRepository(GymDBContext dbContext):base(dbContext)
         {
-            _dbContext.Sessions.Add(session);
-            return _dbContext.SaveChanges();
-        }
-
-        public int Delete(int id)
-        {
-            var session = _dbContext.Sessions.Find(id);
-            if (session is null)
-                return 0;
-            _dbContext.Sessions.Remove(session);
-            return _dbContext.SaveChanges();
-        }
-
-        public IEnumerable<Session> GetAll()=> _dbContext.Sessions.ToList();
-
-        public Session? GetById(int id)=> _dbContext.Sessions.Find(id);
-
-        public int Update(Session session)
-        {
-            _dbContext.Sessions.Update(session);
-            return _dbContext.SaveChanges();
         }
     }
 }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Entities
 {
-    internal class Member : GymUser
+    public class Member : GymUser
     {
         //joindate == createdat of baseentity
-        public string? Photo { get; set; }
+        public string? Phote { get; set; }
 
         #region Member - HealthRecord
         public HealthRecord HealthRecord { get; set; } = null!; 

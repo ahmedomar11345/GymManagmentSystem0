@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Interfaces
 {
-    internal interface IsessionRepository : IGenericRepository<Session>
+    internal interface ImemberRepository:IGenericRepository<Member>
     {
-
+        
     }
 }

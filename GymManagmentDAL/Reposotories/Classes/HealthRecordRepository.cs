@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Classes
 {
-    internal class HealthRecordRepository : IhealthRecordRepostory
+    internal class HealthRecordRepository : IhealthRecordRepository
     {
         private readonly GymDBContext _dbContext = new GymDBContext();
         public int Add(HealthRecord healthRecord)

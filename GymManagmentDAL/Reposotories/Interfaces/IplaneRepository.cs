@@ -7,17 +7,13 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Interfaces
 {
-    internal interface ImemberRepostory
+    public interface IplaneRepository
     {
         //getall
-        IEnumerable<Member> GetAll();
+        IEnumerable<Plane> GetAll();
         //getbyId
-        Member? GetById(int id);
-        //add
-        int Add(Member member);
+        Plane? GetById(int id);
         //update
-        int Update(Member member);
-        //delete
-        int Delete(int id);
+        int Update(Plane plane); 
     }
 }

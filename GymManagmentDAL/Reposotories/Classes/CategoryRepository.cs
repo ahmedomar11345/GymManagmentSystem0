@@ -9,9 +9,13 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Classes
 {
-    internal class CategoryRepository : IcategoryRepostory
+    internal class CategoryRepository : IcategoryRepository
     {
-        private readonly GymDBContext _dbContext = new GymDBContext();
+        private readonly GymDBContext _dbContext;
+        public CategoryRepository(GymDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public int Add(Category category)
         {
             _dbContext.Categories.Add(category);

@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Interfaces
 {
-    internal interface ImemberSessionRepostory
+    internal interface IhealthRecordRepository
     {
-        //getall
-        IEnumerable<MemberSession> GetAll();
-        //getbyId
-        MemberSession? GetById(int id);
+        //get all
+        IEnumerable<HealthRecord> GetAll();
+        //get by id
+        HealthRecord? GetById (int id);
         //add
-        int Add(MemberSession memberSession);
+        int Add(HealthRecord healthRecord);
         //update
-        int Update(MemberSession memberSession);
+        int Update(HealthRecord healthRecord);
         //delete
         int Delete(int id);
     }

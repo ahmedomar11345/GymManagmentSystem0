@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Classes
 {
-    internal class MemberSessionRepository : ImemberSessionRepostory
+    internal class MemberSessionRepository : ImemberSessionRepository
     {
         private readonly GymDBContext _dbContext = new GymDBContext();
         public int Add(MemberSession memberSession)

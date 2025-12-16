@@ -9,22 +9,12 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Reposotories.Classes
 {
-    internal class PlaneRepository : IplaneRepostory
+    public class PlaneRepository : IplaneRepository
     {
-        private readonly GymDBContext _dbContext = new GymDBContext();
-        public int Add(Plane plane)
+        private readonly GymDBContext _dbContext;
+        public PlaneRepository(GymDBContext dbContext)
         {
-            _dbContext.Planes.Add(plane);
-            return _dbContext.SaveChanges();
-        }
-
-        public int Delete(int id)
-        {
-            var plane = _dbContext.Planes.Find(id);
-            if (plane is null)
-                return 0;
-            _dbContext.Planes.Remove(plane);
-            return _dbContext.SaveChanges();
+            _dbContext = dbContext;
         }
 
         public IEnumerable<Plane> GetAll()=> _dbContext.Planes.ToList();
