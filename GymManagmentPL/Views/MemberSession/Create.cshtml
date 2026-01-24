@@ -1,0 +1,53 @@
+@model CreateBookingViewModel
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<h1>Create New Booking</h1>
+<hr />
+
+<div class="row">
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Booking Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" asp-for="SessionId" />
+
+                        <div class="mb-3">
+                            <label asp-for="MemberId" class="form-label">Member</label>
+                            <select asp-for="MemberId" asp-items="@ViewBag.Members" class="form-select">
+                                <option value="">-- Select Member --</option>
+                            </select>
+                            <span asp-validation-for="MemberId" class="text-danger"></span>
+                            <small class="text-muted">Only members with active membership are shown</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Booking
+                            </button>
+                            <a asp-action="GetMembersForUpcomingSession" asp-route-id="@ViewBag.SessionId" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_AlertBoxScript" />
+}

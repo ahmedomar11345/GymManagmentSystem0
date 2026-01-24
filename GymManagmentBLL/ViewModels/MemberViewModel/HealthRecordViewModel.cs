@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBLL.ViewModels.MemberViewModel
 {
-    internal class HealthRecordViewModel
+    public class HealthRecordViewModel
     {
         [Required(ErrorMessage = "Height Is Required!")]
         [Range(minimum: 0.1, maximum: 300, ErrorMessage = "Height Must Be Greater Than 0 And Less Than 300!")]
@@ -18,7 +18,7 @@ namespace GymManagmentBLL.ViewModels.MemberViewModel
         public decimal Weight { get; set; } = default;
 
         [Required(ErrorMessage = "Blood Type Is Required!")]
-        [StringLength(maximumLength: 3, MinimumLength = 3, ErrorMessage = "Blood Type Must Be 3 Char Or Lower!")]
+        [StringLength(maximumLength: 3, MinimumLength= 1, ErrorMessage = "Blood Type Must Be 3 Char Or Lower!")]
         public string BloodType { get; set; } = null!;
         public string? Note { get; set; }
     }

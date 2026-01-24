@@ -1,0 +1,170 @@
+@{
+    var upcomingSessions = ViewBag.UpcomingSessions as IEnumerable<SessionForBookingViewModel> ?? [];
+    var ongoingSessions = ViewBag.OngoingSessions as IEnumerable<SessionForBookingViewModel> ?? [];
+}
+@{
+    ViewData["Title"] = "MemberSession";
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div id="Alert" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="container">
+    <!-- Upcoming Sessions -->
+    <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
+        <div>
+            <h2 class="text-primary-color mb-0">Upcoming Sessions</h2>
+            <p class="text-muted">Sessions Valid For Manage Booking</p>
+        </div>
+    </header>
+
+    @if (upcomingSessions.Any())
+    {
+        <div class="row g-4">
+            @foreach (var session in upcomingSessions)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 session-card">
+                        <div class="card-header text-white py-3 bg-primary">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-calendar-event me-2"></i>@session.CategoryName
+                                </h5>
+                                <span class="badge bg-light text-dark">@session.Status</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-3">@session.Description</p>
+
+                            <div class="session-info mb-3">
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-person-circle text-primary me-2"></i>
+                                    <strong>Trainer:</strong> @session.TrainerName
+                                </div>
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-calendar3 text-primary me-2"></i>
+                                    <strong>Date:</strong> @session.Date
+                                </div>
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-clock text-primary me-2"></i>
+                                    <strong>Time:</strong> @session.StartTime - @session.EndTime
+                                </div>
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-hourglass-split text-primary me-2"></i>
+                                    <strong>Duration:</strong> @session.Duration
+                                </div>
+                                <div class="info-item">
+                                    <i class="bi bi-people text-primary me-2"></i>
+                                    <strong>Capacity:</strong> @session.BookedCount/@session.Capacity slots
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="d-grid gap-2">
+                                <a asp-action="GetMembersForUpcomingSession" asp-route-id="@session.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye me-1"></i> View Members
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-x display-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">No Upcoming Sessions Available</h4>
+        </div>
+    }
+
+    <!-- Ongoing Sessions -->
+    <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
+        <div>
+            <h2 class="text-primary-color mb-0">Ongoing Sessions</h2>
+            <p class="text-muted">Sessions Valid For Manage Attendance</p>
+        </div>
+    </header>
+
+    @if (ongoingSessions.Any())
+    {
+        <div class="row g-4">
+            @foreach (var session in ongoingSessions)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 session-card">
+                        <div class="card-header text-white py-3 bg-success">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-calendar-event me-2"></i>@session.CategoryName
+                                </h5>
+                                <span class="badge bg-light text-dark">@session.Status</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-3">@session.Description</p>
+
+                            <div class="session-info mb-3">
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-person-circle text-success me-2"></i>
+                                    <strong>Trainer:</strong> @session.TrainerName
+                                </div>
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-calendar3 text-success me-2"></i>
+                                    <strong>Date:</strong> @session.Date
+                                </div>
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-clock text-success me-2"></i>
+                                    <strong>Time:</strong> @session.StartTime - @session.EndTime
+                                </div>
+                                <div class="info-item mb-2">
+                                    <i class="bi bi-hourglass-split text-success me-2"></i>
+                                    <strong>Duration:</strong> @session.Duration
+                                </div>
+                                <div class="info-item">
+                                    <i class="bi bi-people text-success me-2"></i>
+                                    <strong>Capacity:</strong> @session.BookedCount/@session.Capacity slots
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="d-grid gap-2">
+                                <a asp-action="GetMembersForOngoingSession" asp-route-id="@session.Id" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-eye me-1"></i> View Members
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-x display-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">No Ongoing Sessions Available</h4>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_AlertBoxScript" />
+    
+}

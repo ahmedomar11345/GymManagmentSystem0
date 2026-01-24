@@ -10,7 +10,7 @@ namespace GymManagmentDAL.Entities
     public class Trainer : GymUser
     {
         // hierdate ==> createdat of baseentity
-        public Specialies Specialies { get; set; }
+        public Specialities Specialies { get; set; }
 
         #region Trainer - Session
         public ICollection<Session> Sessions { get; set; } = null!; 

@@ -13,17 +13,14 @@ namespace GymManagmentDAL.Entities
         public string Status { get
             {
                 if(EndDate > DateTime.Now)
-                    return "Expired";
-                else
                     return "Active";
+                else
+                    return "Expired";
             }
         }
         public int MemberId { get; set; }
         public Member Member { get; set; } = null!;
         public int PlanId { get; set; }
         public Plane Plan { get; set; } = null!;
-
-
-
     }
 }

@@ -1,0 +1,212 @@
+﻿@model SessionViewModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <!-- If Session Ongoing  bg-success -->
+                <!-- If Session Upcoming  bg-primary -->
+                <!-- If Session Completed  bg-secondary -->
+                <div class="card-header  text-white text-center py-4 @(Model.Status == "Ongoing" ? "bg-success" : Model.Status == "Upcoming" ? "bg-primary" : "bg-secondary")">
+                    <i class="bi bi-calendar-event display-4 mb-3"></i>
+                    <h2 class="mb-2">@Model.CategoryName</h2>
+                    <span class="badge bg-light text-dark fs-6">@Model.Status</span>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Description -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h6 class="text-primary-color mb-2">
+                            <i class="bi bi-file-text me-2"></i>Description
+                        </h6>
+                        <p class="mb-0">@Model.Description</p>
+                    </div>
+
+                    <!-- Session Details -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-person-circle text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Trainer</small>
+                                        <strong>@Model.TrainerName</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-people text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Capacity</small>
+                                        <strong>@Model.AvailableSlot / @Model.Capacity spots</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-calendar-check text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Start Time</small>
+                                        <strong>@Model.StartDate</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-calendar-x text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">End Time</small>
+                                        <strong>@Model.EndDate</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="detail-box p-3 border rounded bg-light">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-hourglass-split text-primary-color fs-3"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted d-block">Session Duration</small>
+                                        <strong class="text-primary-color fs-5">
+											@Model.Duration.Hours Hours @Model.Duration.Minutes Minutes
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.Status == "Ongoing")
+                        {
+                            <div class="col-12">
+                                <div class="detail-box p-3 border rounded" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-box me-3">
+                                            <i class="bi bi-clock-history text-success fs-3 animated-pulse"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <small class="text-muted d-block mb-1">Real-time Duration</small>
+                                            <div class="d-flex align-items-baseline gap-3">
+                                                <div>
+                                                    <span id="elapsedHours" class="fs-4 fw-bold text-success">00</span>
+                                                    <small class="text-muted ms-1">Hours</small>
+                                                </div>
+                                                <div>
+                                                    <span id="elapsedMinutes" class="fs-4 fw-bold text-success">00</span>
+                                                    <small class="text-muted ms-1">Minutes</small>
+                                                </div>
+                                                <div>
+                                                    <span id="elapsedSeconds" class="fs-4 fw-bold text-success">00</span>
+                                                    <small class="text-muted ms-1">Seconds</small>
+                                                </div>
+                                            </div>
+                                            <div class="progress mt-2" style="height: 6px;">
+                                                <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                            <small class="text-muted d-block mt-1">
+                                                <span id="remainingTime"></span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0 p-4">
+                    <div class="d-flex justify-content-between gap-2">
+                        <a asp-action="Index" class="btn btn-outline flex-fill">
+                            <i class="bi bi-arrow-left me-1"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Status == "Ongoing")
+{
+    <script>
+        const startDate = new Date('@Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+        const endDate = new Date('@Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+        const totalDuration = endDate - startDate;
+
+        function updateRealTimeDuration() {
+            const now = new Date();
+            const elapsed = now - startDate;
+            const remaining = endDate - now;
+
+            // Calculate elapsed time
+            const elapsedHours = Math.floor(elapsed / (1000 * 60 * 60));
+            const elapsedMinutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+            const elapsedSeconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+            // Calculate remaining time
+            const remainingHours = Math.floor(remaining / (1000 * 60 * 60));
+            const remainingMinutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+            const remainingSeconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+            // Update DOM
+            document.getElementById('elapsedHours').textContent = String(elapsedHours).padStart(2, '0');
+            document.getElementById('elapsedMinutes').textContent = String(elapsedMinutes).padStart(2, '0');
+            document.getElementById('elapsedSeconds').textContent = String(elapsedSeconds).padStart(2, '0');
+
+            // Update progress bar
+            const progress = (elapsed / totalDuration) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Update remaining time text
+            if (remaining > 0) {
+                document.getElementById('remainingTime').textContent = 
+                    `${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s remaining`;
+            } else {
+                document.getElementById('remainingTime').textContent = 'Session completed!';
+                document.getElementById('progressBar').classList.remove('bg-success');
+                document.getElementById('progressBar').classList.add('bg-danger');
+            }
+        }
+
+        // Update every second
+        updateRealTimeDuration();
+        setInterval(updateRealTimeDuration, 1000);
+    </script>
+
+    <style>
+        .animated-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+    </style>
+}

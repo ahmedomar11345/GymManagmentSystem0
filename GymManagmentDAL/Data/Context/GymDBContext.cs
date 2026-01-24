@@ -1,4 +1,5 @@
 ﻿using GymManagmentDAL.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,19 +10,24 @@ using System.Threading.Tasks;
 
 namespace GymManagmentDAL.Data.Context
 {
-    public class GymDBContext : DbContext
+    public class GymDBContext : IdentityDbContext<ApplicationUser>
     {
         public GymDBContext(DbContextOptions<GymDBContext> option): base(option)
         {
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Server=.;Database=GymManagementDB;Trusted_Connection=True; TrustServerCertificate= true");
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.Entity<ApplicationUser>(E =>
+            {
+                E.Property(x => x.FirstName).HasColumnType("nvarchar").HasMaxLength(50);
+                E.Property(x => x.LastName).HasColumnType("nvarchar").HasMaxLength(50);
+
+            }
+                
+            );
         }
 
         #region DBSet

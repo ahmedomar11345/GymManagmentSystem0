@@ -9,7 +9,7 @@ namespace GymManagmentDAL.Entities
     public class Member : GymUser
     {
         //joindate == createdat of baseentity
-        public string? Phote { get; set; }
+        public string Photo { get; set; } = null!; 
 
         #region Member - HealthRecord
         public HealthRecord HealthRecord { get; set; } = null!; 

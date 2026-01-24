@@ -1,0 +1,172 @@
+﻿@model CreateMemberViewModel
+
+<header class="mb-4">
+    <h3 class="text-primary">Add Member</h3>
+</header>
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey("DataMissed"))
+{
+    <div class="alert alert-danger">
+        @Html.ValidationMessage("DataMissed")
+    </div>
+}
+
+<form asp-action="CreateMember" method="post" enctype="multipart/form-data">
+    <ul class="nav nav-tabs mb-4" id="addMemberTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="member-tab" data-bs-toggle="tab"
+                    data-bs-target="#member-info" type="button" role="tab" aria-controls="member-info" aria-selected="true">
+                Member Info
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="health-tab" data-bs-toggle="tab"
+                    data-bs-target="#health-info" type="button" role="tab" aria-controls="health-info" aria-selected="false">
+                Health Data
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="member-info" role="tabpanel" aria-labelledby="member-tab">
+            <div class="section-header mb-3">
+                <h5 class="text-primary fw-bold">Personal Information</h5>
+				<hr class="mt-2">
+                <div class="mt-2">
+                    <img id="photoPreview" src="#" alt="Photo Preview" style="max-width: 200px; display: none;"
+                         class="img-thumbnail" />
+                </div>
+                <label asp-for="PhotoFile" class="control-label">Profile Photo <span class="text-danger">*</span></label>
+                <input asp-for="PhotoFile" type="file" class="form-control" accept="image/*" id="photoInput" required />
+                <span asp-validation-for="PhotoFile" class="text-danger"></span>
+                <small class="form-text text-muted">Max size: 3 MB. Allowed types: JPG, PNG, JPEG (Required)</small>
+            </div>
+            <div class="row g-3"> 
+                <div class="col-12 col-md-6">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Gender" class="form-label"></label>
+                    <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-select">
+                        <option value="">-- Select Gender --</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="section-header mb-3 mt-4">
+                <h5 class="text-primary fw-bold">Address Information</h5>
+                <hr class="mt-2">
+            </div>
+            <div class="row g-3">
+                <div class="col-12 col-md-4">
+                    <label asp-for="BuildingNumber" class="form-label"></label>
+                    <input asp-for="BuildingNumber" class="form-control" />
+                    <span asp-validation-for="BuildingNumber" class="text-danger"></span>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label asp-for="Street" class="form-label"></label>
+                    <input asp-for="Street" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label asp-for="City" class="form-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="health-info" role="tabpanel" aria-labelledby="health-tab">
+            <div class="section-header mb-3">
+                <h5 class="text-primary fw-bold">Health Metrics</h5>
+                <hr class="mt-2">
+            </div>
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label asp-for="HealthRecord.Height" class="form-label">Height (cm)</label>
+                    <input asp-for="HealthRecord.Height" type="number" step="0.1" class="form-control" />
+                    <span asp-validation-for="HealthRecord.Height" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="HealthRecord.Weight" class="form-label">Weight (kg)</label>
+                    <input asp-for="HealthRecord.Weight" type="number" step="0.1" class="form-control" />
+                    <span asp-validation-for="HealthRecord.Weight" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="HealthRecord.BloodType" class="form-label">Blood Type</label>
+                    <select asp-for="HealthRecord.BloodType" class="form-select">
+                        <option value="">Select Type</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+                    <span asp-validation-for="HealthRecord.BloodType" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="HealthRecord.Note" class="form-label"></label>
+                    <textarea asp-for="HealthRecord.Note" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="HealthRecord.Note" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="d-flex justify-content-end gap-3 mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary px-4">
+            <i class="bi bi-arrow-left me-2"></i> Back to List
+        </a>
+        <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-plus-circle me-2"></i> Add Member
+        </button>
+    </footer>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Preview photo before upload
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

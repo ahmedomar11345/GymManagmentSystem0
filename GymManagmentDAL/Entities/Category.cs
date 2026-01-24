@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GymManagmentDAL.Entities.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace GymManagmentDAL.Entities
 {
     public class Category : BaseEntity
     {
-        public string CategoryName { get; set; } = null!;
+        public Categories CategoryName { get; set; } 
         public ICollection<Session> sessions { get; set; } = null!;
     }
 }
