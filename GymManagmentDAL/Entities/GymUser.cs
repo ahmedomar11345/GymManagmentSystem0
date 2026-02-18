@@ -16,6 +16,7 @@ namespace GymManagmentDAL.Entities
         public DateOnly DateOfBirth { get; set; }
         public Gender Gender { get; set; } 
         public Address Address { get; set; } = null!;
+        public string AccessKey { get; set; } = Guid.NewGuid().ToString("N");
 
     }
     [Owned]
@@ -24,5 +25,6 @@ namespace GymManagmentDAL.Entities
         public int BuildingNumber { get; set; }
         public string Street { get; set; } = null!;
         public string City { get; set; } = null!;
+        public string Country { get; set; } = "Egypt";
     }
 }

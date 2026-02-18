@@ -9,16 +9,16 @@ namespace GymManagmentBLL.ViewModels.MemberViewModel
 {
     public class HealthRecordViewModel
     {
-        [Required(ErrorMessage = "Height Is Required!")]
-        [Range(minimum: 0.1, maximum: 300, ErrorMessage = "Height Must Be Greater Than 0 And Less Than 300!")]
+        [Required(ErrorMessage = "HeightRequired")]
+        [Range(minimum: 30, maximum: 220, ErrorMessage = "Height must be between 30 and 220 cm.")]
         public decimal Height { get; set; } = default;
 
-        [Required(ErrorMessage = "Weight Is Required!")]
-        [Range(minimum: 0.1, maximum: 500, ErrorMessage = "Weight Must Be Greater Than 0 And Less Than 500!")]
+        [Required(ErrorMessage = "WeightRequired")]
+        [Range(minimum: 30, maximum: 200, ErrorMessage = "Weight must be between 30 and 200 kg.")]
         public decimal Weight { get; set; } = default;
 
-        [Required(ErrorMessage = "Blood Type Is Required!")]
-        [StringLength(maximumLength: 3, MinimumLength= 1, ErrorMessage = "Blood Type Must Be 3 Char Or Lower!")]
+        [Required(ErrorMessage = "BloodTypeRequired")]
+        [StringLength(maximumLength: 3, MinimumLength= 1, ErrorMessage = "BloodTypeLength")]
         public string BloodType { get; set; } = null!;
         public string? Note { get; set; }
     }

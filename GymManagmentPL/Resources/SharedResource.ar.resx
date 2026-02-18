@@ -1,0 +1,2475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>نظام إدارة الجيم</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>لوحة التحكم</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>الأعضاء</value>
+  </data>
+  <data name="Trainers" xml:space="preserve">
+    <value>المدربين</value>
+  </data>
+  <data name="Sessions" xml:space="preserve">
+    <value>الجلسات</value>
+  </data>
+  <data name="Bookings" xml:space="preserve">
+    <value>الحجوزات</value>
+  </data>
+  <data name="Memberships" xml:space="preserve">
+    <value>العضويات</value>
+  </data>
+  <data name="Plans" xml:space="preserve">
+    <value>الخطط</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="Trainer" xml:space="preserve">
+    <value>مدرب</value>
+  </data>
+  <data name="Session" xml:space="preserve">
+    <value>جلسة</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>مصروف</value>
+  </data>
+  <data name="Plane" xml:space="preserve">
+    <value>خطة</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="CreateSuccess" xml:space="preserve">
+    <value>تم الإنشاء بنجاح!</value>
+  </data>
+  <data name="UpdateSuccess" xml:space="preserve">
+    <value>تم التحديث بنجاح!</value>
+  </data>
+  <data name="DeleteSuccess" xml:space="preserve">
+    <value>تم الحذف بنجاح!</value>
+  </data>
+  <data name="CancelSuccess" xml:space="preserve">
+    <value>تم الإلغاء بنجاح!</value>
+  </data>
+  <data name="OperationFailed" xml:space="preserve">
+    <value>فشلت العملية. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>السجل غير موجود.</value>
+  </data>
+  <data name="InvalidInput" xml:space="preserve">
+    <value>إدخال غير صالح. يرجى التحقق من البيانات.</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>هذا الحقل مطلوب.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>عنوان بريد إلكتروني غير صالح.</value>
+  </data>
+  <data name="InvalidPhone" xml:space="preserve">
+    <value>رقم هاتف غير صالح.</value>
+  </data>
+  <data name="PhotoRequired" xml:space="preserve">
+    <value>برجاء اختيار صورة العضو.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>اسم العضو مطلوب.</value>
+  </data>
+  <data name="NameLength" xml:space="preserve">
+    <value>يجب أن يكون الاسم بين {2} و {1} حرفاً.</value>
+  </data>
+  <data name="EmailLength" xml:space="preserve">
+    <value>يجب أن يكون البريد الإلكتروني بين {2} و {1} حرفاً.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>البريد الإلكتروني مطلوب.</value>
+  </data>
+  <data name="PhoneRequired" xml:space="preserve">
+    <value>رقم الهاتف مطلوب.</value>
+  </data>
+  <data name="EgyptianPhone" xml:space="preserve">
+    <value>يجب أن يكون رقم الهاتف مصرياً صالحاً (01XXXXXXXXX).</value>
+  </data>
+  <data name="DateOfBirthRequired" xml:space="preserve">
+    <value>تاريخ الميلاد مطلوب.</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>يرجى تحديد الجنس.</value>
+  </data>
+  <data name="AddressRequired" xml:space="preserve">
+    <value>العنوان مطلوب.</value>
+  </data>
+  <data name="CityRequired" xml:space="preserve">
+    <value>يرجى إدخال اسم المدينة.</value>
+  </data>
+  <data name="CityLength" xml:space="preserve">
+    <value>اسم المدينة يجب أن يكون بين {2} و {1} حرفاً.</value>
+  </data>
+  <data name="StreetRequired" xml:space="preserve">
+    <value>يرجى إدخال اسم الشارع.</value>
+  </data>
+  <data name="StreetLength" xml:space="preserve">
+    <value>اسم الشارع يجب أن يكون بين {2} و {1} حرفاً.</value>
+  </data>
+  <data name="BuildingNumberRequired" xml:space="preserve">
+    <value>رقم المبنى مطلوب.</value>
+  </data>
+  <data name="BuildingNumberRange" xml:space="preserve">
+    <value>رقم المبنى يجب أن يكون بين {1} و {2}.</value>
+  </data>
+  <data name="PlanNameRequired" xml:space="preserve">
+    <value>اسم الخطة مطلوب.</value>
+  </data>
+  <data name="PlanNameLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم الخطة {1} حرفاً.</value>
+  </data>
+  <data name="PriceRequired" xml:space="preserve">
+    <value>سعر الخطة مطلوب.</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>يجب أن يكون السعر بين {1} و {2} جنيه.</value>
+  </data>
+  <data name="DurationRequired" xml:space="preserve">
+    <value>مدة الخطة مطلوبة.</value>
+  </data>
+  <data name="DurationRange" xml:space="preserve">
+    <value>يجب أن تكون المدة بين {1} و {2} يوم.</value>
+  </data>
+  <data name="DescriptionRequired" xml:space="preserve">
+    <value>وصف العملية مطلوب.</value>
+  </data>
+  <data name="DescriptionLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف {1} حرفاً.</value>
+  </data>
+  <data name="SpecialtyRequired" xml:space="preserve">
+    <value>يرجى تحديد التخصص.</value>
+  </data>
+  <data name="CapacityRequired" xml:space="preserve">
+    <value>سعة الجلسة مطلوبة.</value>
+  </data>
+  <data name="CapacityRange" xml:space="preserve">
+    <value>يجب أن تكون السعة بين {1} و {2} أشخاص.</value>
+  </data>
+  <data name="StartDateRequired" xml:space="preserve">
+    <value>تاريخ البدء مطلوب.</value>
+  </data>
+  <data name="EndDateRequired" xml:space="preserve">
+    <value>تاريخ الانتهاء مطلوب.</value>
+  </data>
+  <data name="TrainerRequired" xml:space="preserve">
+    <value>يرجى اختيار المدرب.</value>
+  </data>
+  <data name="CategoryRequired" xml:space="preserve">
+    <value>يرجى اختيار القسم.</value>
+  </data>
+  <data name="RecurrenceCountRange" xml:space="preserve">
+    <value>يجب أن يكون عدد التكرار بين {1} و {2}.</value>
+  </data>
+  <data name="ExpenseTitleRequired" xml:space="preserve">
+    <value>عنوان المصروف مطلوب.</value>
+  </data>
+  <data name="AmountRequired" xml:space="preserve">
+    <value>المبلغ مطلوب.</value>
+  </data>
+  <data name="AmountRange" xml:space="preserve">
+    <value>يجب أن يكون المبلغ أكبر من {1}.</value>
+  </data>
+  <data name="ExpenseDateRequired" xml:space="preserve">
+    <value>تاريخ المصروف مطلوب.</value>
+  </data>
+  <data name="HeightRequired" xml:space="preserve">
+    <value>الطول مطلوب.</value>
+  </data>
+  <data name="HeightRange" xml:space="preserve">
+    <value>يجب أن يكون الطول بين {1} و {2} سم.</value>
+  </data>
+  <data name="WeightRequired" xml:space="preserve">
+    <value>الوزن مطلوب.</value>
+  </data>
+  <data name="WeightRange" xml:space="preserve">
+    <value>يجب أن يكون الوزن بين {1} و {2} كجم.</value>
+  </data>
+  <data name="BloodTypeRequired" xml:space="preserve">
+    <value>فصيلة الدم مطلوبة.</value>
+  </data>
+  <data name="BloodTypeLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز فصيلة الدم {1} أحرف.</value>
+  </data>
+  <data name="MemberRequired" xml:space="preserve">
+    <value>يرجى اختيار العضو.</value>
+  </data>
+  <data name="PlanRequired" xml:space="preserve">
+    <value>يرجى اختيار خطة الاشتراك.</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>كلمة المرور مطلوبة.</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>الاسم الأول مطلوب.</value>
+  </data>
+  <data name="LastNameRequired" xml:space="preserve">
+    <value>الاسم الأخير مطلوب.</value>
+  </data>
+  <data name="CurrentPasswordRequired" xml:space="preserve">
+    <value>كلمة المرور الحالية مطلوبة.</value>
+  </data>
+  <data name="NewPasswordRequired" xml:space="preserve">
+    <value>كلمة المرور الجديدة مطلوبة.</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>يجب أن تكون كلمة المرور بين {2} و {1} حرفاً.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>كلمة المرور وتأكيدها غير متطابقين.</value>
+  </data>
+  <data name="HealthRecordRequired" xml:space="preserve">
+    <value>بيانات السجل الصحي مطلوبة.</value>
+  </data>
+  <data name="FullNamePlaceholder" xml:space="preserve">
+    <value>أدخل الاسم بالكامل للعميل</value>
+  </data>
+  <data name="EmailPlaceholder" xml:space="preserve">
+    <value>email@example.com</value>
+  </data>
+  <data name="PhonePlaceholder" xml:space="preserve">
+    <value>01XXXXXXXXX</value>
+  </data>
+  <data name="CityPlaceholder" xml:space="preserve">
+    <value>القاهرة</value>
+  </data>
+  <data name="StreetPlaceholder" xml:space="preserve">
+    <value>اسم الشارع</value>
+  </data>
+  <data name="BuildingPlaceholder" xml:space="preserve">
+    <value>رقم المبنى</value>
+  </data>
+  <data name="MedicalNotesPlaceholder" xml:space="preserve">
+    <value>مثل: إصابات، حالات طبية خاصة، إلخ.</value>
+  </data>
+  <data name="DeleteConfirmTitle" xml:space="preserve">
+    <value> تأكيد الحذف</value>
+  </data>
+  <data name="DeleteConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد حذف هذا السجل؟ لا يمكن التراجع عن هذا الإجراء.</value>
+  </data>
+  <data name="CancelConfirmTitle" xml:space="preserve">
+    <value>تأكيد الإلغاء</value>
+  </data>
+  <data name="CancelConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد الإلغاء؟</value>
+  </data>
+  <data name="ActiveMembers" xml:space="preserve">
+    <value>الأعضاء النشطين</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>الإجمالي</value>
+  </data>
+  <data name="MembersAnalysis" xml:space="preserve">
+    <value>تحليل الأعضاء</value>
+  </data>
+  <data name="MainMenu" xml:space="preserve">
+    <value>القائمة الرئيسية</value>
+  </data>
+  <data name="Administration" xml:space="preserve">
+    <value>الإدارة</value>
+  </data>
+  <data name="Operations" xml:space="preserve">
+    <value>العمليات</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>مرحباً</value>
+  </data>
+  <data name="ManagementSystem" xml:space="preserve">
+    <value>نظام الإدارة</value>
+  </data>
+  <data name="ManageBookings" xml:space="preserve">
+    <value>إدارة الحجوزات</value>
+  </data>
+  <data name="RegisterMember" xml:space="preserve">
+    <value>تسجيل عضو</value>
+  </data>
+  <data name="UpcomingSessions" xml:space="preserve">
+    <value>الجلسات القادمة</value>
+  </data>
+  <data name="TotalTrainers" xml:space="preserve">
+    <value>إجمالي المدربين</value>
+  </data>
+  <data name="ProfessionalStaff" xml:space="preserve">
+    <value>طاقم التدريب الاحترافي</value>
+  </data>
+  <data name="ScheduledTraining" xml:space="preserve">
+    <value>التدريبات المجدولة اليوم</value>
+  </data>
+  <data name="GymHealthy" xml:space="preserve">
+    <value>ناديكم يبدو بحالة جيدة اليوم.</value>
+  </data>
+  <data name="GoodMorning" xml:space="preserve">
+    <value>صباح الخير</value>
+  </data>
+  <data name="GoodAfternoon" xml:space="preserve">
+    <value>مساء الخير</value>
+  </data>
+  <data name="GoodEvening" xml:space="preserve">
+    <value>مساء الخير</value>
+  </data>
+  <data name="EntranceCheckIn" xml:space="preserve">
+    <value>تسجيل الدخول بوابة</value>
+  </data>
+  <data name="QRScanner" xml:space="preserve">
+    <value>ماسح الكود</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>الملف الشخصي</value>
+  </data>
+  <data name="LoginTitle" xml:space="preserve">
+    <value>دخول المدير</value>
+  </data>
+  <data name="LoginSubtitle" xml:space="preserve">
+    <value>أهلاً بك مجدداً! يرجى تسجيل الدخول إلى حسابك</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>تذكرني لمدة 24 ساعة</value>
+  </data>
+  <data name="LoginButton" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="FeatureHeroText" xml:space="preserve">
+    <value>جسدك يمكنه تحمل أي شيء تقريبًا</value>
+  </data>
+  <data name="FeatureDescription" xml:space="preserve">
+    <value>عقلك هو الذي يحتاج إلى الاقتناع. تجاوز حدودك، وحاظ على التزامك، وشاهد جسدك يتحول.</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>الدعم الفني</value>
+  </data>
+  <data name="ManageProfiles" xml:space="preserve">
+    <value>إدارة ملفات الأعضاء والسجلات.</value>
+  </data>
+  <data name="ContactInfo" xml:space="preserve">
+    <value>معلومات الاتصال</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>تاريخ الميلاد</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>لم يتم العثور على أعضاء</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>ذكر</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>أنثى</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>رقم الهاتف</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>العضو</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="AddNewMember" xml:space="preserve">
+    <value>إضافة عضو جديد</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>المعلومات الأساسية</value>
+  </data>
+  <data name="ProfilePhoto" xml:space="preserve">
+    <value>صورة الملف الشخصي</value>
+  </data>
+  <data name="UploadImage" xml:space="preserve">
+    <value>تحميل صورة</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>الاسم بالكامل</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="HealthRecord" xml:space="preserve">
+    <value>السجل الصحي</value>
+  </data>
+  <data name="BloodType" xml:space="preserve">
+    <value>فصيلة الدم</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>الوزن</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>الطول</value>
+  </data>
+  <data name="ChronicDiseases" xml:space="preserve">
+    <value>الأمراض المزمنة</value>
+  </data>
+  <data name="PhysicalActivity" xml:space="preserve">
+    <value>النشاط البدني</value>
+  </data>
+  <data name="MembershipPlan" xml:space="preserve">
+    <value>خطة العضوية</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>(اختياري)</value>
+  </data>
+  <data name="Requirements" xml:space="preserve">
+    <value>المتطلبات</value>
+  </data>
+  <data name="MaxSize" xml:space="preserve">
+    <value>أقصى حجم</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>الصيغة</value>
+  </data>
+  <data name="RegisterMemberTitle" xml:space="preserve">
+    <value>تسجيل العضو</value>
+  </data>
+  <data name="EnterFullName" xml:space="preserve">
+    <value>أدخل الاسم بالكامل</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>المدينة</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>الشارع</value>
+  </data>
+  <data name="AddressDetails" xml:space="preserve">
+    <value>تفاصيل العنوان</value>
+  </data>
+  <data name="BuildingNumber" xml:space="preserve">
+    <value>رقم المبنى</value>
+  </data>
+  <data name="HealthStatus" xml:space="preserve">
+    <value>الحالة الصحية الأولية</value>
+  </data>
+  <data name="WeightKg" xml:space="preserve">
+    <value>الوزن (كجم)</value>
+  </data>
+  <data name="HeightCm" xml:space="preserve">
+    <value>الطول (سم)</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>اختر</value>
+  </data>
+  <data name="MedicalNotes" xml:space="preserve">
+    <value>ملاحظات طبية</value>
+  </data>
+  <data name="NoActiveMembership" xml:space="preserve">
+    <value>-- لا يوجد اشتراك حالياً --</value>
+  </data>
+  <data name="SkipAssignLater" xml:space="preserve">
+    <value>يمكنك تخطي هذه الخطوة وتعيين باقة لاحقاً من الملف الشخصي للعضو.</value>
+  </data>
+  <data name="ReadyToRegister" xml:space="preserve">
+    <value>هل أنت جاهز للتسجيل؟</value>
+  </data>
+  <data name="MemberAddedImmediately" xml:space="preserve">
+    <value>سيتم إضافة العضو إلى قاعدة البيانات فوراً.</value>
+  </data>
+  <data name="RegisterAndActivate" xml:space="preserve">
+    <value>تسجيل العضو وتفعيل الباقة</value>
+  </data>
+  <data name="DaysText" xml:space="preserve">
+    <value>يوم</value>
+  </data>
+  <data name="MemberDetails" xml:space="preserve">
+    <value>تفاصيل العضو</value>
+  </data>
+  <data name="MemberProfile" xml:space="preserve">
+    <value>ملف العضو</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>تعديل الملف</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>العودة للقائمة</value>
+  </data>
+  <data name="NoActivePlan" xml:space="preserve">
+    <value>لا توجد باقة مفعلة</value>
+  </data>
+  <data name="MemberSince" xml:space="preserve">
+    <value>عضو منفذ</value>
+  </data>
+  <data name="DigitalMemberID" xml:space="preserve">
+    <value>هوية العضو الرقمية</value>
+  </data>
+  <data name="PersonalInformation" xml:space="preserve">
+    <value>المعلومات الشخصية</value>
+  </data>
+  <data name="JoinDate" xml:space="preserve">
+    <value>تاريخ الانضمام</value>
+  </data>
+  <data name="SessionsBooked" xml:space="preserve">
+    <value>الجلسات المحجوزة</value>
+  </data>
+  <data name="MembershipDetails" xml:space="preserve">
+    <value>تفاصيل العضوية</value>
+  </data>
+  <data name="CurrentPlan" xml:space="preserve">
+    <value>الباقة الحالية</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>تاريخ البدء</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>تاريخ الانتهاء</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>لاشيء</value>
+  </data>
+  <data name="NA" xml:space="preserve">
+    <value>غير متوفر</value>
+  </data>
+  <data name="NoAddressProvided" xml:space="preserve">
+    <value>لم يتم توفير عنوان</value>
+  </data>
+  <data name="BMI" xml:space="preserve">
+    <value>مؤشر كتلة الجسم</value>
+  </data>
+  <data name="CM" xml:space="preserve">
+    <value>سم</value>
+  </data>
+  <data name="KG" xml:space="preserve">
+    <value>كجم</value>
+  </data>
+  <data name="NoActiveMembershipForNow" xml:space="preserve">
+    <value>-- لا توجد عضوية نشطة حالياً --</value>
+  </data>
+  <data name="EditMemberProfile" xml:space="preserve">
+    <value>تعديل ملف العضو</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>حفظ التغييرات</value>
+  </data>
+  <data name="MemberID" xml:space="preserve">
+    <value>معرف العضو</value>
+  </data>
+  <data name="ContactAddress" xml:space="preserve">
+    <value>عنوان الاتصال</value>
+  </data>
+  <data name="ReadyToSave" xml:space="preserve">
+    <value>جاهز للحفظ؟</value>
+  </data>
+  <data name="ReviewChanges" xml:space="preserve">
+    <value>يرجى مراجعة التغييرات قبل التأكيد.</value>
+  </data>
+  <data name="UpdateProfile" xml:space="preserve">
+    <value>تحديث الملف الشخصي</value>
+  </data>
+  <data name="TrainersManagement" xml:space="preserve">
+    <value>إدارة المدربين</value>
+  </data>
+  <data name="TrainersDesc" xml:space="preserve">
+    <value>إدارة طاقم التدريب المحترفين والتخصصات.</value>
+  </data>
+  <data name="AddNewTrainer" xml:space="preserve">
+    <value>إضافة مدرب جديد</value>
+  </data>
+  <data name="Specialty" xml:space="preserve">
+    <value>التخصص</value>
+  </data>
+  <data name="NoTrainersFound" xml:space="preserve">
+    <value>لم يتم العثور على مدربين</value>
+  </data>
+  <data name="NoTrainersDesc" xml:space="preserve">
+    <value>حاول ضبط البحث أو إضافة مدرب جديد إلى الطاقم.</value>
+  </data>
+  <data name="Specialties" xml:space="preserve">
+    <value>التخصصات</value>
+  </data>
+  <data name="AddTrainer" xml:space="preserve">
+    <value>إضافة مدرب</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>إضافة جديد</value>
+  </data>
+  <data name="PrimarySpecialty" xml:space="preserve">
+    <value>التخصص الرئيسي</value>
+  </data>
+  <data name="Professional" xml:space="preserve">
+    <value>احترافي</value>
+  </data>
+  <data name="SelectSpecialist" xml:space="preserve">
+    <value>-- اختر متخصص --</value>
+  </data>
+  <data name="RegisterTrainer" xml:space="preserve">
+    <value>تسجيل المدرب</value>
+  </data>
+  <data name="TrainerProfile" xml:space="preserve">
+    <value>ملف المدرب</value>
+  </data>
+  <data name="Specialist" xml:space="preserve">
+    <value>متخصص</value>
+  </data>
+  <data name="StaffMember" xml:space="preserve">
+    <value> موظف</value>
+  </data>
+  <data name="OfficeAddress" xml:space="preserve">
+    <value>عنوان المكتب</value>
+  </data>
+  <data name="StaffDetails" xml:space="preserve">
+    <value>تفاصيل الموظف</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>إرسال رسالة</value>
+  </data>
+  <data name="RegisteredOn" xml:space="preserve">
+    <value>تم التسجيل في</value>
+  </data>
+  <data name="TrainerAccessNote" xml:space="preserve">
+    <value>تتم إدارة ملفات الموظفين بواسطة المستخدمين الإداريين فقط. لا يمكن للأعضاء العاديين عرض تفاصيل الاتصال الكاملة.</value>
+  </data>
+  <data name="EditTrainerInfo" xml:space="preserve">
+    <value>تعديل معلومات المدرب</value>
+  </data>
+  <data name="SelectGender" xml:space="preserve">
+    <value>-- اختر الجنس --</value>
+  </data>
+  <data name="AddressInformation" xml:space="preserve">
+    <value>معلومات العنوان</value>
+  </data>
+  <data name="ProfessionalInformation" xml:space="preserve">
+    <value>المعلومات المهنية</value>
+  </data>
+  <data name="DeleteTrainerConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد حذف هذا المدرب؟</value>
+  </data>
+  <data name="DeleteWarning" xml:space="preserve">
+    <value>تحذير!</value>
+  </data>
+  <data name="DeleteTrainerDesc" xml:space="preserve">
+    <value>لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع بيانات المدرب بشكل دائم.</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="MembershipPlans" xml:space="preserve">
+    <value>خطط العضوية</value>
+  </data>
+  <data name="PlansDesc" xml:space="preserve">
+    <value>إدارة حزم الاشتراك والأسعار.</value>
+  </data>
+  <data name="CreateNewPlan" xml:space="preserve">
+    <value>إنشاء خطة جديدة</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+  <data name="EGPPerPackage" xml:space="preserve">
+    <value>ج.م / الباقة</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>المدة</value>
+  </data>
+  <data name="DurationDaysText" xml:space="preserve">
+    <value>أيام</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>الوصف:</value>
+  </data>
+  <data name="Deactivate" xml:space="preserve">
+    <value>إلغاء التنشيط</value>
+  </data>
+  <data name="Activate" xml:space="preserve">
+    <value>تنشيط</value>
+  </data>
+  <data name="NoPlansFound" xml:space="preserve">
+    <value>لم يتم العثور على خطط عضويته</value>
+  </data>
+  <data name="NoPlansDesc" xml:space="preserve">
+    <value>ابدأ بإنشاء أول حزمة اشتراك لك.</value>
+  </data>
+  <data name="PlanName" xml:space="preserve">
+    <value>اسم الخطة</value>
+  </data>
+  <data name="EGP" xml:space="preserve">
+    <value>ج.م</value>
+  </data>
+  <data name="DesignNewPackage" xml:space="preserve">
+    <value>تصميم حزمة جديدة</value>
+  </data>
+  <data name="NewPolicy" xml:space="preserve">
+    <value>سياسة جديدة</value>
+  </data>
+  <data name="DesignPackage" xml:space="preserve">
+    <value>تصميم الحزمة</value>
+  </data>
+  <data name="PackageName" xml:space="preserve">
+    <value>اسم الحزمة</value>
+  </data>
+  <data name="PackagePrice" xml:space="preserve">
+    <value>سعر الحزمة</value>
+  </data>
+  <data name="DurationPolicy" xml:space="preserve">
+    <value>سياسة المدة</value>
+  </data>
+  <data name="PlanBenefitsRules" xml:space="preserve">
+    <value>مزايا وقواعد الخطة</value>
+  </data>
+  <data name="PlanDescriptionPlaceholder" xml:space="preserve">
+    <value>ص ما يحصل عليه الأعضاء مع هذه الحزمة...</value>
+  </data>
+  <data name="PlanDescriptionTip" xml:space="preserve">
+    <value>استخدم أسلوب النقاط الواضحة لوصف المزايا لسهولة القراءة.</value>
+  </data>
+  <data name="NewPlanActivationNote" xml:space="preserve">
+    <value>يتم إنشاء الخطط الجديدة كنشطة افتراضياً. يمكنك إلغاء تنشيطها في أي وقت من لوحة التحكم.</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>تجاهل</value>
+  </data>
+  <data name="CreatePackage" xml:space="preserve">
+    <value>إنشاء حزمة</value>
+  </data>
+  <data name="PlanDetails" xml:space="preserve">
+    <value>تفاصيل الخطة</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>الحالة الحالية</value>
+  </data>
+  <data name="AvailableForNewMembers" xml:space="preserve">
+    <value>متاح للأعضاء الجدد</value>
+  </data>
+  <data name="RegistrationClosed" xml:space="preserve">
+    <value>التسجيل مغلق</value>
+  </data>
+  <data name="EditPlanDetails" xml:space="preserve">
+    <value>تعديل تفاصيل الخطة</value>
+  </data>
+  <data name="DeactivatePlan" xml:space="preserve">
+    <value>إلغاء تنشيط الخطة</value>
+  </data>
+  <data name="ActivatePlan" xml:space="preserve">
+    <value>تنشيط الخطة</value>
+  </data>
+  <data name="BackToAllPlans" xml:space="preserve">
+    <value>العودة إلى جميع الخطط</value>
+  </data>
+  <data name="UpdateMembershipPackage" xml:space="preserve">
+    <value>تحديث حزمة العضوية</value>
+  </data>
+  <data name="UpdatePackage" xml:space="preserve">
+    <value>تحديث الحزمة</value>
+  </data>
+  <data name="EditPackage" xml:space="preserve">
+    <value>تعديل الحزمة</value>
+  </data>
+  <data name="PlanNameTrackingNote" xml:space="preserve">
+    <value>لا يمكن تغيير اسم الخطة لضمان اتساق التتبع.</value>
+  </data>
+  <data name="UpdatedPrice" xml:space="preserve">
+    <value>السعر المحدث</value>
+  </data>
+  <data name="NewDurationPolicy" xml:space="preserve">
+    <value>سياسية المدة الجديدة</value>
+  </data>
+  <data name="UpdatedPlanBenefits" xml:space="preserve">
+    <value>مزايا الخطة المحدثة</value>
+  </data>
+  <data name="UpdatePlanDescriptionPlaceholder" xml:space="preserve">
+    <value>تحديث وصف الخطة...</value>
+  </data>
+  <data name="PolicyUpdate" xml:space="preserve">
+    <value>تحديث السياسة:</value>
+  </data>
+  <data name="PolicyUpdateDesc" xml:space="preserve">
+    <value>ستنطبق التغييرات على جميع الاشتراكات المستقبلية. ستحتظ الاشتراكات النشطة الحالية بسعرها ومدتها الأصلية حتى تنتهي صلاحيتها.</value>
+  </data>
+  <data name="QRCheckInScanner" xml:space="preserve">
+    <value>ماسح التحقق من QR</value>
+  </data>
+  <data name="GymEntrance" xml:space="preserve">
+    <value>مدخل الصالة الرياضية</value>
+  </data>
+  <data name="ScannerInstructions" xml:space="preserve">
+    <value>وجه الكاميرا نحو رمز QR الخاص بالهوية الرقمية للعضو.</value>
+  </data>
+  <data name="NextScan" xml:space="preserve">
+    <value>المسح التالي</value>
+  </data>
+  <data name="RecentActivity" xml:space="preserve">
+    <value>النشاط الأخير</value>
+  </data>
+  <data name="LoadingHistory" xml:space="preserve">
+    <value>جاري تحميل السجل...</value>
+  </data>
+  <data name="AccessGranted" xml:space="preserve">
+    <value>تم السماح بالدخول</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>تم رفض الدخول</value>
+  </data>
+  <data name="SystemError" xml:space="preserve">
+    <value>حدث خطأ في النظام.</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>الوقت</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="DeleteMember" xml:space="preserve">
+    <value>حذف العضو</value>
+  </data>
+  <data name="LiveNow" xml:space="preserve">
+    <value>مباشر الآن</value>
+  </data>
+  <data name="ActiveSessionsInProgress" xml:space="preserve">
+    <value>جلسات نشطة جارية</value>
+  </data>
+  <data name="ManagementModules" xml:space="preserve">
+    <value>وحدات الإدارة</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>طاقم العمل</value>
+  </data>
+  <data name="Pricing" xml:space="preserve">
+    <value>التسعير</value>
+  </data>
+  <data name="Attendance" xml:space="preserve">
+    <value>الحضور</value>
+  </data>
+  <data name="SystemSnapshot" xml:space="preserve">
+    <value>لمحة عن النظام</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>مكتمل</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>قاعدة البيانات</value>
+  </data>
+  <data name="Healthy" xml:space="preserve">
+    <value>سليمة</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>التخزين</value>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="FlexGymManagementTitle" xml:space="preserve">
+    <value>نظام إدارة الجيم</value>
+  </data>
+  <data name="SystemOnline" xml:space="preserve">
+    <value>النظام متصل</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>اكتب للبحث عن أي شيء (أعضاء، مدربين، جلسات)...</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>الإشعارات</value>
+  </data>
+  <data name="NotificationsEmpty" xml:space="preserve">
+    <value>أنت مطلع على كل شيء!</value>
+  </data>
+  <data name="Administrator" xml:space="preserve">
+    <value>مدير النظام</value>
+  </data>
+  <data name="QuickActions" xml:space="preserve">
+    <value>إجراءات سريعة</value>
+  </data>
+  <data name="AddMember" xml:space="preserve">
+    <value>إضافة عضو</value>
+  </data>
+  <data name="BookSession" xml:space="preserve">
+    <value>حجز جلسة</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+  <data name="ContactInformation" xml:space="preserve">
+    <value>معلومات الاتصال</value>
+  </data>
+  <data name="NoHealthRecord" xml:space="preserve">
+    <value>لا يوجد سجل صحي متاح</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+  <data name="NoAttendanceRecords" xml:space="preserve">
+    <value>لا توجد سجلات حضور لهذا العضو.</value>
+  </data>
+  <data name="DeleteMemberConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد من حذف هذا العضو؟</value>
+  </data>
+  <data name="DeleteMemberDesc" xml:space="preserve">
+    <value>هذا الإجراء لا يمكن التراجع عنه. سيتم حذف جميع بيانات العضو بشكل دائم.</value>
+  </data>
+  <data name="TrainingSessions" xml:space="preserve">
+    <value>جلسات التدريب</value>
+  </data>
+  <data name="SessionDesc" xml:space="preserve">
+    <value>جدولة ومراقبة أنشطة التدريب الجماعية.</value>
+  </data>
+  <data name="ScheduleNewSession" xml:space="preserve">
+    <value>جدولة جلسة جديدة</value>
+  </data>
+  <data name="Upcoming" xml:space="preserve">
+    <value>قادمة</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>مباشر</value>
+  </data>
+  <data name="SlotsLeft" xml:space="preserve">
+    <value>أماكن شاغرة</value>
+  </data>
+  <data name="DeleteSession" xml:space="preserve">
+    <value>حذف الجلسة</value>
+  </data>
+  <data name="NoSessionsScheduled" xml:space="preserve">
+    <value>لا توجد جلسات مجدولة</value>
+  </data>
+  <data name="NoSessionsDesc" xml:space="preserve">
+    <value>لا توجد جلسات تدريب تطابق البحث الحالي.</value>
+  </data>
+  <data name="ScheduleSession" xml:space="preserve">
+    <value>جدولة الجلسة</value>
+  </data>
+  <data name="NewSchedule" xml:space="preserve">
+    <value>جدول جديد</value>
+  </data>
+  <data name="ClassCategory" xml:space="preserve">
+    <value> فئة الصف</value>
+  </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>اختر الفئة</value>
+  </data>
+  <data name="LeadTrainer" xml:space="preserve">
+    <value>المدرب الرئيسي</value>
+  </data>
+  <data name="SelectTrainer" xml:space="preserve">
+    <value>اختر المدرب</value>
+  </data>
+  <data name="SessionDescription" xml:space="preserve">
+    <value>وصف الجلسة</value>
+  </data>
+  <data name="MaxCapacity" xml:space="preserve">
+    <value>السعة القصوى</value>
+  </data>
+  <data name="CapacityNote" xml:space="preserve">
+    <value>تعمل معظم الفصول بشكل أفضل مع 15-25 عضوًا.</value>
+  </data>
+  <data name="DateTimeSchedule" xml:space="preserve">
+    <value>جدول التاريخ والوقت</value>
+  </data>
+  <data name="StartsAt" xml:space="preserve">
+    <value>تبدأ في</value>
+  </data>
+  <data name="EndsAt" xml:space="preserve">
+    <value>تنتهي في</value>
+  </data>
+  <data name="TimezoneNote" xml:space="preserve">
+    <value>الأوقات بالتوقيت المحلي للنظام (UTC+02:00).</value>
+  </data>
+  <data name="SessionDetails" xml:space="preserve">
+    <value>تفاصيل الجلسة</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>إعادة جدولة</value>
+  </data>
+  <data name="BackToSchedule" xml:space="preserve">
+    <value>العودة إلى الجدول</value>
+  </data>
+  <data name="AboutSession" xml:space="preserve">
+    <value>حول هذه الجلسة</value>
+  </data>
+  <data name="Participation" xml:space="preserve">
+    <value>مشاركة</value>
+  </data>
+  <data name="ConfirmedBookings" xml:space="preserve">
+    <value>الحجوزات المؤكدة</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>الموقع</value>
+  </data>
+  <data name="MainGymHall" xml:space="preserve">
+    <value>الصالة الرياضية الرئيسية</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>افتراضي</value>
+  </data>
+  <data name="ScheduleTimeline" xml:space="preserve">
+    <value>الجدول الزمني</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>بدء</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>نهاية</value>
+  </data>
+  <data name="SessionInProgress" xml:space="preserve">
+    <value>الجلسة قيد التقدم حالياً</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>منقضي</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>متبقي</value>
+  </data>
+  <data name="SessionID" xml:space="preserve">
+    <value>معرف الجلسة</value>
+  </data>
+  <data name="SystemProfile" xml:space="preserve">
+    <value>مل تم إنشاؤه بواسطة النظام</value>
+  </data>
+  <data name="UpdateSession" xml:space="preserve">
+    <value>تحديث الجلسة</value>
+  </data>
+  <data name="EditSchedule" xml:space="preserve">
+    <value>تعديل الجدول</value>
+  </data>
+  <data name="SessionInformation" xml:space="preserve">
+    <value>معلومات الجلسة</value>
+  </data>
+  <data name="SessionInfoDesc" xml:space="preserve">
+    <value>لا يمكن تغيير الفئة والهيكل الأساسي بمجرد إنشاء الجلسة وقد يكون هناك حجوزات موجودة.</value>
+  </data>
+  <data name="AssignedLeadTrainer" xml:space="preserve">
+    <value>المدرب الرئيسي المعين</value>
+  </data>
+  <data name="UpdateDescription" xml:space="preserve">
+    <value>تحديث الوصف</value>
+  </data>
+  <data name="UpdateTimeSlots" xml:space="preserve">
+    <value>تحديث الفترات الزمنية</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>وقت البدء</value>
+  </data>
+  <data name="EndTime" xml:space="preserve">
+    <value>وقت الانتهاء</value>
+  </data>
+  <data name="ScheduleChangeWarning" xml:space="preserve">
+    <value>قد يؤثر تغيير الجدول على الأعضاء الذين حجزوا هذه الجلسة بالفعل.</value>
+  </data>
+  <data name="DeleteSessionConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد من حذف هذه الجلسة؟</value>
+  </data>
+  <data name="ExpiringMemberships" xml:space="preserve">
+    <value>الاشتراكات المنتهية قريباً</value>
+  </data>
+  <data name="ExpiringSoon" xml:space="preserve">
+    <value>تنتهي قريباً</value>
+  </data>
+  <data name="ShowingPlansExpiringWithin" xml:space="preserve">
+    <value>عرض الاشتراكات التي تنتهي خلال</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>أيام</value>
+  </data>
+  <data name="SendReminders" xml:space="preserve">
+    <value>إرسال تنبيهات</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>يوم</value>
+  </data>
+  <data name="ExpirationDate" xml:space="preserve">
+    <value>تاريخ الانتهاء</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>الوقت المتبقي</value>
+  </data>
+  <data name="DaysLeft" xml:space="preserve">
+    <value>يوم متبقي</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>عرض الملف الشخصي</value>
+  </data>
+  <data name="NoExpiringMembershipsTitle" xml:space="preserve">
+    <value>لا توجد اشتراكات تنتهي قريباً</value>
+  </data>
+  <data name="NoExpiringMembershipsDesc" xml:space="preserve">
+    <value>جميع الاشتراكات النشطة مستقرة خلال الفترة المحددة.</value>
+  </data>
+  <data name="BackToActive" xml:space="preserve">
+    <value>العودة للاشتراكات النشطة</value>
+  </data>
+  <data name="HowItWorks" xml:space="preserve">
+    <value>كي يعمل هذا؟</value>
+  </data>
+  <data name="ExpiringSoonInfo" xml:space="preserve">
+    <value>تعرض هذه الصحفة الأعضاء الذين تنتهي اشتراكاتهم قريباً. يمكنك إرسال تنبيهات عبر البريد الإلكتروني باستخدام الزر أعلاه.</value>
+  </data>
+  <data name="DeleteSessionDesc" xml:space="preserve">
+    <value>هذا الإجراء لا يمكن التراجع عنه. سيتم حذف جميع بيانات الجلسة والحجوزات بشكل دائم.</value>
+  </data>
+  <data name="ActiveMemberships" xml:space="preserve">
+    <value>العضويات النشطة</value>
+  </data>
+  <data name="MembershipsDesc" xml:space="preserve">
+    <value>تتبع وإدارة خطط اشتراك النادي الرياضي.</value>
+  </data>
+  <data name="ExportExcel" xml:space="preserve">
+    <value>تصدير إكسل</value>
+  </data>
+  <data name="NewMembership" xml:space="preserve">
+    <value>عضوية جديدة</value>
+  </data>
+  <data name="Starts" xml:space="preserve">
+    <value>يبدأ</value>
+  </data>
+  <data name="Ends" xml:space="preserve">
+    <value>ينتهي</value>
+  </data>
+  <data name="Watch" xml:space="preserve">
+    <value>متابعة</value>
+  </data>
+  <data name="Frozen" xml:space="preserve">
+    <value>مجمد</value>
+  </data>
+  <data name="Unfreeze" xml:space="preserve">
+    <value>إلغاء التجميد</value>
+  </data>
+  <data name="Freeze" xml:space="preserve">
+    <value>تجميد</value>
+  </data>
+  <data name="NoMembershipsFound" xml:space="preserve">
+    <value>لم يتم العثور على عضويات نشطة</value>
+  </data>
+  <data name="NoMembershipsDesc" xml:space="preserve">
+    <value>لا توجد اشتراكات أعضاء نشطة حالياً.</value>
+  </data>
+  <data name="ActivateFirstPlan" xml:space="preserve">
+    <value>تفعيل أول باقة</value>
+  </data>
+  <data name="FreezeMembership" xml:space="preserve">
+    <value>تجميد العضوية</value>
+  </data>
+  <data name="FreezeWarningPart1" xml:space="preserve">
+    <value>أنت على وشك تجميد عضوية</value>
+  </data>
+  <data name="FreezeWarningPart2" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="FreezeDurationDays" xml:space="preserve">
+    <value>مدة التجميد (بالأيام)</value>
+  </data>
+  <data name="FreezeInfoText" xml:space="preserve">
+    <value>سيتم تمديد تاريخ انتهاء الصلاحية بهذا العدد من الأيام.</value>
+  </data>
+  <data name="ConfirmFreeze" xml:space="preserve">
+    <value>تأكيد التجميد</value>
+  </data>
+  <data name="GlobalSearch" xml:space="preserve">
+    <value>ابحث عن الأعضاء، الخطط، والمدربين...</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>إجمالي الإيرادات</value>
+  </data>
+  <data name="MonthlyRevenue" xml:space="preserve">
+    <value>الإيرادات الشهرية</value>
+  </data>
+  <data name="RevenueAnalytics" xml:space="preserve">
+    <value>تحليلات الإيرادات</value>
+  </data>
+  <data name="MemberGrowth" xml:space="preserve">
+    <value>نمو الأعضاء</value>
+  </data>
+  <data name="RevenueFor" xml:space="preserve">
+    <value>إيرادات شهر</value>
+  </data>
+  <data name="Last6Months" xml:space="preserve">
+    <value>آخر 6 أشهر</value>
+  </data>
+  <data name="SelectRange" xml:space="preserve">
+    <value>اختر الفترة</value>
+  </data>
+  <data name="vsLastMonth" xml:space="preserve">
+    <value>مقارنة بالشهر الماضي</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>آخر سنة</value>
+  </data>
+  <data name="CustomRange" xml:space="preserve">
+    <value>فترة مخصصة</value>
+  </data>
+  <data name="NoCheckIns" xml:space="preserve">
+    <value>لا توجد تسجيلات دخول لهذا اليوم</value>
+  </data>
+  <data name="StatusSingle" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="MemberSingle" xml:space="preserve">
+    <value>العضو</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>النظام</value>
+  </data>
+  <data name="ScheduledTasks" xml:space="preserve">
+    <value>المهام المجدولة</value>
+  </data>
+  <data name="ScheduledTasksDesc" xml:space="preserve">
+    <value>إدارة وتشغيل المهام التلقائية للنظام</value>
+  </data>
+  <data name="PrintReceipt" xml:space="preserve">
+    <value>طباعة الإيصال</value>
+  </data>
+  <data name="MembershipExpiryReminders" xml:space="preserve">
+    <value>تذكير انتهاء الاشتراكات</value>
+  </data>
+  <data name="ExpiryRemindersDesc" xml:space="preserve">
+    <value>إرسال تذكير للأعضاء الذين ستنتهي اشتراكاتهم قريباً.</value>
+  </data>
+  <data name="Before" xml:space="preserve">
+    <value>قبل</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>يوم</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>تشغيل</value>
+  </data>
+  <data name="SessionReminders" xml:space="preserve">
+    <value>تذكير بالجلسات القادمة</value>
+  </data>
+  <data name="SessionRemindersDesc" xml:space="preserve">
+    <value>إرسال تذكير للأعضاء بجلساتهم المحجوزة.</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>ساعة</value>
+  </data>
+  <data name="BirthdayWishes" xml:space="preserve">
+    <value>تهنئة ذكرى الميلاد</value>
+  </data>
+  <data name="BirthdayWishesDesc" xml:space="preserve">
+    <value>إرسال تهنئة تلقائية للأعضاء مع تقديم خصم خاص.</value>
+  </data>
+  <data name="InactiveMembersAlert" xml:space="preserve">
+    <value>تنبيه الأعضاء غير النشطين</value>
+  </data>
+  <data name="InactiveMembersAlertDesc" xml:space="preserve">
+    <value>رصد الأعضاء الذين لم يحضروا للجيم منذ فترة.</value>
+  </data>
+  <data name="Inactivity" xml:space="preserve">
+    <value>غياب</value>
+  </data>
+  <data name="QRCodeRefresh" xml:space="preserve">
+    <value>تحديث أكواد الدخول (Security)</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>الأمان</value>
+  </data>
+  <data name="QRCodeRefreshDesc" xml:space="preserve">
+    <value>تغيير جميع أكواد الـ QR للأعضاء النشطين وإرسالها بالإيميل.</value>
+  </data>
+  <data name="RefreshAllNow" xml:space="preserve">
+    <value>تحديث الكل الآن</value>
+  </data>
+  <data name="ConfirmQRCodeRefresh" xml:space="preserve">
+    <value>هذا الإجراء سيقوم بتغيير جميع أكواد الدخول لكل الأعضاء وإرسالها عبر البريد الإلكتروني. هل أنت متأكد؟</value>
+  </data>
+  <data name="RunAllTasks" xml:space="preserve">
+    <value>تشغيل جميع المهام</value>
+  </data>
+  <data name="RunAllTasksDesc" xml:space="preserve">
+    <value>تنيذ كل مهام الصيانة المجدولة دفعة واحدة.</value>
+  </data>
+  <data name="RunAll" xml:space="preserve">
+    <value>تشغيل الكل</value>
+  </data>
+  <data name="ScheduledTasksNote" xml:space="preserve">
+    <value>ملاحظة: هذه المهام يمكن تشغيلها يدوياً من هنا، أو يمكن إعدادها للتشغيل التلقائي باستخدام Windows Task Scheduler أو Hangfire.</value>
+  </data>
+  <data name="DiscountPercentage" xml:space="preserve">
+    <value>نسبة الخصم</value>
+  </data>
+  <data name="ExpiryRemindersSent" xml:space="preserve">
+    <value>تم إرسال {0} تذكير بانتهاء الاشتراك بنجاح!</value>
+  </data>
+  <data name="SessionRemindersSent" xml:space="preserve">
+    <value>تم إرسال {0} تذكير بالجلسات القادمة بنجاح!</value>
+  </data>
+  <data name="BirthdayWishesSent" xml:space="preserve">
+    <value>تم إرسال {0} تهنئة عيد ميلاد بنجاح!</value>
+  </data>
+  <data name="InactiveMembersAlertSent" xml:space="preserve">
+    <value>تم رصد {0} عضو غير نشط وتنبيه الإدارة!</value>
+  </data>
+  <data name="QRCodeRefreshSuccess" xml:space="preserve">
+    <value>تم تحديث {0} كود دخول QR بنجاح!</value>
+  </data>
+  <data name="AllTasksExecuted" xml:space="preserve">
+    <value>تم تنفيذ جميع المهام المجدولة بنجاح!</value>
+  </data>
+  <data name="AllNotifications" xml:space="preserve">
+    <value>جميع الإشعارات</value>
+  </data>
+  <data name="NoNotificationsYet" xml:space="preserve">
+    <value>لا توجد إشعارات بعد</value>
+  </data>
+  <data name="NoNotificationsDesc" xml:space="preserve">
+    <value>ستظهر تنبيهات النظام والتذكيرات هنا بمجرد وصولها.</value>
+  </data>
+  <data name="BackToDashboard" xml:space="preserve">
+    <value>العودة للوحة التحكم</value>
+  </data>
+  <data name="MarkAsRead" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ViewAllNotifications" xml:space="preserve">
+    <value>عرض جميع الإشعارات</value>
+  </data>
+  <data name="UpdateSettings" xml:space="preserve">
+    <value>تحديث الإعدادات</value>
+  </data>
+  <data name="NotSpecified" xml:space="preserve">
+    <value>غير محدد</value>
+  </data>
+  <data name="AccountType" xml:space="preserve">
+    <value>نوع الحساب</value>
+  </data>
+  <data name="MarkAllRead" xml:space="preserve">
+    <value>مسح الكل</value>
+  </data>
+  <data name="AccountSettings" xml:space="preserve">
+    <value>إعدادات الحساب</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>تغيير كلمة المرور</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>تغيير البريد الإلكتروني</value>
+  </data>
+  <data name="UpdateSecurityPassword" xml:space="preserve">
+    <value>تحديث كلمة مرور الأمان</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>كلمة المرور الحالية</value>
+  </data>
+  <data name="EnterCurrentPassword" xml:space="preserve">
+    <value>أدخل كلمة المرور الحالية</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>كلمة المرور الجديدة</value>
+  </data>
+  <data name="EnterNewPassword" xml:space="preserve">
+    <value>أدخل كلمة المرور الجديدة</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>تأكيد كلمة المرور الجديدة</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>تحديث كلمة المرور</value>
+  </data>
+  <data name="UpdateEmailIdentity" xml:space="preserve">
+    <value>تحديث الهوية الإلكترونية</value>
+  </data>
+  <data name="EmailChangeAuditNote" xml:space="preserve">
+    <value>تغيير بريدك الإلكتروني يتطلب التحقق عبر رمز (OTP) لدواعي الأمان.</value>
+  </data>
+  <data name="NewEmailAddress" xml:space="preserve">
+    <value>عنوان البريد الإلكتروني الجديد</value>
+  </data>
+  <data name="EnterNewEmail" xml:space="preserve">
+    <value>أدخل عنوان البريد الإلكتروني الجديد</value>
+  </data>
+  <data name="SendVerificationCode" xml:space="preserve">
+    <value>إرسال رمز التحقق</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>اختر اللغة</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>مستخدم</value>
+  </data>
+  <data name="ChangeTheme" xml:space="preserve">
+    <value>تغيير المظهر</value>
+  </data>
+  <data name="EmailUpdatedSuccess" xml:space="preserve">
+    <value>تم تحديث البريد الإلكتروني بنجاح!</value>
+  </data>
+  <data name="InvalidOTP" xml:space="preserve">
+    <value>رمز التحقق غير صالح، منتهي الصلاحية، أو غير متطابق.</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="AccountLockedOut" xml:space="preserve">
+    <value>الحساب مغلق حالياً. يرجى المحاولة لاحقاً.</value>
+  </data>
+  <data name="SignInNotAllowed" xml:space="preserve">
+    <value>تسجيل الدخول غير مسموح به لهذا الحساب حالياً.</value>
+  </data>
+  <data name="InvalidSignInAttempt" xml:space="preserve">
+    <value>محاولة تسجيل دخول غير صالحة.</value>
+  </data>
+  <data name="VerifyEmailOTP" xml:space="preserve">
+    <value>التحقق من البريد الإلكتروني</value>
+  </data>
+  <data name="VerifyYourEmail" xml:space="preserve">
+    <value>تحقق من بريدك الإلكتروني</value>
+  </data>
+  <data name="VerificationCodeSentTo" xml:space="preserve">
+    <value>لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى</value>
+  </data>
+  <data name="VerifyCode" xml:space="preserve">
+    <value>تحقق من الرمز</value>
+  </data>
+  <data name="DidNotReceiveCode" xml:space="preserve">
+    <value>لم تصلك الرسالة؟</value>
+  </data>
+  <data name="TryAnotherEmail" xml:space="preserve">
+    <value>جرب بريداً آخر</value>
+  </data>
+  <data name="EmailVerificationSubject" xml:space="preserve">
+    <value>رمز التحقق لتغيير البريد الإلكتروني</value>
+  </data>
+  <data name="EmailVerificationBody" xml:space="preserve">
+    <value>كود التحقق الخاص بك لتغيير البريد الإلكتروني هو: {0}. هذا الرمز صالح لمدة 10 دقائق فقط.</value>
+  </data>
+  <data name="EmailSendError" xml:space="preserve">
+    <value>فشل إرسال بريد التحقق. يرجى التحقق من إعدادات SMTP.</value>
+  </data>
+  <data name="FinancialReports" xml:space="preserve">
+    <value>التقارير المالية</value>
+  </data>
+  <data name="FinancialAnalytics" xml:space="preserve">
+    <value>التحليلات المالية</value>
+  </data>
+  <data name="FinancialAnalyticsDesc" xml:space="preserve">
+    <value>رؤى متقدمة حول الإيرادات والربحية لـ</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>السنة</value>
+  </data>
+  <data name="EstimatedExpenses" xml:space="preserve">
+    <value>المصروفات التقديرية</value>
+  </data>
+  <data name="EstimatedExpensesDesc" xml:space="preserve">
+    <value>التشغيل والصيانة</value>
+  </data>
+  <data name="NetProfitDesc" xml:space="preserve">
+    <value>الأرباح النهائية</value>
+  </data>
+  <data name="RevenueTrend" xml:space="preserve">
+    <value>اتجاه الإيرادات حسب الشهر</value>
+  </data>
+  <data name="MembershipStatus" xml:space="preserve">
+    <value>حالة العضوية</value>
+  </data>
+  <data name="TopPerformingPlans" xml:space="preserve">
+    <value>الخطط الأكثر أداء</value>
+  </data>
+  <data name="MonthlyBreakdownDetail" xml:space="preserve">
+    <value>تفاصيل التقرير الشهري</value>
+  </data>
+  <data name="Subscribers" xml:space="preserve">
+    <value>المشتركين</value>
+  </data>
+  <data name="Revenue" xml:space="preserve">
+    <value>الإيرادات</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>الشهر</value>
+  </data>
+  <data name="Subs" xml:space="preserve">
+    <value>المشتركين</value>
+  </data>
+  <data name="RevenueEGP" xml:space="preserve">
+    <value>الإيرادات (ج.م)</value>
+  </data>
+  <data name="NetProfit" xml:space="preserve">
+    <value>صافي الربح</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>المصروفات</value>
+  </data>
+  <data name="ExpenseTitle" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="ExpenseAmount" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="ExpenseDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="ExpenseCategory" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="ExpenseNotes" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+  <data name="ManageExpenses" xml:space="preserve">
+    <value>إدارة المصروفات</value>
+  </data>
+  <data name="AddExpense" xml:space="preserve">
+    <value>إضافة مصروف</value>
+  </data>
+  <data name="NoExpensesFound" xml:space="preserve">
+    <value>لا توجد مصروفات مسجلة بعد.</value>
+  </data>
+  <data name="DeleteExpenseConfirm" xml:space="preserve">
+    <value>هل أنت متأكد من حذف هذا المصروف؟</value>
+  </data>
+  <data name="ExpensesDesc" xml:space="preserve">
+    <value>تتبع وإدارة التكاليف التشغيلية للصالة الرياضية.</value>
+  </data>
+  <data name="Cat_Rent" xml:space="preserve">
+    <value>إيجار</value>
+  </data>
+  <data name="Cat_Utilities" xml:space="preserve">
+    <value>مرافق (كهرباء، مياه، إنترنت)</value>
+  </data>
+  <data name="Cat_Salaries" xml:space="preserve">
+    <value>رواتب</value>
+  </data>
+  <data name="Cat_Maintenance" xml:space="preserve">
+    <value>صيانة</value>
+  </data>
+  <data name="Cat_Equipment" xml:space="preserve">
+    <value>معدات</value>
+  </data>
+  <data name="Cat_Marketing" xml:space="preserve">
+    <value>تسويق</value>
+  </data>
+  <data name="Cat_Other" xml:space="preserve">
+    <value>أخرى</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>هل أنت متأكد؟</value>
+  </data>
+  <data name="YesDelete" xml:space="preserve">
+    <value>نعم، احذفه!</value>
+  </data>
+  <data name="SelectDateRange" xml:space="preserve">
+    <value>اختر نطاق التاريخ</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="FeatureUnderDevelopment" xml:space="preserve">
+    <value>هذه الميزة قيد التطوير.</value>
+  </data>
+  <data name="ManageGymIdentityAndSystemPreferences" xml:space="preserve">
+    <value>إدارة هوية النادي وتفضيلات النظام</value>
+  </data>
+  <data name="GymIdentity" xml:space="preserve">
+    <value>هوية النادي</value>
+  </data>
+  <data name="GymName" xml:space="preserve">
+    <value>اسم الجيم</value>
+  </data>
+  <data name="SystemPreferences" xml:space="preserve">
+    <value>تفضيلات النظام</value>
+  </data>
+  <data name="LivePreview" xml:space="preserve">
+    <value>معاينة مباشرة</value>
+  </data>
+  <data name="NeedHelp" xml:space="preserve">
+    <value>هل تحتاج مساعدة؟</value>
+  </data>
+  <data name="SettingsHelpText" xml:space="preserve">
+    <value>هذه الإعدادات ستظهر في جميع التقارير، الوصلات، والهيدر الخاص بالموقع.</value>
+  </data>
+  <data name="SettingsTip1" xml:space="preserve">
+    <value>تأكد من صحة رقم الهاتف للتواصل.</value>
+  </data>
+  <data name="SettingsTip2" xml:space="preserve">
+    <value>اسم الجيم يظهر في عنوان صفحات المتصفح.</value>
+  </data>
+  <data name="ExportPdf" xml:space="preserve">
+    <value>تصدير PDF</value>
+  </data>
+  <data name="CreateMembershipTitle" xml:space="preserve">
+    <value>إنشاء عضوية</value>
+  </data>
+  <data name="ActivateSubscriptionPlanDesc" xml:space="preserve">
+    <value>تفعيل خطة اشتراك جديدة للعضو.</value>
+  </data>
+  <data name="BackToMemberships" xml:space="preserve">
+    <value>العودة للعضويات</value>
+  </data>
+  <data name="SelectMember" xml:space="preserve">
+    <value>اختر العضو</value>
+  </data>
+  <data name="ChooseAMember" xml:space="preserve">
+    <value>-- اختر عضواً --</value>
+  </data>
+  <data name="SelectMemberInfo" xml:space="preserve">
+    <value>اختر العضو الذي سيشترك في هذه الخطة.</value>
+  </data>
+  <data name="SelectPlan" xml:space="preserve">
+    <value>اختر الخطة</value>
+  </data>
+  <data name="ChooseASubscriptionPlan" xml:space="preserve">
+    <value>-- اختر خطة اشتراك --</value>
+  </data>
+  <data name="ChooseFromActivePlans" xml:space="preserve">
+    <value>اختر من الخطط النشطة المتاحة.</value>
+  </data>
+  <data name="ReceiptEmailLanguage" xml:space="preserve">
+    <value>لغة إرسال الإيصال</value>
+  </data>
+  <data name="Arabic" xml:space="preserve">
+    <value>العربية</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>الإنجليزية</value>
+  </data>
+  <data name="ReceiptLanguageDesc" xml:space="preserve">
+    <value>اختر اللغة التي سيتلقى بها العضو إيصال التأكيد.</value>
+  </data>
+  <data name="MembershipStartImmediately" xml:space="preserve">
+    <value>سيبدأ الاشتراك فوراً عند الإنشاء.</value>
+  </data>
+  <data name="EndDateCalculationInfo" xml:space="preserve">
+    <value>سيتم حساب تاريخ الانتهاء بناءً على مدة الخطة.</value>
+  </data>
+  <data name="ExpiryNotificationInfo" xml:space="preserve">
+    <value>سيتم إخطار العضو عندما يقترب موعد انتهاء الاشتراك.</value>
+  </data>
+  <data name="ImportantInformation" xml:space="preserve">
+    <value>معلومات هامة</value>
+  </data>
+  <data name="CreateMembership" xml:space="preserve">
+    <value>إنشاء عضوية</value>
+  </data>
+  <data name="TrainerNamePlaceholder" xml:space="preserve">
+    <value>اسم المدرب</value>
+  </data>
+  <data name="EmailLanguage" xml:space="preserve">
+    <value>لغة البريد الإلكتروني</value>
+  </data>
+  <data name="TrainerWelcomeEmailDesc" xml:space="preserve">
+    <value>اختر اللغة التي سيتم إرسال بريد الترحيب للمدرب بها.</value>
+  </data>
+  <data name="GeneralFitness" xml:space="preserve">
+    <value>اللياقة العامة</value>
+  </data>
+  <data name="Yoga" xml:space="preserve">
+    <value>يوغا</value>
+  </data>
+  <data name="Boxing" xml:space="preserve">
+    <value>ملاكمة</value>
+  </data>
+  <data name="CrossFit" xml:space="preserve">
+    <value>كروس فيت</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>البلد</value>
+  </data>
+  <data name="CountryRequired" xml:space="preserve">
+    <value>البلد مطلوب.</value>
+  </data>
+  <data name="Egypt" xml:space="preserve">
+    <value>مصر</value>
+  </data>
+  <data name="ManageBookingsDesc" xml:space="preserve">
+    <value>إدارة وحجز جلسات التدريب للأعضاء.</value>
+  </data>
+  <data name="UpcomingSessionsDesc" xml:space="preserve">
+    <value>الجلسات المتاحة لإدارة الحجز.</value>
+  </data>
+  <data name="OngoingSessionsDesc" xml:space="preserve">
+    <value>الجلسات المتاحة لإدارة الحضور.</value>
+  </data>
+  <data name="NoUpcomingSessions" xml:space="preserve">
+    <value>لا توجد جلسات قادمة متاحة.</value>
+  </data>
+  <data name="NoOngoingSessions" xml:space="preserve">
+    <value>لا توجد جلسات جارية متاحة.</value>
+  </data>
+  <data name="ViewMembers" xml:space="preserve">
+    <value>عرض الأعضاء</value>
+  </data>
+  <data name="TrainerColon" xml:space="preserve">
+    <value>المدرب:</value>
+  </data>
+  <data name="DateColon" xml:space="preserve">
+    <value>التاريخ:</value>
+  </data>
+  <data name="TimeColon" xml:space="preserve">
+    <value>الوقت:</value>
+  </data>
+  <data name="DurationColon" xml:space="preserve">
+    <value>المدة:</value>
+  </data>
+  <data name="CapacityColon" xml:space="preserve">
+    <value>السعة:</value>
+  </data>
+  <data name="Slots" xml:space="preserve">
+    <value>أماكن</value>
+  </data>
+  <data name="AuditLogs" xml:space="preserve">
+    <value>سجلات المراجعة</value>
+  </data>
+  <data name="SystemAuditLogs" xml:space="preserve">
+    <value>سجلات مراجعة النظام</value>
+  </data>
+  <data name="TrackActions" xml:space="preserve">
+    <value>تتبع الإجراءات الإدارية وتغييرات البيانات.</value>
+  </data>
+  <data name="Timestamp" xml:space="preserve">
+    <value>الطابع الزمني</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>الإجراء</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>الكيان</value>
+  </data>
+  <data name="EntityID" xml:space="preserve">
+    <value>معرف الكيان</value>
+  </data>
+  <data name="AuditLogDetails" xml:space="preserve">
+    <value>تفاصيل سجل المراجعة</value>
+  </data>
+  <data name="OldValues" xml:space="preserve">
+    <value>القيم القديمة</value>
+  </data>
+  <data name="NewValues" xml:space="preserve">
+    <value>القيم الجديدة</value>
+  </data>
+  <data name="NoPreviousData" xml:space="preserve">
+    <value>لا توجد بيانات سابقة</value>
+  </data>
+  <data name="NoNewData" xml:space="preserve">
+    <value>لا توجد بيانات جديدة</value>
+  </data>
+  <data name="Registry" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="SessionRegistry" xml:space="preserve">
+    <value>سجل الجلسة</value>
+  </data>
+  <data name="EnrollMember" xml:space="preserve">
+    <value>تسجيل عضو</value>
+  </data>
+  <data name="EnrollMemberDesc" xml:space="preserve">
+    <value>فقط الأعضاء الذين لديهم اشتراكات نشطة سيظهرون في الاختيار أدناه.</value>
+  </data>
+  <data name="BookingPolicy" xml:space="preserve">
+    <value>سياسة الحجز</value>
+  </data>
+  <data name="BookingPolicyDesc" xml:space="preserve">
+    <value>يمكن للأعضاء الحجز فقط إذا كانت خطتهم صالحة في تاريخ الجلسة. إذا كان العضو مفقوداً، تأكد من أن لديه خطة نشطة.</value>
+  </data>
+  <data name="ConfirmEnrollment" xml:space="preserve">
+    <value>تأكيد التسجيل</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>جاري المعالجة...</value>
+  </data>
+  <data name="CancelAndReturn" xml:space="preserve">
+    <value>إلغاء والعودة</value>
+  </data>
+  <data name="RegistryEmpty" xml:space="preserve">
+    <value>السجل فارغ</value>
+  </data>
+  <data name="RegistryEmptyDesc" xml:space="preserve">
+    <value>لم يقم أي أعضاء بالحجز لهذه الجلسة بعد.</value>
+  </data>
+  <data name="BackToSessions" xml:space="preserve">
+    <value>العودة للجلسات</value>
+  </data>
+  <data name="RemoveMember" xml:space="preserve">
+    <value>إزالة عضو</value>
+  </data>
+  <data name="MemberName" xml:space="preserve">
+    <value>اسم العضو</value>
+  </data>
+  <data name="BookingDate" xml:space="preserve">
+    <value>تاريخ الحجز</value>
+  </data>
+  <data name="Excel" xml:space="preserve">
+    <value>إكسل</value>
+  </data>
+  <data name="PDF" xml:space="preserve">
+    <value>بي دي إف</value>
+  </data>
+  <data name="SelectAvailableMember" xml:space="preserve">
+    <value>-- اختر عضواً متاحاً --</value>
+  </data>
+  <data name="NoAvailableMembers" xml:space="preserve">
+    <value>-- لا يوجد أعضاء متاحون بخطط نشطة --</value>
+  </data>
+  <data name="RepeatFor" xml:space="preserve">
+    <value>تكرار لـ</value>
+  </data>
+  <data name="Times" xml:space="preserve">
+    <value>مرات</value>
+  </data>
+  <data name="RecurrenceNote" xml:space="preserve">
+    <value>استخدم هذا لجدولة جلسات متعددة تلقائياً في وقت واحد.</value>
+  </data>
+  <data name="DiscardChanges" xml:space="preserve">
+    <value>تجاهل التغييرات</value>
+  </data>
+  <data name="TrainingSession" xml:space="preserve">
+    <value>جلسة تدريب</value>
+  </data>
+  <data name="BookedMembers" xml:space="preserve">
+    <value>الأعضاء المحجوزون</value>
+  </data>
+  <data name="RegistryTitle" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>دقائق</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>ساعات</value>
+  </data>
+  <data name="RepeatPattern" xml:space="preserve">
+    <value>نمط التكرار</value>
+  </data>
+  <data name="UpdateSessionSchedule" xml:space="preserve">
+    <value>تحديث جدول الجلسة</value>
+  </data>
+  <data name="SessionEditNotice" xml:space="preserve">
+    <value>لا يمكن تغيير الفئة والهيكل الأساسي بمجرد إنشاء الجلسة وقد توجد حجوزات.</value>
+  </data>
+  <data name="ScheduleEditWarning" xml:space="preserve">
+    <value>قد يؤثر تغيير الجدول على الأعضاء الذين حجزوا هذه الجلسة بالفعل.</value>
+  </data>
+  <data name="Ongoing" xml:space="preserve">
+    <value>جارية</value>
+  </data>
+  <data name="DeleteSessionWarning" xml:space="preserve">
+    <value>لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع بيانات الجلسة والحجوزات بشكل دائم.</value>
+  </data>
+  <data name="ConfirmDeleteSession" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد حذف هذه الجلسة؟</value>
+  </data>
+  <data name="SessionMembers" xml:space="preserve">
+    <value>أعضاء الجلسة</value>
+  </data>
+  <data name="SessionMembersDesc" xml:space="preserve">
+    <value>قائمة الأعضاء المسجلين في هذه الجلسة.</value>
+  </data>
+  <data name="AttendanceStatus" xml:space="preserve">
+    <value>حالة الحضور</value>
+  </data>
+  <data name="Attended" xml:space="preserve">
+    <value>حضر</value>
+  </data>
+  <data name="Absent" xml:space="preserve">
+    <value>ليس بعد / غائب</value>
+  </data>
+  <data name="NoMembersRegistered" xml:space="preserve">
+    <value>لا يوجد أعضاء مسجلون بعد</value>
+  </data>
+  <data name="NoMembersRegisteredDesc" xml:space="preserve">
+    <value>بمجرد قيام الأعضاء بحجز هذه الجلسة، سيظهرون هنا.</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>تحذير</value>
+  </data>
+  <data name="MemberSession" xml:space="preserve">
+    <value>جلسة العضو</value>
+  </data>
+  <data name="BookingManagement" xml:space="preserve">
+    <value>إدارة الحجوزات</value>
+  </data>
+  <data name="AttendanceSheet" xml:space="preserve">
+    <value>كشف الحضور</value>
+  </data>
+  <data name="AttendanceProgress" xml:space="preserve">
+    <value>تقدم الحضور</value>
+  </data>
+  <data name="Present" xml:space="preserve">
+    <value>حاضر</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
+  <data name="MarkPresent" xml:space="preserve">
+    <value>تحديد كحاضر</value>
+  </data>
+  <data name="Logged" xml:space="preserve">
+    <value>تم التسجيل</value>
+  </data>
+  <data name="NoMembersMatched" xml:space="preserve">
+    <value>لا يوجد أعضاء مطابقون لهذه الجلسة</value>
+  </data>
+  <data name="NoMembersMatchedDesc" xml:space="preserve">
+    <value>لا يمكنك تسجيل الحضور إذا لم يتم حجز أي أعضاء قبل بدء الجلسة.</value>
+  </data>
+  <data name="BackToBookings" xml:space="preserve">
+    <value>العودة للحجوزات</value>
+  </data>
+  <data name="BackToLiveList" xml:space="preserve">
+    <value>العودة للقائمة المباشرة</value>
+  </data>
+  <data name="ActiveMember" xml:space="preserve">
+    <value>عضو نشط</value>
+  </data>
+  <data name="AttendanceHistoryAnalysis" xml:space="preserve">
+    <value>سجل الحضور والتحليل</value>
+  </data>
+  <data name="EmailLanguageDesc" xml:space="preserve">
+    <value>اختر لغة البريد الإلكتروني الخاص برمز الاستجابة السريعة (QR).</value>
+  </data>
+  <data name="NoPlansAvailable" xml:space="preserve">
+    <value>لا توجد خطط متاحة</value>
+  </data>
+  <data name="Access" xml:space="preserve">
+    <value>الدخول</value>
+  </data>
+  <data name="DeniedText" xml:space="preserve">
+    <value>مرفوض</value>
+  </data>
+  <data name="AccessDeniedDesc" xml:space="preserve">
+    <value>عذرًا، ولكن ليس لديك إذن للوصول إلى هذا المصدر. لا يمنحك دور المستخدم الحالي أو حالة العضوية الوصول إلى هذا القسم.</value>
+  </data>
+  <data name="ErrorCode" xml:space="preserve">
+    <value>رمز الخطأ</value>
+  </data>
+  <data name="ForbiddenAccess" xml:space="preserve">
+    <value>وصول محظور</value>
+  </data>
+  <data name="AccessDeniedHelp" xml:space="preserve">
+    <value>إذا كنت تعتقد أن هذا خطأ أو تحتاج إلى أذونات مرتفعة، يرجى الاتصال بمسؤول النظام أو مدير العضوية للحصول على المساعدة.</value>
+  </data>
+  <data name="ReturnToHome" xml:space="preserve">
+    <value>العودة إلى الصفحة الرئيسية</value>
+  </data>
+  <data name="RetentionRate" xml:space="preserve">
+    <value>معدل الاستبقاء</value>
+  </data>
+  <data name="AuditLogsDesc" xml:space="preserve">
+    <value>تتبع الإجراءات الإدارية وتغييرات البيانات.</value>
+  </data>
+  <data name="on" xml:space="preserve">
+    <value>على</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>لا توجد بيانات</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>منتهي الصلاحية</value>
+  </data>
+  <data name="NoAttendanceThisWeek" xml:space="preserve">
+    <value>لا توجد سجلات حضور لهذا الأسبوع.</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>سجل المراجعة</value>
+  </data>
+  <data name="VisitsPerMonth" xml:space="preserve">
+    <value>الزيارات شهرياً</value>
+  </data>
+  <data name="AuditLogAction_Create" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="AuditLogAction_Update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="AuditLogAction_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>يومياً</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>أسبوعياً</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>شهرياً</value>
+  </data>
+  <data name="AttendanceHistory" xml:space="preserve">
+    <value>سجل الحضور</value>
+  </data>
+  <data name="ReviewWeeklyAttendance" xml:space="preserve">
+    <value>مراجعة سجل الحضور الأسبوعي</value>
+  </data>
+  <data name="DailyAttendanceHistory" xml:space="preserve">
+    <value>سجل الحضور اليومي</value>
+  </data>
+  <data name="MonthlyMemberAttendance" xml:space="preserve">
+    <value>حضور الأعضاء الشهري</value>
+  </data>
+  <data name="MonthlyLeaderboard" xml:space="preserve">
+    <value>لوحة الصدارة الشهرية</value>
+  </data>
+  <data name="TrackMemberConsistency" xml:space="preserve">
+    <value>تتبع التزام الأعضاء بالحضور</value>
+  </data>
+  <data name="ExportReport" xml:space="preserve">
+    <value>تصدير التقرير</value>
+  </data>
+  <data name="TotalAttendees" xml:space="preserve">
+    <value>إجمالي الحضور</value>
+  </data>
+  <data name="TopMember" xml:space="preserve">
+    <value>العضو الأكثر حضوراً</value>
+  </data>
+  <data name="AvgAttendance" xml:space="preserve">
+    <value>متوسط الحضور</value>
+  </data>
+  <data name="AttendanceRanking" xml:space="preserve">
+    <value>ترتيب الحضور</value>
+  </data>
+  <data name="SearchByMemberName" xml:space="preserve">
+    <value>البحث باسم العضو</value>
+  </data>
+  <data name="Ranking" xml:space="preserve">
+    <value>الترتيب</value>
+  </data>
+  <data name="DaysVisited" xml:space="preserve">
+    <value>أيام الحضور</value>
+  </data>
+  <data name="AttendanceLevel" xml:space="preserve">
+    <value>مستوى الحضور</value>
+  </data>
+  <data name="LastSeen" xml:space="preserve">
+    <value>آخر ظهور</value>
+  </data>
+  <data name="Verified" xml:space="preserve">
+    <value>تم التحقق</value>
+  </data>
+  <data name="CheckedIn" xml:space="preserve">
+    <value>سجل دخول</value>
+  </data>
+  <data name="TotalVisitsToday" xml:space="preserve">
+    <value>إجمالي زيارات اليوم</value>
+  </data>
+  <data name="WeeklyTotal" xml:space="preserve">
+    <value>إجمالي الأسبوع</value>
+  </data>
+  <data name="DailyAverage" xml:space="preserve">
+    <value>المتوسط اليومي</value>
+  </data>
+  <data name="CheckIns" xml:space="preserve">
+    <value>عمليات الدخول</value>
+  </data>
+  <data name="ReviewWeeklyAttendanceAnalytics" xml:space="preserve">
+    <value>مراجعة تحليلات وسجلات الحضور المفصلة</value>
+  </data>
+  <data name="DailyMemberAttendance" xml:space="preserve">
+    <value>حضور الأعضاء اليومي</value>
+  </data>
+  <data name="TotalCheckIns" xml:space="preserve">
+    <value>إجمالي عمليات الدخول</value>
+  </data>
+  <data name="BusyTime" xml:space="preserve">
+    <value>وقت الذروة</value>
+  </data>
+  <data name="HighestEntryPeak" xml:space="preserve">
+    <value>أعلى معدل دخول تم تسجيله</value>
+  </data>
+  <data name="AverageDuration" xml:space="preserve">
+    <value>متوسط المدة</value>
+  </data>
+  <data name="EstimatedAvgStay" xml:space="preserve">
+    <value>متوسط مدة البقاء المقدرة</value>
+  </data>
+  <data name="NoCheckInsFound" xml:space="preserve">
+    <value>لم يتم العثور على عمليات دخول</value>
+  </data>
+  <data name="AttendanceLogs" xml:space="preserve">
+    <value>سجلات الحضور</value>
+  </data>
+  <data name="NewAttendance" xml:space="preserve">
+    <value>تسجيل حضور جديد</value>
+  </data>
+  <data name="Plan" xml:space="preserve">
+    <value>الباقة</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>طباعة</value>
+  </data>
+  <data name="Visits" xml:space="preserve">
+    <value>الزيارات</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>تصدير</value>
+  </data>
+  <data name="NoRecordsFound" xml:space="preserve">
+    <value>لم يتم العثور على سجلات</value>
+  </data>
+  <data name="DailyAttendanceReport" xml:space="preserve">
+    <value>تقرير الحضور اليومي</value>
+  </data>
+  <data name="GymCurrentState" xml:space="preserve">
+    <value>حالة الجيم الحالية</value>
+  </data>
+  <data name="MemberLogs" xml:space="preserve">
+    <value>سجلات الأعضاء</value>
+  </data>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>البحث عن أعضاء</value>
+  </data>
+  <data name="TrainerLogs" xml:space="preserve">
+    <value>سجلات المدربين</value>
+  </data>
+  <data name="SearchTrainers" xml:space="preserve">
+    <value>البحث عن مدربين</value>
+  </data>
+  <data name="NoTrainerAttendance" xml:space="preserve">
+    <value>لا يوجد سجلات حضور للمدربين اليوم</value>
+  </data>
+  <data name="DailyAttendance" xml:space="preserve">
+    <value>الحضور اليومي</value>
+  </data>
+  <data name="TrainerMonthlyReport" xml:space="preserve">
+    <value>التقرير الشهري للمدربين</value>
+  </data>
+  <data name="TrainerMonthlyLeaderboard" xml:space="preserve">
+    <value>لوحة المدربين الشهرية</value>
+  </data>
+  <data name="TrainerAttendanceRanking" xml:space="preserve">
+    <value>ترتيب حضور المدربين</value>
+  </data>
+  <data name="SearchByTrainerName" xml:space="preserve">
+    <value>بحث باسم المدرب...</value>
+  </data>
+  <data name="AttendanceDays" xml:space="preserve">
+    <value>أيام الحضور</value>
+  </data>
+  <data name="TotalHours" xml:space="preserve">
+    <value>إجمالي الساعات</value>
+  </data>
+  <data name="TotalDelay" xml:space="preserve">
+    <value>إجمالي التأخير</value>
+  </data>
+  <data name="MonthlyTrainerAttendance" xml:space="preserve">
+    <value>حضور المدربين الشهري</value>
+  </data>
+  <data name="ReadyForScan" xml:space="preserve">
+    <value>في انتظار مسح الكود...</value>
+  </data>
+  <data name="ReadyForNextMember" xml:space="preserve">
+    <value>في انتظار العضو التالي...</value>
+  </data>
+  <data name="ManageSpecialties" xml:space="preserve">
+    <value>إدارة التخصصات</value>
+  </data>
+  <data name="TrainerSpecialties" xml:space="preserve">
+    <value>تخصصات المدربين</value>
+  </data>
+  <data name="ManageSpecialtiesDesc" xml:space="preserve">
+    <value>إدارة فئات وتصنيفات المدربين المختلفة في النظام.</value>
+  </data>
+  <data name="AddNewSpecialty" xml:space="preserve">
+    <value>إضافة تخصص جديد</value>
+  </data>
+  <data name="EditSpecialty" xml:space="preserve">
+    <value>تعديل التخصص</value>
+  </data>
+  <data name="SpecialtyName" xml:space="preserve">
+    <value>اسم التخصص</value>
+  </data>
+  <data name="TrainersCount" xml:space="preserve">
+    <value>عدد المدربين</value>
+  </data>
+  <data name="SpecialtyCreated" xml:space="preserve">
+    <value>تم إضافة التخصص بنجاح!</value>
+  </data>
+  <data name="SpecialtyUpdated" xml:space="preserve">
+    <value>تم تحديث التخصص بنجاح!</value>
+  </data>
+  <data name="SpecialtyDeleted" xml:space="preserve">
+    <value>تم حذف التخصص بنجاح!</value>
+  </data>
+  <data name="DeleteSpecialtyConfirm" xml:space="preserve">
+    <value>هل أنت متأكد من حذف هذا التخصص؟ سيتم إلغاء تعيينه من جميع المدربين المرتبطين به.</value>
+  </data>
+  <data name="SearchSpecialties" xml:space="preserve">
+    <value>بحث في التخصصات...</value>
+  </data>
+  <data name="NoSpecialtiesFound" xml:space="preserve">
+    <value>لم يتم العثور على تخصصات.</value>
+  </data>
+  <data name="AddSpecialty" xml:space="preserve">
+    <value>إضافة تخصص</value>
+  </data>
+  <data name="ExpiredMembershipNotificationsSent" xml:space="preserve">
+    <value>تم إرسال {0} إشعار(ات) انتهاء اشتراك بنجاح.</value>
+  </data>
+  <data name="ExpiringSoonMembers" xml:space="preserve">
+    <value>عضويات أوشكت على الانتهاء</value>
+  </data>
+  <data name="DaysRemainingLabel" xml:space="preserve">
+    <value>متبقي {0} أيام</value>
+  </data>
+  <data name="RecentActivities" xml:space="preserve">
+    <value>أحدث النشاطات في النظام</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>عرض الكل</value>
+  </data>
+  <data name="NoExpiringMembers" xml:space="preserve">
+    <value>لا توجد عضويات توشك على الانتهاء حالياً.</value>
+  </data>
+  <data name="ExpiringToday" xml:space="preserve">
+    <value>تنتهي اليوم ⚠️</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>الآن</value>
+  </data>
+  <data name="AuditLogAction_Create" xml:space="preserve">
+    <value>إضافة جديد</value>
+  </data>
+  <data name="AuditLogAction_Update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="AuditLogAction_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="QuickAccess" xml:space="preserve">
+    <value>وصول سريع</value>
+  </data>
+  <data name="Scanner" xml:space="preserve">
+    <value>الماسح الضوئي</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>المصاريف</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>طباعة</value>
+  </data>
+  <data name="SendByEmail" xml:space="preserve">
+    <value>إرسال عبر الإيميل</value>
+  </data>
+  <data name="ExpiresOn" xml:space="preserve">
+    <value>تاريخ الانتهاء</value>
+  </data>
+  <data name="ThankYouForChoosing" xml:space="preserve">
+    <value>شكراً لاختياركم</value>
+  </data>
+  <data name="Waitlisted" xml:space="preserve">
+    <value>قائمة الانتظار</value>
+  </data>
+  <data name="Confirmed" xml:space="preserve">
+    <value>تم التأكيد</value>
+  </data>
+  <data name="Waitlist" xml:space="preserve">
+    <value>الانتظار</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>مكتمل العدد</value>
+  </data>
+  <data name="RemoveFromWaitlist" xml:space="preserve">
+    <value>حذف من الانتظار</value>
+  </data>
+  <data name="HealthProgression" xml:space="preserve">
+    <value>متابعة التطور الصحي</value>
+  </data>
+  <data name="TrackProgress" xml:space="preserve">
+    <value>متابعة التطور</value>
+  </data>
+  <data name="AddMeasurement" xml:space="preserve">
+    <value>إضافة قياس جديد</value>
+  </data>
+  <data name="WeightTrend" xml:space="preserve">
+    <value>تطور الوزن</value>
+  </data>
+  <data name="BMITrend" xml:space="preserve">
+    <value>تطور BMI</value>
+  </data>
+  <data name="ProgressHistory" xml:space="preserve">
+    <value>سجل القياسات</value>
+  </data>
+  <data name="BodyFat" xml:space="preserve">
+    <value>نسبة الدهون (%)</value>
+  </data>
+  <data name="MuscleMass" xml:space="preserve">
+    <value>كتلة العضلات (كجم)</value>
+  </data>
+  <data name="NoProgressRecords" xml:space="preserve">
+    <value>لا يوجد سجل قياسات حالياً. أضف أول قياس لك!</value>
+  </data>
+  <data name="Progression" xml:space="preserve">
+    <value>التطور</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>الوضع الحالي</value>
+  </data>
+  <data name="CurrentWeight" xml:space="preserve">
+    <value>الوزن الحالي</value>
+  </data>
+  <data name="LastCheck" xml:space="preserve">
+    <value>آخر فحص</value>
+  </data>
+  <data name="BMIUpdateInfo" xml:space="preserve">
+    <value>يتم حساب BMI تلقائياً بناءً على الطول المسجل.</value>
+  </data>
+  <data name="Fat" xml:space="preserve">
+    <value>الدهون</value>
+  </data>
+  <data name="SaveMeasurement" xml:space="preserve">
+    <value>حفظ القياس</value>
+  </data>
+</root>

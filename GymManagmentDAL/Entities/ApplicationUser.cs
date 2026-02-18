@@ -11,6 +11,9 @@ namespace GymManagmentDAL.Entities
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
+        public string? OtpCode { get; set; }
+        public DateTime? OtpExpiryTime { get; set; }
+        public string? PendingEmail { get; set; }
 
     }
 }

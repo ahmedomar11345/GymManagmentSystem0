@@ -17,5 +17,8 @@ namespace GymManagmentBLL.ViewModels.TrainerViewModel
 		public string Gender { get; set; } = null!;
 		public string Address { get; set; } = null!;
 		public string Specialties { get; set; } = null!;
+		public string ShiftStart { get; set; } = null!;
+		public string ShiftEnd { get; set; } = null!;
+		public string AccessKey { get; set; } = null!;
 	}
 }

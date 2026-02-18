@@ -30,31 +30,44 @@ namespace GymManagmentBLL
         private void MapTrainer()
         {
             CreateMap<Trainer, TrainerViewModel>()
-        .ForMember(dest => dest.Specialties, opt => opt.MapFrom(src => Enum.GetName(typeof(Specialities), src.Specialies)))
-        .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber}, {src.Address.Street}, {src.Address.City}"));
+                .ForMember(dest => dest.Specialties, opt => opt.MapFrom(src => src.Specialty != null ? src.Specialty.Name : null))
+                .ForMember(dest => dest.ShiftStart, opt => opt.MapFrom(src => src.ShiftStart.ToString(@"hh\:mm")))
+                .ForMember(dest => dest.ShiftEnd, opt => opt.MapFrom(src => src.ShiftEnd.ToString(@"hh\:mm")))
+                .ForMember(dest => dest.AccessKey, opt => opt.MapFrom(src => src.AccessKey))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber}, {src.Address.Street}, {src.Address.City}, {src.Address.Country}"));
 
             CreateMap<CreateTrainerViewModel, Trainer>()
-                .ForMember(dest => dest.Specialies, opt => opt.MapFrom(src => src.Specialties))
+                .ForMember(dest => dest.ShiftStart, opt => opt.MapFrom(src => src.ShiftStart))
+                .ForMember(dest => dest.ShiftEnd, opt => opt.MapFrom(src => src.ShiftEnd))
+                .ForMember(dest => dest.SpecialtyId, opt => opt.MapFrom(src => src.SpecialtyId))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => new Address
                 {
                     BuildingNumber = src.BuildingNumber,
                     City = src.City,
-                    Street = src.Street
+                    Street = src.Street,
+                    Country = src.Country
                 }));
 
             CreateMap<Trainer, TrainerToUpdateViewModel>()
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))
                 .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber));
 
             CreateMap<TrainerToUpdateViewModel, Trainer>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore())
                 .AfterMap((src, dest) =>
                 {
-                    if (dest.Address == null) dest.Address = new Address(); // Prevent NullReference
+                    if (dest.Address == null) dest.Address = new Address();
+                    dest.Name = src.Name;
+                    dest.DateOfBirth = src.DateOfBirth;
+                    dest.Gender = src.Gender;
                     dest.Address.BuildingNumber = src.BuildingNumber;
                     dest.Address.City = src.City;
                     dest.Address.Street = src.Street;
+                    dest.Address.Country = src.Country;
+                    dest.ShiftStart = src.ShiftStart;
+                    dest.ShiftEnd = src.ShiftEnd;
+                    dest.SpecialtyId = src.SpecialtyId;
                     dest.UpdatedAt = DateTime.Now;
                 });
         }
@@ -81,52 +94,71 @@ namespace GymManagmentBLL
                   {
                       BuildingNumber = src.BuildingNumber,
                       City = src.City,
-                      Street = src.Street
+                      Street = src.Street,
+                      Country = src.Country
                   })).ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecord));
 
 
-            CreateMap<HealthRecordViewModel, HealthRecord>().ReverseMap();
+            CreateMap<HealthRecord, HealthRecordViewModel>().ReverseMap();
+
             CreateMap<Member, MemberViewModel>()
-           .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
-            .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth.ToShortDateString()))
-            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} - {src.Address.Street} - {src.Address.City}"));
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
+                .ForMember(dest => dest.JoinDate, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth.ToShortDateString()))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} - {src.Address.Street} - {src.Address.City} - {src.Address.Country}"))
+                .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecord))
+                .ForMember(dest => dest.SessionsBooked, opt => opt.MapFrom(src => src.MemberSessions != null ? src.MemberSessions.Count : 0))
+                .ForMember(dest => dest.PlaneName, opt => opt.MapFrom(src => src.Memberships != null && src.Memberships.Any() ? src.Memberships.OrderByDescending(m => m.CreatedAt).First().Plan.Name : null))
+                .ForMember(dest => dest.MembershipStartDate, opt => opt.MapFrom(src => src.Memberships != null && src.Memberships.Any() ? src.Memberships.OrderByDescending(m => m.CreatedAt).First().CreatedAt.ToShortDateString() : null))
+                .ForMember(dest => dest.MembershipEndDate, opt => opt.MapFrom(src => src.Memberships != null && src.Memberships.Any() ? src.Memberships.OrderByDescending(m => m.CreatedAt).First().EndDate.ToShortDateString() : null))
+                .ForMember(dest => dest.AccessKey, opt => opt.MapFrom(src => src.AccessKey));
 
             CreateMap<Member, MemberToUpdateViewModel>()
-            .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
-            .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
-            .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street));
+                .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))
+                .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecord));
 
             CreateMap<MemberToUpdateViewModel, Member>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore())
                 .ForMember(dest => dest.Photo, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Photo)))
+                .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecord))
                 .AfterMap((src, dest) =>
                 {
+                    if (dest.Address == null) dest.Address = new Address();
+                    dest.Name = src.Name;
                     dest.Address.BuildingNumber = src.BuildingNumber;
                     dest.Address.City = src.City;
                     dest.Address.Street = src.Street;
+                    dest.Address.Country = src.Country;
                     if (!string.IsNullOrEmpty(src.Photo))
                     {
                         dest.Photo = src.Photo;
                     }
                     dest.UpdatedAt = DateTime.Now;
                 });
+
+            CreateMap<HealthProgress, HealthProgressViewModel>().ReverseMap();
         }
         private void MapPlan()
         {
+            CreateMap<CreatePlanViewModel, Plane>();
             CreateMap<Plane, PlanViewModel>();
             CreateMap<Plane, UpdatePlanViewModel>().ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Name));
             CreateMap<UpdatePlanViewModel, Plane>()
-           .ForMember(dest => dest.Name, opt => opt.Ignore())
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PlanName))
            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.Now));
 
         }
         private void MapMemberShip()
         {
             CreateMap<MemberShip, MemberShipViewModel>()
-                .ForMember(dest => dest.MemberName, opt => opt.Ignore())
-                .ForMember(dest => dest.PlanName, opt => opt.Ignore())
+                .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name))
+                .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan.Name))
+                .ForMember(dest => dest.MemberPhoto, opt => opt.MapFrom(src => src.Member.Photo))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.CreatedAt.ToString("MMM dd, yyyy")))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("MMM dd, yyyy")));
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("MMM dd, yyyy")))
+                .ForMember(dest => dest.DaysRemaining, opt => opt.MapFrom(src => (int)(src.EndDate - DateTime.Now).TotalDays));
 
             CreateMap<CreateMemberShipViewModel, MemberShip>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))

@@ -1,408 +1,564 @@
-﻿
+﻿@inject IStringLocalizer<SharedResource> Localizer
+@inject IGymSettingsService GymService
 @model AnalyticsViewModel
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = Localizer["Dashboard"];
+    var gymSettings = await GymService.GetSettingsAsync();
+    var hour = DateTime.Now.Hour;
+    string greetingKey = hour < 12 ? "GoodMorning" : hour < 18 ? "GoodAfternoon" : "GoodEvening";
+    string greeting = Localizer[greetingKey];
+    
+    // Fallback to email/username if Full Name claim isn't present yet
+    var displayName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name;
 }
 
-            <div class="row">
-                <div class="col-md-6 col-lg-7 col-12">
-                    <div class="info mt-4">
-                        <header class="text-black-alternative">
-                            <h2 class="fw-bolder display-2 mb-4">
-                                Your body can
-                                <span class="text-primary-color">stand almost</span> anything
-                            </h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/ironpulse-dashboard.css" asp-append-version="true" />
+    <style>
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        .growth-positive { color: #198754; }
+        .growth-negative { color: #dc3545; }
+    </style>
+}
 
-                            <p class="mb-6">
-                                It's your mind that needs convincing. Push past your limits,
-                                stay <br />
-                                committed, and watch as your body transform into powerhouse of
-                                <br />
-                                strength and resilience. Start your journey today & truly
-                                capable of!
-                            </p>
-                        </header>
 
-                        <div class="stats-bar">
-                            <div class="row g-0">
-                                <div class="col-4">
-                                    <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.TotalMembers</span>
-                                        <h3 class="fs-5 fw-normal">Total Members</h3>
-                                    </div> 
-                                </div>
-                                <div class="col-4">
-                                    <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.ActiveMembers</span>
-                                        <h3 class="fs-5 fw-normal">Active Members</h3>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.TotalTrainers</span>
-                                        <h3 class="fs-5 fw-normal">Trainers</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row g-0">
-                                <div class="col-4">
-                                    <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.UpcomingSessions</span>
-                                        <h3 class="fs-5 fw-normal">Upcoming Sessions</h3>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.OngoingSessions</span>
-                                        <h3 class="fs-5 fw-normal">Ongoing Sessions</h3>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.CompletedSessions</span>
-                                        <h3 class="fs-5 fw-normal">Completed Sessions</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="animate-fade-in">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner shadow-lg">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold mb-2">@greeting، @displayName!</h1>
+                <p class="lead opacity-75 mb-4">@Localizer["Welcome"] @Localizer["ManagementSystem"] @gymSettings.GymName. @Localizer["GymHealthy"]</p>
+                <div class="d-flex gap-3">
+                    <a asp-controller="MemberSession" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-calendar-check me-2"></i> @Localizer["ManageBookings"]
+                    </a>
+                    <a asp-controller="Member" asp-action="Create" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                        <i class="fas fa-user-plus me-2"></i> @Localizer["RegisterMember"]
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 d-none d-md-block text-end">
+                <div class="display-1 opacity-25"><i class="fas fa-dumbbell"></i></div>
+            </div>
+        </div>
+    </div>
 
-                        <div class="buttons my-4">
-                            <button class="get-started bg-primary-color text-white btn rounded-5 fw-medium px-3 py-2 me-5 border-2 border-primary-color">
-                                Get Started
-                            </button>
-
-                            <button class="explore-more border-primary-color btn rounded-5 fw-medium px-3 py-2 border-2 text-primary-color fw-medium">
-                                Explore More
-                            </button>
+    <!-- Quick Stats Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="premium-card searchable-card p-4 stat-box h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
+                        <i class="fas fa-users fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-secondary mb-0">@Localizer["MembersAnalysis"]</h6>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <h3 class="fw-bold mb-0">@Model.TotalMembers</h3>
+                            <small class="text-secondary">@Localizer["Total"]</small>
                         </div>
                     </div>
                 </div>
+                <div class="mt-3 p-2 bg-success bg-opacity-10 rounded-3 d-flex justify-content-between align-items-center">
+                    <span class="small fw-bold text-success text-uppercase">@Localizer["ActiveMembers"]</span>
+                    <span class="badge bg-success rounded-pill">@Model.ActiveMembers</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="premium-card searchable-card p-4 stat-box h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="icon-shape bg-success bg-opacity-10 text-success me-3">
+                        <i class="fas fa-user-tie fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-secondary mb-0">@Localizer["Trainers"]</h6>
+                        <h3 class="fw-bold mb-0">@Model.TotalTrainers</h3>
+                    </div>
+                </div>
+                <div class="mt-2 small">
+                    @Localizer["ProfessionalStaff"]
+                </div>
+            </div>
+        </div>
 
-                <div class="col-md-1 offset-md-2 col-12 order-first order-md-last">
-                    <div class="character d-md-block d-flex justify-content-center">
-                        <img src="~/images/Theo Vance.jpg" alt="Theo Vance" />
+        <div class="col-md-3">
+            <div class="premium-card searchable-card p-4 stat-box h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="icon-shape bg-warning bg-opacity-10 text-warning me-3">
+                        <i class="fas fa-calendar-day fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-secondary mb-0">@Localizer["UpcomingSessions"]</h6>
+                        <h3 class="fw-bold mb-0">@Model.UpcomingSessions</h3>
+                    </div>
+                </div>
+                <div class="mt-2 small">
+                    @Localizer["ScheduledTraining"]
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="premium-card searchable-card p-4 stat-box h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="icon-shape bg-danger bg-opacity-10 text-danger me-3">
+                        <i class="fas fa-bolt fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-secondary mb-0">@Localizer["LiveNow"]</h6>
+                        <h3 class="fw-bold mb-0">@Model.OngoingSessions</h3>
+                    </div>
+                </div>
+                <div class="mt-2 small text-danger fw-bold animate-pulse">
+                    @Localizer["ActiveSessionsInProgress"]
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial & Growth Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="premium-card p-4 h-100 border-start border-4 border-success">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h6 class="text-secondary text-uppercase small fw-bold">@Localizer["TotalRevenue"]</h6>
+                        <h2 class="fw-bold mb-0">@Model.TotalRevenue.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
+                    </div>
+                    <div class="icon-shape bg-success bg-opacity-10 text-success">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="d-flex align-items-center">
+                        @if (Model.MemberGrowthPercentage >= 0)
+                        {
+                            <span class="badge bg-success bg-opacity-10 text-success me-2">
+                                <i class="fas fa-arrow-up me-1"></i> @Model.MemberGrowthPercentage%
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger bg-opacity-10 text-danger me-2">
+                                <i class="fas fa-arrow-down me-1"></i> @Math.Abs(Model.MemberGrowthPercentage)%
+                            </span>
+                        }
+                        <span class="small text-secondary">@Localizer["vsLastMonth"]</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="bar bg-primary-color d-flex py-4 text-white fw-bolder align-items-center">
-                <p class="py-0 my-0 overflow-hidden text-nowrap">
-                    outdoor & online trainers
-                    <img src="~/images/star.svg" alt="star icon" /> personal training
-                    <img src="~/images/star.svg" alt="star icon" /> live classes
-                    <img src="~/images/star.svg" alt="star icon" /> personal trainers
-                    <img src="~/images/star.svg" alt="star icon" /> personal training
-                </p>
+        <div class="col-md-4">
+            <div class="premium-card p-4 h-100 border-start border-4 border-primary">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h6 class="text-secondary text-uppercase small fw-bold">@Localizer["MonthlyRevenue"]</h6>
+                        <h2 class="fw-bold mb-0">@Model.MonthlyRevenue.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
+                    </div>
+                    <div class="icon-shape bg-primary bg-opacity-10 text-primary">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="mt-3 small text-secondary">
+                    @Localizer["RevenueFor"] @DateTime.Now.ToString("MMMM yyyy")
+                </div>
             </div>
+        </div>
 
-            <!-- ^ all other section -->
-            <main>
-                <!-- ^ about section -->
-                <section class="about my-5 text-black-alternative">
-                    <div class="container">
-                        <div class="row g-5 justify-content-center">
-                            <div class="col-12 col-lg-6 w-50 w-md-100">
-                                <div class="characters position-relative">
-                                    <div class="image">
-                                        <img class="" src="~/images/about p1.jpg" alt="person" />
-                                    </div>
-
-                                    <div class="image position-absolute d-none d-lg-block">
-                                        <img src="~/images/about p2.jpg" alt="person" />
-                                    </div>
-
-                                    <div class="image position-absolute d-none d-lg-block">
-                                        <img src="~/images/about p3.jpg" alt="person" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6">
-                                <div class="title d-flex justify-content-start align-items-start gap-2">
-                                    <img class="" src="~/images/dumbbell.jpg" alt="dumbbell icon" />
-                                    <h2 class="text-primary-color fs-5">About Us</h2>
-                                </div>
-
-                                <header>
-                                    <p class="fw-bolder display-6 mb-4">
-                                        EMPOWERING YOU TO ACHIEVE
-                                        <span class="text-primary-color">YOUR FITNESS</span> GOALS
-                                    </p>
-                                    <p class="text">
-                                        We believe fitness is more than just a workout—it's a
-                                        lifestyle. With top-of- the-line facilities, certified
-                                        trainers, and a supportive community, we're here to inspire
-                                        and guide you every step of the way.
-                                    </p>
-                                </header>
-
-                                <div class="features">
-                                    <div class="row row-cols-1 row-cols-sm-2 gx-3 gy-5">
-                                        <div class="feature">
-                                            <div class="inner">
-                                                <div class="title d-flex gap-2">
-                                                    <img src="~/images/feature icon.jpg" alt="icon" />
-                                                    <h3 class="fw-bold">Personal Trainer</h3>
-                                                </div>
-                                                <div class="info">
-                                                    <p>Achieve your fitness goals with the</p>
-                                                    <p>guidance of our certified trainers.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="feature">
-                                            <div class="inner">
-                                                <div class="title d-flex gap-2">
-                                                    <img src="~/images/feature icon.jpg" alt="icon" />
-                                                    <h3 class="fw-bold">Personal Trainer</h3>
-                                                </div>
-                                                <div class="info">
-                                                    <p>Achieve your fitness goals with the</p>
-                                                    <p>guidance of our certified trainers.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="feature">
-                                            <div class="inner">
-                                                <div class="title d-flex gap-2">
-                                                    <img src="~/images/feature icon.jpg" alt="icon" />
-                                                    <h3 class="fw-bold">Personal Trainer</h3>
-                                                </div>
-                                                <div class="info">
-                                                    <p>Achieve your fitness goals with the</p>
-                                                    <p>guidance of our certified trainers.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="feature">
-                                            <div class="inner">
-                                                <div class="title d-flex gap-2">
-                                                    <img src="~/images/feature icon.jpg" alt="icon" />
-                                                    <h3 class="fw-bold">Personal Trainer</h3>
-                                                </div>
-                                                <div class="info">
-                                                    <p>Achieve your fitness goals with the</p>
-                                                    <p>guidance of our certified trainers.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="btn bg-primary-color rounded-pill text-white fw-medium px-4 py-2 mt-3">
-                                        Get Started
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+        <div class="col-md-4">
+            <div class="premium-card p-4 h-100 border-start border-4 border-info">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h6 class="text-secondary text-uppercase small fw-bold">@Localizer["ActiveMembers"]</h6>
+                        <h2 class="fw-bold mb-0">@Model.ActiveMembers</h2>
                     </div>
-                </section>
-
-                <!-- ^ workout section -->
-                <section class="workout">
-                    <div class="container">
-                        <div class="title">
-                            <h2>WORKOUTS</h2>
-                            <p class="text-white fw-bolder fs-2 mb-4">
-                                Transform Your Body with Our Dynamic Upcoming Workouts
-                            </p>
-                        </div>
-
-                        <div class="row row-cols-md-3 row-cols-12 gy-4 gx-2 gx-md-4">
-                            <div>
-                                <div class="card">
-                                    <img src="~/images/workout 1.jpg" class="card-img-top" alt="..." />
-
-                                    <footer class="card-footer bg-white">
-                                        <h5 class="card-title text-black-alternative text-uppercase fw-bolder">
-                                            group workout
-                                        </h5>
-                                        <a href="#" class="">Explore</a>
-                                    </footer>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="card">
-                                    <img src="~/images/workout 2.jpg" class="card-img-top" alt="..." />
-
-                                    <footer class="card-footer bg-white">
-                                        <h5 class="card-title text-black-alternative text-uppercase fw-bolder">
-                                            group workout
-                                        </h5>
-                                        <a href="#" class="">Explore</a>
-                                    </footer>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="card">
-                                    <img src="~/images/workout 3.jpg" class="card-img-top" alt="..." />
-
-                                    <footer class="card-footer bg-white">
-                                        <h5 class="card-title text-black-alternative text-uppercase fw-bolder">
-                                            group workout
-                                        </h5>
-                                        <a href="#" class="">Explore</a>
-                                    </footer>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicators">
-                            <div class="indicator"></div>
-                            <div class="indicator active"></div>
-                            <div class="indicator"></div>
-                            <div class="indicator"></div>
-                        </div>
+                    <div class="icon-shape bg-info bg-opacity-10 text-info">
+                        <i class="fas fa-user-check"></i>
                     </div>
-                </section>
-
-                <!-- ^ why-us section -->
-                <section class="why-us my-5">
-                    <div class="container">
-                        <div class="row row-cols-1 row-cols-lg-2">
-                            <div class="info">
-                                <div>
-                                    <div class="title d-flex justify-content-start align-items-start gap-2">
-                                        <img class="" src="~/images/dumbbell.jpg" alt="dumbbell icon" />
-                                        <h2 class="text-primary-color fs-5">Why Us</h2>
-                                    </div>
-
-                                    <header>
-                                        <p class="fw-bolder display-5 mb-4">
-                                            Elevate fitness with<br />
-                                            <span class="text-primary-color">the best</span> way
-                                            possible
-                                        </p>
-                                        <p class="text">
-                                            We believe fitness is more than just a workout—it's a
-                                            lifestyle. With top-of- the-line facilities, certified
-                                            trainers, and a supportive community, we're here to inspire
-                                            and guide you every step of the way.
-                                        </p>
-                                    </header>
-
-                                    <ul class="featutes list-unstyled mt-6">
-                                        <li class="feature d-flex gap-4 align-items-center mb-4">
-                                            <div class="count">01</div>
-
-                                            <div class="text">
-                                                <h3 class="text-capitalize fw-bold">
-                                                    personalized fitness plans
-                                                </h3>
-                                                <p class="fs-18">
-                                                    We tailor every workout to fit your unique goals and
-                                                    fitness level ensuring that you make the most progress.
-                                                </p>
-                                            </div>
-                                        </li>
-
-                                        <li class="feature d-flex gap-4 align-items-center mb-4">
-                                            <div class="count">01</div>
-
-                                            <div class="text">
-                                                <h3 class="text-capitalize fw-bold">
-                                                    personalized fitness plans
-                                                </h3>
-                                                <p class="fs-18">
-                                                    We tailor every workout to fit your unique goals and
-                                                    fitness level ensuring that you make the most progress.
-                                                </p>
-                                            </div>
-                                        </li>
-
-                                        <li class="feature d-flex gap-4 align-items-center">
-                                            <div class="count">01</div>
-
-                                            <div class="text">
-                                                <h3 class="text-capitalize fw-bold">
-                                                    personalized fitness plans
-                                                </h3>
-                                                <p class="fs-18">
-                                                    We tailor every workout to fit your unique goals and
-                                                    fitness level ensuring that you make the most progress.
-                                                </p>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="characters d-none d-lg-block">
-                                <div class="images">
-                                    <img class="" src="~/images/why us images.svg" alt="characters" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
-            <footer class="mt-5">
-                <div class="bar bg-primary-color d-flex py-4 text-white fw-bolder align-items-center">
-                    <p class="py-0 my-0 overflow-hidden text-nowrap">
-                        outdoor & online trainers
-                        <img src="~/images/star.svg" alt="star icon" /> personal training
-                        <img src="~/images/star.svg" alt="star icon" /> live classes
-                        <img src="~/images/star.svg" alt="star icon" /> personal trainers
-                        <img src="~/images/star.svg" alt="star icon" /> personal training
-                    </p>
                 </div>
+                <div class="mt-3">
+                    <div class="progress" style="height: 8px;">
+                        @{
+                            var percentage = Model.TotalMembers > 0 ? (Model.ActiveMembers * 100 / Model.TotalMembers) : 0;
+                        }
+                        <div class="progress-bar bg-info" role="progressbar" style="width: @percentage"></div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span class="small text-secondary">@Localizer["RetentionRate"]</span>
+                        <span class="small fw-bold">@percentage%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="footer-content my-5">
-                    <div class="container">
-                        <div class="row row-cols-2 row-cols-md-4 g-5">
-                            <div class="logo">
-                                <div class="inner">
-                                    <div class="image">
-                                        <img src="~/images/logo.jpg" alt="our logo" />
-                                    </div>
-                                    <p class="fs-18 mt-2">
-                                        Push harder, go further. Your <br />
-                                        fitness journey starts today!
-                                    </p>
+    <!-- Charts Row -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="premium-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-0">@Localizer["RevenueAnalytics"]</h5>
+                        <small class="text-secondary">@Model.SelectedRangeLabel</small>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle px-3 rounded-pill" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar-alt me-1"></i> @Localizer["SelectRange"]
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2" style="border-radius: 12px;">
+                            <li><a class="dropdown-item rounded @(Model.SelectedRangeMonths == 6 && Model.SelectedStartDate == null ? "active" : "")" asp-action="Index" asp-route-months="6">@Localizer["Last6Months"]</a></li>
+                            <li><a class="dropdown-item rounded @(Model.SelectedRangeMonths == 12 ? "active" : "")" asp-action="Index" asp-route-months="12">@Localizer["LastYear"]</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item rounded @(Model.SelectedStartDate != null ? "active" : "")" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#customRangeModal">@Localizer["CustomRange"]</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="premium-card p-4 h-100">
+                <h5 class="fw-bold mb-4">@Localizer["MemberGrowth"]</h5>
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Expiring Soon List -->
+        <div class="col-lg-7">
+            <div class="premium-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0 text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>@Localizer["ExpiringSoonMembers"]
+                    </h5>
+                    <a asp-controller="MemberShip" asp-action="Index" class="btn btn-sm btn-light rounded-pill px-3">@Localizer["ViewAll"]</a>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr class="small text-uppercase text-secondary">
+                                <th class="border-0 px-3">@Localizer["Member"]</th>
+                                <th class="border-0">@Localizer["Plan"]</th>
+                                <th class="border-0">@Localizer["Status"]</th>
+                                <th class="border-0 text-end px-3">@Localizer["Actions"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ExpiringSoonMembers.Any())
+                            {
+                                foreach (var member in Model.ExpiringSoonMembers)
+                                {
+                                    <tr>
+                                        <td class="px-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-danger bg-opacity-10 text-danger rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                                    <i class="fas fa-user small"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold small">@member.MemberName</div>
+                                                    <div class="text-secondary" style="font-size: 11px;">#@member.MemberId</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="small">@member.PlanName</td>
+                                        <td>
+                                            @if (member.DaysRemaining <= 0)
+                                            {
+                                                <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">@Localizer["ExpiringToday"]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">@string.Format(Localizer["DaysRemainingLabel"].Value, member.DaysRemaining)</span>
+                                            }
+                                        </td>
+                                        <td class="text-end px-3">
+                                            <a asp-controller="Member" asp-action="Details" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-primary rounded-circle" title="@Localizer["Details"]">
+                                                <i class="fas fa-eye small"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-secondary opacity-50 small italic">
+                                        <i class="fas fa-check-circle me-2"></i>@Localizer["NoExpiringMembers"]
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities Timeline -->
+        <div class="col-lg-5">
+            <div class="premium-card p-4 h-100">
+                <h5 class="fw-bold mb-4">@Localizer["RecentActivities"]</h5>
+                <div class="timeline-container px-2">
+                    @foreach (var activity in Model.RecentActivities)
+                    {
+                        <div class="d-flex mb-4 position-relative">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-icon bg-@(activity.Action.ToLower() == "create" ? "success" : activity.Action.ToLower() == "update" ? "primary" : "danger") shadow-sm rounded-circle d-flex align-items-center justify-content-center z-1" 
+                                 style="width: 32px; height: 32px; min-width: 32px;">
+                                <i class="fas fa-@(activity.Action.ToLower() == "create" ? "plus" : activity.Action.ToLower() == "update" ? "pen" : "trash") text-white" style="font-size: 10px;"></i>
+                            </div>
+                            <div class="ms-3 flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="mb-1 small fw-bold">
+                                        @(activity.Action == "Create" ? Localizer["AuditLogAction_Create"] : 
+                                          activity.Action == "Update" ? Localizer["AuditLogAction_Update"] : 
+                                          Localizer["AuditLogAction_Delete"]) - @activity.EntityName
+                                    </h6>
+                                    @{
+                                        var diff = DateTime.Now - activity.Timestamp;
+                                        string timeStr = diff.TotalMinutes < 1 ? Localizer["JustNow"].Value : 
+                                                        diff.TotalHours < 1 ? $"{(int)diff.TotalMinutes}m" : 
+                                                        diff.TotalDays < 1 ? $"{(int)diff.TotalHours}h" : 
+                                                        $"{(int)diff.TotalDays}d";
+                                    }
+                                    <small class="text-secondary opacity-75" style="font-size: 10px;">@timeStr</small>
                                 </div>
+                                <div class="small text-secondary" style="font-size: 11px;">@activity.UserEmail</div>
                             </div>
+                        </div>
+                    }
+                </div>
+                <a asp-controller="AuditLog" asp-action="Index" class="btn btn-outline-secondary w-100 mt-2 rounded-pill btn-sm">@Localizer["ViewAll"]</a>
+            </div>
+        </div>
+    </div>
 
-                            <div class="contact">
-                                <h4 class="fw-bolder text-uppercase mb-4">contact us</h4>
+    <!-- Management Quick Tiles -->
+    <div class="premium-card p-4 mb-5">
+        <h5 class="fw-bold mb-4">@Localizer["QuickAccess"]</h5>
+        <div class="row g-3">
+            <div class="col-6 col-md-3 col-lg-2">
+                <a asp-controller="Member" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100 transition-all">
+                    <div class="tile-icon mb-2 text-primary bg-primary bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-users fs-4"></i>
+                    </div>
+                    <span class="small fw-bold text-dark">@Localizer["Members"]</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <a asp-controller="Trainer" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
+                    <div class="tile-icon mb-2 text-success bg-success bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user-tie fs-4"></i>
+                    </div>
+                    <span class="small fw-bold text-dark">@Localizer["Trainers"]</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <a asp-controller="Session" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
+                    <div class="tile-icon mb-2 text-warning bg-warning bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-dumbbell fs-4"></i>
+                    </div>
+                    <span class="small fw-bold text-dark">@Localizer["Sessions"]</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <a asp-controller="Attendance" asp-action="Scanner" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100 border border-primary border-opacity-10">
+                    <div class="tile-icon mb-2 text-danger bg-danger bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-qrcode fs-4 animate-pulse"></i>
+                    </div>
+                    <span class="small fw-bold text-dark">@Localizer["Scanner"]</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <a asp-controller="Expense" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
+                    <div class="tile-icon mb-2 text-info bg-info bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-money-bill-transfer fs-4"></i>
+                    </div>
+                    <span class="small fw-bold text-dark">@Localizer["Expenses"]</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <a asp-controller="Settings" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
+                    <div class="tile-icon mb-2 text-secondary bg-secondary bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-sliders fs-4"></i>
+                    </div>
+                    <span class="small fw-bold text-dark">@Localizer["Settings"]</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
-                                <ul>
-                                    <li class="d-flex align-items-center gap-2">
-                                        <div class="icon">
-                                            <img src="~/images/phone icon.jpg" alt="phone icon" />
-                                        </div>
-                                        <p>+91 123 456 789</p>
-                                    </li>
-
-                                    <li class="d-flex align-items-center gap-2">
-                                        <div class="icon">
-                                            <img src="~/images/message icon.jpg" alt="message icon" />
-                                        </div>
-                                        <p>info@gmail.com</p>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="time">
-                                <h4 class="fw-bolder text-uppercase mb-4">our gym timing</h4>
-
-                                <p>
-                                    Mon - Fri : 08:00 AM - 10:00 PM <br />Sat - Sun : 08:00 AM -
-                                    09:00 PM
-                                </p>
-                            </div>
-
-                            <div class="location">
-                                <h4 class="fw-bolder text-uppercase mb-4">our location</h4>
-
-                                <p>
-                                    2715 Ash Dr. San Jose, South <br />
-                                    Dakota 83475
-                                </p>
-                            </div>
+<!-- Custom Range Modal -->
+<div class="modal fade" id="customRangeModal" tabindex="-1" aria-labelledby="customRangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="customRangeModalLabel">@Localizer["SelectDateRange"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Index" method="get">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-secondary">@Localizer["StartDate"]</label>
+                            <input type="month" name="startDate" class="form-control rounded-pill border-light bg-light" required 
+                                   value="@(Model.SelectedStartDate?.ToString("yyyy-MM"))">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-secondary">@Localizer["EndDate"]</label>
+                            <input type="month" name="endDate" class="form-control rounded-pill border-light bg-light" required
+                                   value="@(Model.SelectedEndDate?.ToString("yyyy-MM"))">
                         </div>
                     </div>
                 </div>
-            </footer>
+                <div class="modal-footer border-0 pt-0 p-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">@Localizer["Apply"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueDataRaw = @Json.Serialize(Model.RevenueLast6Months)
+            const labelKey = "@(Model.SelectedStartDate != null ? Model.SelectedRangeLabel : (Model.SelectedRangeMonths == 12 ? "LastYear" : "Last6Months"))";
+            const currentLabel = "@Localizer[Model.SelectedStartDate != null ? "CustomRange" : (Model.SelectedRangeMonths == 12 ? "LastYear" : "Last6Months")]" + (labelKey.includes('-') ? " ("+labelKey+")" : "")
+            
+            // Map the dictionary keys to localized month names if needed
+            const isArabic = document.documentElement.dir === 'rtl';
+            const monthNamesAr = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+            const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            const labels = Object.keys(revenueDataRaw).map(key => {
+                // key looks like "Jan 2026"
+                const parts = key.split(' ');
+                if (parts.length === 2) {
+                    const monthIndex = monthNamesEn.indexOf(parts[0]);
+                    if (monthIndex !== -1 && isArabic) {
+                        return monthNamesAr[monthIndex] + ' ' + parts[1];
+                    }
+                }
+                return key;
+            });
+
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: isArabic ? 'الإيرادات' : 'Revenue',
+                        data: Object.values(revenueDataRaw),
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#0d6efd',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat().format(context.parsed.y) + ' @Localizer["EGP"]';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { borderDash: [5, 5] },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Growth Chart
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            const growthDataRaw = @Json.Serialize(Model.MemberRegistrationGrowth)
+            
+            const growthLabels = Object.keys(growthDataRaw).map(key => {
+                const parts = key.split(' ');
+                if (parts.length === 2) {
+                    const monthIndex = monthNamesEn.indexOf(parts[0]);
+                    if (monthIndex !== -1 && isArabic) {
+                        return monthNamesAr[monthIndex] + ' ' + parts[1];
+                    }
+                }
+                return key;
+            });
+
+            new Chart(growthCtx, {
+                type: 'bar',
+                data: {
+                    labels: growthLabels,
+                    datasets: [{
+                        label: isArabic ? 'الأعضاء الجدد' : 'New Members',
+                        data: Object.values(growthDataRaw),
+                        backgroundColor: 'rgba(25, 135, 84, 0.8)',
+                        hoverBackgroundColor: '#198754',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { 
+                                precision: 0,
+                                font: { size: 11 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

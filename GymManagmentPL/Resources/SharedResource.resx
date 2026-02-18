@@ -1,0 +1,2483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>Gym Management</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="Trainers" xml:space="preserve">
+    <value>Trainers</value>
+  </data>
+  <data name="Sessions" xml:space="preserve">
+    <value>Sessions</value>
+  </data>
+  <data name="Bookings" xml:space="preserve">
+    <value>Bookings</value>
+  </data>
+  <data name="Memberships" xml:space="preserve">
+    <value>Memberships</value>
+  </data>
+  <data name="Plans" xml:space="preserve">
+    <value>Plans</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Trainer" xml:space="preserve">
+    <value>Trainer</value>
+  </data>
+  <data name="Session" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="Plane" xml:space="preserve">
+    <value>Plan</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="CreateSuccess" xml:space="preserve">
+    <value>Created successfully!</value>
+  </data>
+  <data name="UpdateSuccess" xml:space="preserve">
+    <value>Updated successfully!</value>
+  </data>
+  <data name="DeleteSuccess" xml:space="preserve">
+    <value>Deleted successfully!</value>
+  </data>
+  <data name="CancelSuccess" xml:space="preserve">
+    <value>Cancelled successfully!</value>
+  </data>
+  <data name="OperationFailed" xml:space="preserve">
+    <value>Operation failed. Please try again.</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Record not found.</value>
+  </data>
+  <data name="InvalidInput" xml:space="preserve">
+    <value>Invalid input. Please check your data.</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>This field is required.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Invalid email address.</value>
+  </data>
+  <data name="InvalidPhone" xml:space="preserve">
+    <value>Invalid phone number.</value>
+  </data>
+  <data name="PhotoRequired" xml:space="preserve">
+    <value>Please select a member photo.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Member name is required.</value>
+  </data>
+  <data name="NameLength" xml:space="preserve">
+    <value>Name must be between {2} and {1} characters.</value>
+  </data>
+  <data name="EmailLength" xml:space="preserve">
+    <value>Email must be between {2} and {1} characters.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="PhoneRequired" xml:space="preserve">
+    <value>Phone number is required.</value>
+  </data>
+  <data name="EgyptianPhone" xml:space="preserve">
+    <value>Phone must be a valid Egyptian mobile number (01XXXXXXXXX).</value>
+  </data>
+  <data name="DateOfBirthRequired" xml:space="preserve">
+    <value>Date of birth is required.</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>Please select a gender.</value>
+  </data>
+  <data name="AddressRequired" xml:space="preserve">
+    <value>Address is required.</value>
+  </data>
+  <data name="CityRequired" xml:space="preserve">
+    <value>Please enter a city name.</value>
+  </data>
+  <data name="CityLength" xml:space="preserve">
+    <value>City name must be between {2} and {1} characters.</value>
+  </data>
+  <data name="StreetRequired" xml:space="preserve">
+    <value>Please enter a street name.</value>
+  </data>
+  <data name="StreetLength" xml:space="preserve">
+    <value>Street name must be between {2} and {1} characters.</value>
+  </data>
+  <data name="BuildingNumberRequired" xml:space="preserve">
+    <value>Building number is required.</value>
+  </data>
+  <data name="BuildingNumberRange" xml:space="preserve">
+    <value>Building number must be between {1} and {2}.</value>
+  </data>
+  <data name="PlanNameRequired" xml:space="preserve">
+    <value>Plan name is required.</value>
+  </data>
+  <data name="PlanNameLength" xml:space="preserve">
+    <value>Plan name cannot exceed {0} characters.</value>
+  </data>
+  <data name="PriceRequired" xml:space="preserve">
+    <value>Price is required.</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>Price must be between {1} and {2}.</value>
+  </data>
+  <data name="DurationRequired" xml:space="preserve">
+    <value>Duration is required.</value>
+  </data>
+  <data name="DurationRange" xml:space="preserve">
+    <value>Duration must be between {1} and {2} days.</value>
+  </data>
+  <data name="DescriptionRequired" xml:space="preserve">
+    <value>Description is required.</value>
+  </data>
+  <data name="DescriptionLength" xml:space="preserve">
+    <value>Description cannot exceed {0} characters.</value>
+  </data>
+  <data name="SpecialtyRequired" xml:space="preserve">
+    <value>Please select a specialty.</value>
+  </data>
+  <data name="CapacityRequired" xml:space="preserve">
+    <value>Capacity is required.</value>
+  </data>
+  <data name="CapacityRange" xml:space="preserve">
+    <value>Capacity must be between {1} and {2}.</value>
+  </data>
+  <data name="StartDateRequired" xml:space="preserve">
+    <value>Start date is required.</value>
+  </data>
+  <data name="EndDateRequired" xml:space="preserve">
+    <value>End date is required.</value>
+  </data>
+  <data name="TrainerRequired" xml:space="preserve">
+    <value>Please select a trainer.</value>
+  </data>
+  <data name="CategoryRequired" xml:space="preserve">
+    <value>Please select a category.</value>
+  </data>
+  <data name="RecurrenceCountRange" xml:space="preserve">
+    <value>Recurrence count must be between {1} and {2}.</value>
+  </data>
+  <data name="ExpenseTitleRequired" xml:space="preserve">
+    <value>Expense title is required.</value>
+  </data>
+  <data name="AmountRequired" xml:space="preserve">
+    <value>Amount is required.</value>
+  </data>
+  <data name="AmountRange" xml:space="preserve">
+    <value>Amount must be greater than {1}.</value>
+  </data>
+  <data name="ExpenseDateRequired" xml:space="preserve">
+    <value>Expense date is required.</value>
+  </data>
+  <data name="HeightRequired" xml:space="preserve">
+    <value>Height is required.</value>
+  </data>
+  <data name="HeightRange" xml:space="preserve">
+    <value>Height must be between {1} and {2} cm.</value>
+  </data>
+  <data name="WeightRequired" xml:space="preserve">
+    <value>Weight is required.</value>
+  </data>
+  <data name="WeightRange" xml:space="preserve">
+    <value>Weight must be between {1} and {2} kg.</value>
+  </data>
+  <data name="BloodTypeRequired" xml:space="preserve">
+    <value>Blood type is required.</value>
+  </data>
+  <data name="BloodTypeLength" xml:space="preserve">
+    <value>Blood type cannot exceed {0} characters.</value>
+  </data>
+  <data name="MemberRequired" xml:space="preserve">
+    <value>Please select a member.</value>
+  </data>
+  <data name="PlanRequired" xml:space="preserve">
+    <value>Please select a membership plan.</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>First name is required.</value>
+  </data>
+  <data name="LastNameRequired" xml:space="preserve">
+    <value>Last name is required.</value>
+  </data>
+  <data name="CurrentPasswordRequired" xml:space="preserve">
+    <value>Current password is required.</value>
+  </data>
+  <data name="NewPasswordRequired" xml:space="preserve">
+    <value>New password is required.</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>Password must be between {2} and {1} characters.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>Password and confirmation do not match.</value>
+  </data>
+  <data name="HealthRecordRequired" xml:space="preserve">
+    <value>Health record data is required.</value>
+  </data>
+  <data name="FullNamePlaceholder" xml:space="preserve">
+    <value>Enter full name</value>
+  </data>
+  <data name="EmailPlaceholder" xml:space="preserve">
+    <value>member@example.com</value>
+  </data>
+  <data name="PhonePlaceholder" xml:space="preserve">
+    <value>01XXXXXXXXX</value>
+  </data>
+  <data name="CityPlaceholder" xml:space="preserve">
+    <value>Cairo</value>
+  </data>
+  <data name="StreetPlaceholder" xml:space="preserve">
+    <value>Street Name</value>
+  </data>
+  <data name="BuildingPlaceholder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="MedicalNotesPlaceholder" xml:space="preserve">
+    <value>Injuries, medical conditions, etc.</value>
+  </data>
+  <data name="DeleteConfirmTitle" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="DeleteConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this record? This action cannot be undone.</value>
+  </data>
+  <data name="CancelConfirmTitle" xml:space="preserve">
+    <value>Confirm Cancellation</value>
+  </data>
+  <data name="CancelConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to cancel?</value>
+  </data>
+  <data name="ActiveMembers" xml:space="preserve">
+    <value>Active Members</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="MembersAnalysis" xml:space="preserve">
+    <value>Members Analysis</value>
+  </data>
+  <data name="MainMenu" xml:space="preserve">
+    <value>Main Menu</value>
+  </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="Operations" xml:space="preserve">
+    <value>Operations</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="ManagementSystem" xml:space="preserve">
+    <value>Management System</value>
+  </data>
+  <data name="ManageBookings" xml:space="preserve">
+    <value>Manage Bookings</value>
+  </data>
+  <data name="RegisterMember" xml:space="preserve">
+    <value>Register Member</value>
+  </data>
+  <data name="UpcomingSessions" xml:space="preserve">
+    <value>Upcoming Sessions</value>
+  </data>
+  <data name="TotalTrainers" xml:space="preserve">
+    <value>Total Trainers</value>
+  </data>
+  <data name="ProfessionalStaff" xml:space="preserve">
+    <value>Professional Coaching Staff</value>
+  </data>
+  <data name="ScheduledTraining" xml:space="preserve">
+    <value>Scheduled Training Today</value>
+  </data>
+  <data name="GymHealthy" xml:space="preserve">
+    <value>Your gym is looking healthy today.</value>
+  </data>
+  <data name="GoodMorning" xml:space="preserve">
+    <value>Good Morning</value>
+  </data>
+  <data name="GoodAfternoon" xml:space="preserve">
+    <value>Good Afternoon</value>
+  </data>
+  <data name="GoodEvening" xml:space="preserve">
+    <value>Good Evening</value>
+  </data>
+  <data name="EntranceCheckIn" xml:space="preserve">
+    <value>Entrance Check-in</value>
+  </data>
+  <data name="QRScanner" xml:space="preserve">
+    <value>QR Scanner</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="LoginTitle" xml:space="preserve">
+    <value>Admin Login</value>
+  </data>
+  <data name="LoginSubtitle" xml:space="preserve">
+    <value>Welcome back! Please login to your account</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Remember me for 24 hours</value>
+  </data>
+  <data name="LoginButton" xml:space="preserve">
+    <value>Login to Dashboard</value>
+  </data>
+  <data name="FeatureHeroText" xml:space="preserve">
+    <value>Your body can stand almost anything</value>
+  </data>
+  <data name="FeatureDescription" xml:space="preserve">
+    <value>It's your mind that needs convincing. Push past your limits, stay committed, and watch as your body transforms.</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="ManageProfiles" xml:space="preserve">
+    <value>Manage profiles and records.</value>
+  </data>
+  <data name="ContactInfo" xml:space="preserve">
+    <value>Contact Info</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>No members found</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="AddNewMember" xml:space="preserve">
+    <value>Add New Member</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="ProfilePhoto" xml:space="preserve">
+    <value>Profile Photo</value>
+  </data>
+  <data name="UploadImage" xml:space="preserve">
+    <value>Upload Image</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="HealthRecord" xml:space="preserve">
+    <value>Health Record</value>
+  </data>
+  <data name="BloodType" xml:space="preserve">
+    <value>Blood Type</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="ChronicDiseases" xml:space="preserve">
+    <value>Chronic Diseases</value>
+  </data>
+  <data name="PhysicalActivity" xml:space="preserve">
+    <value>Physical Activity</value>
+  </data>
+  <data name="MembershipPlan" xml:space="preserve">
+    <value>Membership Plan</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>(Optional)</value>
+  </data>
+  <data name="Requirements" xml:space="preserve">
+    <value>Requirements</value>
+  </data>
+  <data name="MaxSize" xml:space="preserve">
+    <value>Max size</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="RegisterMemberTitle" xml:space="preserve">
+    <value>Register Member</value>
+  </data>
+  <data name="EnterFullName" xml:space="preserve">
+    <value>Enter full name</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="AddressDetails" xml:space="preserve">
+    <value>Address Details</value>
+  </data>
+  <data name="BuildingNumber" xml:space="preserve">
+    <value>Building No.</value>
+  </data>
+  <data name="HealthStatus" xml:space="preserve">
+    <value>Initial Health Status</value>
+  </data>
+  <data name="WeightKg" xml:space="preserve">
+    <value>Weight (kg)</value>
+  </data>
+  <data name="HeightCm" xml:space="preserve">
+    <value>Height (cm)</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="MedicalNotes" xml:space="preserve">
+    <value>Medical Notes</value>
+  </data>
+  <data name="NoActiveMembership" xml:space="preserve">
+    <value>-- No Active Membership For Now --</value>
+  </data>
+  <data name="SkipAssignLater" xml:space="preserve">
+    <value>You can skip this and assign a plan later from the member's profile.</value>
+  </data>
+  <data name="ReadyToRegister" xml:space="preserve">
+    <value>Ready to register?</value>
+  </data>
+  <data name="MemberAddedImmediately" xml:space="preserve">
+    <value>Member will be added to the database immediately.</value>
+  </data>
+  <data name="RegisterAndActivate" xml:space="preserve">
+    <value>Register Member &amp; Activate Plan</value>
+  </data>
+  <data name="DaysText" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="MemberDetails" xml:space="preserve">
+    <value>Member Details</value>
+  </data>
+  <data name="MemberProfile" xml:space="preserve">
+    <value>Member Profile</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Back to List</value>
+  </data>
+  <data name="NoActivePlan" xml:space="preserve">
+    <value>No Active Plan</value>
+  </data>
+  <data name="MemberSince" xml:space="preserve">
+    <value>Member Since</value>
+  </data>
+  <data name="DigitalMemberID" xml:space="preserve">
+    <value>Digital Member ID</value>
+  </data>
+  <data name="PersonalInformation" xml:space="preserve">
+    <value>Personal Information</value>
+  </data>
+  <data name="JoinDate" xml:space="preserve">
+    <value>Join Date</value>
+  </data>
+  <data name="SessionsBooked" xml:space="preserve">
+    <value>Sessions Booked</value>
+  </data>
+  <data name="MembershipDetails" xml:space="preserve">
+    <value>Membership Details</value>
+  </data>
+  <data name="CurrentPlan" xml:space="preserve">
+    <value>Current Plan</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="NA" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="NoAddressProvided" xml:space="preserve">
+    <value>No address provided</value>
+  </data>
+  <data name="BMI" xml:space="preserve">
+    <value>BMI</value>
+  </data>
+  <data name="CM" xml:space="preserve">
+    <value>cm</value>
+  </data>
+  <data name="KG" xml:space="preserve">
+    <value>kg</value>
+  </data>
+  <data name="NoActiveMembershipForNow" xml:space="preserve">
+    <value>-- No Active Membership For Now --</value>
+  </data>
+  <data name="EditMemberProfile" xml:space="preserve">
+    <value>Edit Member Profile</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+  <data name="MemberID" xml:space="preserve">
+    <value>Member ID</value>
+  </data>
+  <data name="ContactAddress" xml:space="preserve">
+    <value>Contact Address</value>
+  </data>
+  <data name="ReadyToSave" xml:space="preserve">
+    <value>Ready to save?</value>
+  </data>
+  <data name="ReviewChanges" xml:space="preserve">
+    <value>Please review all changes before confirming.</value>
+  </data>
+  <data name="UpdateProfile" xml:space="preserve">
+    <value>Update Profile</value>
+  </data>
+  <data name="TrainersManagement" xml:space="preserve">
+    <value>Trainers Management</value>
+  </data>
+  <data name="TrainersDesc" xml:space="preserve">
+    <value>Manage professional training staff and specialties.</value>
+  </data>
+  <data name="AddNewTrainer" xml:space="preserve">
+    <value>Add New Trainer</value>
+  </data>
+  <data name="Specialty" xml:space="preserve">
+    <value>Specialty</value>
+  </data>
+  <data name="NoTrainersFound" xml:space="preserve">
+    <value>No trainers found</value>
+  </data>
+  <data name="NoTrainersDesc" xml:space="preserve">
+    <value>Try adjusting your search or add a new trainer to the staff.</value>
+  </data>
+  <data name="Specialties" xml:space="preserve">
+    <value>Specialties</value>
+  </data>
+  <data name="AddTrainer" xml:space="preserve">
+    <value>Add Trainer</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Add New</value>
+  </data>
+  <data name="PrimarySpecialty" xml:space="preserve">
+    <value>Primary Specialty</value>
+  </data>
+  <data name="Professional" xml:space="preserve">
+    <value>Professional</value>
+  </data>
+  <data name="SelectSpecialist" xml:space="preserve">
+    <value>-- Select Specialist --</value>
+  </data>
+  <data name="RegisterTrainer" xml:space="preserve">
+    <value>Register Trainer</value>
+  </data>
+  <data name="TrainerProfile" xml:space="preserve">
+    <value>Trainer Profile</value>
+  </data>
+  <data name="Specialist" xml:space="preserve">
+    <value>Specialist</value>
+  </data>
+  <data name="StaffMember" xml:space="preserve">
+    <value>Staff Member</value>
+  </data>
+  <data name="OfficeAddress" xml:space="preserve">
+    <value>Office Address</value>
+  </data>
+  <data name="StaffDetails" xml:space="preserve">
+    <value>Staff Details</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>Send message</value>
+  </data>
+  <data name="RegisteredOn" xml:space="preserve">
+    <value>Registered On</value>
+  </data>
+  <data name="TrainerAccessNote" xml:space="preserve">
+    <value>Staff profiles are managed by administrative users only. Regular members cannot view full contact details.</value>
+  </data>
+  <data name="EditTrainerInfo" xml:space="preserve">
+    <value>Edit Trainer Information</value>
+  </data>
+  <data name="SelectGender" xml:space="preserve">
+    <value>-- Select Gender --</value>
+  </data>
+  <data name="AddressInformation" xml:space="preserve">
+    <value>Address Information</value>
+  </data>
+  <data name="ProfessionalInformation" xml:space="preserve">
+    <value>Professional Information</value>
+  </data>
+  <data name="DeleteTrainerConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete this Trainer?</value>
+  </data>
+  <data name="DeleteWarning" xml:space="preserve">
+    <value>Warning!</value>
+  </data>
+  <data name="DeleteTrainerDesc" xml:space="preserve">
+    <value>This action cannot be undone. All Trainer data will be permanently deleted.</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="MembershipPlans" xml:space="preserve">
+    <value>Membership Plans</value>
+  </data>
+  <data name="PlansDesc" xml:space="preserve">
+    <value>Manage subscription packages and pricing.</value>
+  </data>
+  <data name="CreateNewPlan" xml:space="preserve">
+    <value>Create New Plan</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="EGPPerPackage" xml:space="preserve">
+    <value>EGP / Package</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="DurationDaysText" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="Deactivate" xml:space="preserve">
+    <value>Deactivate</value>
+  </data>
+  <data name="Activate" xml:space="preserve">
+    <value>Activate</value>
+  </data>
+  <data name="NoPlansFound" xml:space="preserve">
+    <value>No membership plans found</value>
+  </data>
+  <data name="NoPlansDesc" xml:space="preserve">
+    <value>Get started by creating your first subscription package.</value>
+  </data>
+  <data name="PlanName" xml:space="preserve">
+    <value>Plan Name</value>
+  </data>
+  <data name="EGP" xml:space="preserve">
+    <value>EGP</value>
+  </data>
+  <data name="DesignNewPackage" xml:space="preserve">
+    <value>Design New Package</value>
+  </data>
+  <data name="NewPolicy" xml:space="preserve">
+    <value>New Policy</value>
+  </data>
+  <data name="DesignPackage" xml:space="preserve">
+    <value>Design Package</value>
+  </data>
+  <data name="PackageName" xml:space="preserve">
+    <value>Package Name</value>
+  </data>
+  <data name="PackagePrice" xml:space="preserve">
+    <value>Package Price</value>
+  </data>
+  <data name="DurationPolicy" xml:space="preserve">
+    <value>Duration Policy</value>
+  </data>
+  <data name="PlanBenefitsRules" xml:space="preserve">
+    <value>Plan Benefits &amp; Rules</value>
+  </data>
+  <data name="PlanDescriptionPlaceholder" xml:space="preserve">
+    <value>Describe what members get with this package...</value>
+  </data>
+  <data name="PlanDescriptionTip" xml:space="preserve">
+    <value>Use clear, bullet-point style descriptions for better member readability.</value>
+  </data>
+  <data name="NewPlanActivationNote" xml:space="preserve">
+    <value>New plans are created as Active by default. You can deactivate them anytime from the dashboard.</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="CreatePackage" xml:space="preserve">
+    <value>Create Package</value>
+  </data>
+  <data name="PlanDetails" xml:space="preserve">
+    <value>Plan Details</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
+  <data name="AvailableForNewMembers" xml:space="preserve">
+    <value>Available for new members</value>
+  </data>
+  <data name="RegistrationClosed" xml:space="preserve">
+    <value>Registration Closed</value>
+  </data>
+  <data name="EditPlanDetails" xml:space="preserve">
+    <value>Edit Plan Details</value>
+  </data>
+  <data name="DeactivatePlan" xml:space="preserve">
+    <value>Deactivate Plan</value>
+  </data>
+  <data name="ActivatePlan" xml:space="preserve">
+    <value>Activate Plan</value>
+  </data>
+  <data name="BackToAllPlans" xml:space="preserve">
+    <value>Back to All Plans</value>
+  </data>
+  <data name="UpdateMembershipPackage" xml:space="preserve">
+    <value>Update Membership Package</value>
+  </data>
+  <data name="UpdatePackage" xml:space="preserve">
+    <value>Update Package</value>
+  </data>
+  <data name="EditPackage" xml:space="preserve">
+    <value>Edit Package</value>
+  </data>
+  <data name="PlanNameTrackingNote" xml:space="preserve">
+    <value>Plan name cannot be changed for tracking consistency.</value>
+  </data>
+  <data name="UpdatedPrice" xml:space="preserve">
+    <value>Updated Price</value>
+  </data>
+  <data name="NewDurationPolicy" xml:space="preserve">
+    <value>New Duration Policy</value>
+  </data>
+  <data name="UpdatedPlanBenefits" xml:space="preserve">
+    <value>Updated Plan Benefits</value>
+  </data>
+  <data name="UpdatePlanDescriptionPlaceholder" xml:space="preserve">
+    <value>Update the plan description...</value>
+  </data>
+  <data name="PolicyUpdate" xml:space="preserve">
+    <value>Policy Update:</value>
+  </data>
+  <data name="PolicyUpdateDesc" xml:space="preserve">
+    <value>Changes will apply to all future subscriptions. Existing active memberships will retain their original price and duration until they expire.</value>
+  </data>
+  <data name="QRCheckInScanner" xml:space="preserve">
+    <value>QR Check-in Scanner</value>
+  </data>
+  <data name="GymEntrance" xml:space="preserve">
+    <value>Gym Entrance</value>
+  </data>
+  <data name="ScannerInstructions" xml:space="preserve">
+    <value>Point the camera at the member's Digital ID QR code.</value>
+  </data>
+  <data name="NextScan" xml:space="preserve">
+    <value>Next Scan</value>
+  </data>
+  <data name="RecentActivity" xml:space="preserve">
+    <value>Recent Activity</value>
+  </data>
+  <data name="LoadingHistory" xml:space="preserve">
+    <value>Loading history...</value>
+  </data>
+  <data name="AccessGranted" xml:space="preserve">
+    <value>Access Granted</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Access Denied</value>
+  </data>
+  <data name="SystemError" xml:space="preserve">
+    <value>System error occurred.</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+
+  <data name="ViewDetails" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="DeleteMember" xml:space="preserve">
+    <value>Delete Member</value>
+  </data>
+  <data name="LiveNow" xml:space="preserve">
+    <value>Live Now</value>
+  </data>
+  <data name="ActiveSessionsInProgress" xml:space="preserve">
+    <value>Active Sessions in Progress</value>
+  </data>
+  <data name="ManagementModules" xml:space="preserve">
+    <value>Management Modules</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Staff</value>
+  </data>
+  <data name="Pricing" xml:space="preserve">
+    <value>Pricing</value>
+  </data>
+  <data name="Attendance" xml:space="preserve">
+    <value>Attendance</value>
+  </data>
+  <data name="SystemSnapshot" xml:space="preserve">
+    <value>System Snapshot</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="Healthy" xml:space="preserve">
+    <value>Healthy</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="FlexGymManagementTitle" xml:space="preserve">
+    <value>Gym Management</value>
+  </data>
+  <data name="SystemOnline" xml:space="preserve">
+    <value>System Online</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Type to search anything (members, trainers, sessions)...</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationsEmpty" xml:space="preserve">
+    <value>You're all caught up!</value>
+  </data>
+  <data name="Administrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="QuickActions" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="AddMember" xml:space="preserve">
+    <value>Add Member</value>
+  </data>
+  <data name="BookSession" xml:space="preserve">
+    <value>Book Session</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="ContactInformation" xml:space="preserve">
+    <value>Contact Information</value>
+  </data>
+  <data name="NoHealthRecord" xml:space="preserve">
+    <value>No health record available</value>
+  </data>
+
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="NoAttendanceRecords" xml:space="preserve">
+    <value>No attendance records found for this member.</value>
+  </data>
+  <data name="DeleteMemberConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete this member?</value>
+  </data>
+  <data name="DeleteMemberDesc" xml:space="preserve">
+    <value>This action cannot be undone. All member data will be permanently deleted.</value>
+  </data>
+  <data name="TrainingSessions" xml:space="preserve">
+    <value>Training Sessions</value>
+  </data>
+  <data name="SessionDesc" xml:space="preserve">
+    <value>Schedule and oversee group training activities.</value>
+  </data>
+  <data name="ScheduleNewSession" xml:space="preserve">
+    <value>Schedule New Session</value>
+  </data>
+  <data name="Upcoming" xml:space="preserve">
+    <value>Upcoming</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="SlotsLeft" xml:space="preserve">
+    <value>slots left</value>
+  </data>
+  <data name="DeleteSession" xml:space="preserve">
+    <value>Delete Session</value>
+  </data>
+  <data name="NoSessionsScheduled" xml:space="preserve">
+    <value>No sessions scheduled</value>
+  </data>
+  <data name="NoSessionsDesc" xml:space="preserve">
+    <value>There are no training sessions matching your current filter.</value>
+  </data>
+  <data name="ScheduleSession" xml:space="preserve">
+    <value>Schedule Session</value>
+  </data>
+  <data name="NewSchedule" xml:space="preserve">
+    <value>New Schedule</value>
+  </data>
+  <data name="ClassCategory" xml:space="preserve">
+    <value>Class Category</value>
+  </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>Select Category</value>
+  </data>
+  <data name="LeadTrainer" xml:space="preserve">
+    <value>Lead Trainer</value>
+  </data>
+  <data name="SelectTrainer" xml:space="preserve">
+    <value>Select Trainer</value>
+  </data>
+  <data name="SessionDescription" xml:space="preserve">
+    <value>Session Description</value>
+  </data>
+  <data name="MaxCapacity" xml:space="preserve">
+    <value>Max Capacity</value>
+  </data>
+  <data name="CapacityNote" xml:space="preserve">
+    <value>Most classes perform best with 15-25 members.</value>
+  </data>
+  <data name="DateTimeSchedule" xml:space="preserve">
+    <value>Date &amp; Time Schedule</value>
+  </data>
+  <data name="StartsAt" xml:space="preserve">
+    <value>Starts At</value>
+  </data>
+  <data name="EndsAt" xml:space="preserve">
+    <value>Ends At</value>
+  </data>
+  <data name="TimezoneNote" xml:space="preserve">
+    <value>Times are in system local timezone (UTC+02:00).</value>
+  </data>
+  <data name="SessionDetails" xml:space="preserve">
+    <value>Session Details</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Reschedule</value>
+  </data>
+  <data name="BackToSchedule" xml:space="preserve">
+    <value>Back to Schedule</value>
+  </data>
+  <data name="AboutSession" xml:space="preserve">
+    <value>About this Session</value>
+  </data>
+  <data name="Participation" xml:space="preserve">
+    <value>Participation</value>
+  </data>
+  <data name="ConfirmedBookings" xml:space="preserve">
+    <value>Confirmed Bookings</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="MainGymHall" xml:space="preserve">
+    <value>Main Gym Hall</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="ScheduleTimeline" xml:space="preserve">
+    <value>Schedule Timeline</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="SessionInProgress" xml:space="preserve">
+    <value>Session Currently In Progress</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>elapsed</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>remaining</value>
+  </data>
+  <data name="SessionID" xml:space="preserve">
+    <value>Session ID</value>
+  </data>
+  <data name="SystemProfile" xml:space="preserve">
+    <value>System generated profile</value>
+  </data>
+  <data name="UpdateSession" xml:space="preserve">
+    <value>Update Session</value>
+  </data>
+  <data name="EditSchedule" xml:space="preserve">
+    <value>Edit Schedule</value>
+  </data>
+  <data name="SessionInformation" xml:space="preserve">
+    <value>Session Information</value>
+  </data>
+  <data name="SessionInfoDesc" xml:space="preserve">
+    <value>Category and basic structure cannot be changed once session is created and bookings might exist.</value>
+  </data>
+  <data name="AssignedLeadTrainer" xml:space="preserve">
+    <value>Assigned Lead Trainer</value>
+  </data>
+  <data name="UpdateDescription" xml:space="preserve">
+    <value>Update Description</value>
+  </data>
+  <data name="UpdateTimeSlots" xml:space="preserve">
+    <value>Update Time Slots</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="EndTime" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="ScheduleChangeWarning" xml:space="preserve">
+    <value>Changing schedule might affect members who already booked this session.</value>
+  </data>
+  <data name="DeleteSessionConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete this session?</value>
+  </data>
+  <data name="ExpiringMemberships" xml:space="preserve">
+    <value>Expiring Memberships</value>
+  </data>
+  <data name="ExpiringSoon" xml:space="preserve">
+    <value>Expiring Soon</value>
+  </data>
+  <data name="ShowingPlansExpiringWithin" xml:space="preserve">
+    <value>Showing plans expiring within the next</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="SendReminders" xml:space="preserve">
+    <value>Send Reminders</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>Day(s)</value>
+  </data>
+  <data name="ExpirationDate" xml:space="preserve">
+    <value>Expiration Date</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>Time Left</value>
+  </data>
+  <data name="DaysLeft" xml:space="preserve">
+    <value>Days Left</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>View Profile</value>
+  </data>
+  <data name="NoExpiringMembershipsTitle" xml:space="preserve">
+    <value>No Expiring Memberships</value>
+  </data>
+  <data name="NoExpiringMembershipsDesc" xml:space="preserve">
+    <value>All current memberships are stable for the requested timeframe.</value>
+  </data>
+  <data name="BackToActive" xml:space="preserve">
+    <value>Back to Active Memberships</value>
+  </data>
+  <data name="HowItWorks" xml:space="preserve">
+    <value>How it works?</value>
+  </data>
+  <data name="ExpiringSoonInfo" xml:space="preserve">
+    <value>This page lists members whose subscriptions are ending soon. You can send automated email reminders using the button above.</value>
+  </data>
+  <data name="DeleteSessionDesc" xml:space="preserve">
+    <value>This action cannot be undone. All session data and bookings will be permanently deleted.</value>
+  </data>
+  <data name="ActiveMemberships" xml:space="preserve">
+    <value>Active Memberships</value>
+  </data>
+  <data name="MembershipsDesc" xml:space="preserve">
+    <value>Track and manage gym subscription plans.</value>
+  </data>
+  <data name="ExportExcel" xml:space="preserve">
+    <value>Export Excel</value>
+  </data>
+  <data name="NewMembership" xml:space="preserve">
+    <value>New Membership</value>
+  </data>
+  <data name="Starts" xml:space="preserve">
+    <value>Starts</value>
+  </data>
+  <data name="Ends" xml:space="preserve">
+    <value>Ends</value>
+  </data>
+  <data name="Watch" xml:space="preserve">
+    <value>Watch</value>
+  </data>
+  <data name="Frozen" xml:space="preserve">
+    <value>Frozen</value>
+  </data>
+  <data name="Unfreeze" xml:space="preserve">
+    <value>Unfreeze</value>
+  </data>
+  <data name="Freeze" xml:space="preserve">
+    <value>Freeze</value>
+  </data>
+  <data name="NoMembershipsFound" xml:space="preserve">
+    <value>No active memberships found</value>
+  </data>
+  <data name="NoMembershipsDesc" xml:space="preserve">
+    <value>Currently there are no active gymnast subscriptions.</value>
+  </data>
+  <data name="ActivateFirstPlan" xml:space="preserve">
+    <value>Activate First Plan</value>
+  </data>
+  <data name="FreezeMembership" xml:space="preserve">
+    <value>Freeze Membership</value>
+  </data>
+  <data name="FreezeWarningPart1" xml:space="preserve">
+    <value>You are about to freeze</value>
+  </data>
+  <data name="FreezeWarningPart2" xml:space="preserve">
+    <value>'s membership.</value>
+  </data>
+  <data name="FreezeDurationDays" xml:space="preserve">
+    <value>Freeze Duration (Days)</value>
+  </data>
+  <data name="FreezeInfoText" xml:space="preserve">
+    <value>The expiration date will be extended by this number of days.</value>
+  </data>
+  <data name="ConfirmFreeze" xml:space="preserve">
+    <value>Confirm Freeze</value>
+  </data>
+  <data name="GlobalSearch" xml:space="preserve">
+    <value>Search for members, plans, trainers...</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>Total Revenue</value>
+  </data>
+  <data name="MonthlyRevenue" xml:space="preserve">
+    <value>Monthly Revenue</value>
+  </data>
+  <data name="RevenueAnalytics" xml:space="preserve">
+    <value>Revenue Analytics</value>
+  </data>
+  <data name="MemberGrowth" xml:space="preserve">
+    <value>Member Growth</value>
+  </data>
+  <data name="RevenueFor" xml:space="preserve">
+    <value>Revenue for</value>
+  </data>
+  <data name="Last6Months" xml:space="preserve">
+    <value>Last 6 Months</value>
+  </data>
+  <data name="SelectRange" xml:space="preserve">
+    <value>Select Range</value>
+  </data>
+  <data name="vsLastMonth" xml:space="preserve">
+    <value>vs last month</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>Last Year</value>
+  </data>
+  <data name="CustomRange" xml:space="preserve">
+    <value>Custom Range</value>
+  </data>
+
+
+  <data name="NoCheckIns" xml:space="preserve">
+    <value>No check-ins for this day</value>
+  </data>
+  <data name="StatusSingle" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="MemberSingle" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="ScheduledTasks" xml:space="preserve">
+    <value>Scheduled Tasks</value>
+  </data>
+  <data name="ScheduledTasksDesc" xml:space="preserve">
+    <value>Manage and trigger automated system tasks</value>
+  </data>
+  <data name="PrintReceipt" xml:space="preserve">
+    <value>Print Receipt</value>
+  </data>
+  <data name="MembershipExpiryReminders" xml:space="preserve">
+    <value>Membership Expiry Reminders</value>
+  </data>
+  <data name="ExpiryRemindersDesc" xml:space="preserve">
+    <value>Send notifications to members whose subscriptions are ending soon.</value>
+  </data>
+  <data name="Before" xml:space="preserve">
+    <value>Before</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="SessionReminders" xml:space="preserve">
+    <value>Upcoming Session Reminders</value>
+  </data>
+  <data name="SessionRemindersDesc" xml:space="preserve">
+    <value>Remind members about their booked sessions.</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>Hour</value>
+  </data>
+  <data name="BirthdayWishes" xml:space="preserve">
+    <value>Birthday Wishes</value>
+  </data>
+  <data name="BirthdayWishesDesc" xml:space="preserve">
+    <value>Send automated birthday greetings with a special discount.</value>
+  </data>
+  <data name="InactiveMembersAlert" xml:space="preserve">
+    <value>Inactive Members Alert</value>
+  </data>
+  <data name="InactiveMembersAlertDesc" xml:space="preserve">
+    <value>Identify members who haven't visited the gym recently.</value>
+  </data>
+  <data name="Inactivity" xml:space="preserve">
+    <value>Inactivity</value>
+  </data>
+  <data name="QRCodeRefresh" xml:space="preserve">
+    <value>QR Access Key Refresh (Security)</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="QRCodeRefreshDesc" xml:space="preserve">
+    <value>Regenerate all member access keys and send new QR codes.</value>
+  </data>
+  <data name="RefreshAllNow" xml:space="preserve">
+    <value>Refresh All Now</value>
+  </data>
+  <data name="ConfirmQRCodeRefresh" xml:space="preserve">
+    <value>This will regenerate all QR codes and email them to active members. Continue?</value>
+  </data>
+  <data name="RunAllTasks" xml:space="preserve">
+    <value>Run All Tasks</value>
+  </data>
+  <data name="RunAllTasksDesc" xml:space="preserve">
+    <value>Execute all scheduled maintenance tasks at once.</value>
+  </data>
+  <data name="RunAll" xml:space="preserve">
+    <value>Run All</value>
+  </data>
+  <data name="ScheduledTasksNote" xml:space="preserve">
+    <value>Note: These tasks can be triggered manually or automated using Windows Task Scheduler or Hangfire.</value>
+  </data>
+  <data name="DiscountPercentage" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="ExpiryRemindersSent" xml:space="preserve">
+    <value>Successfully sent {0} membership expiry reminders!</value>
+  </data>
+  <data name="SessionRemindersSent" xml:space="preserve">
+    <value>Successfully sent {0} session reminders!</value>
+  </data>
+  <data name="BirthdayWishesSent" xml:space="preserve">
+    <value>Successfully sent {0} birthday wishes!</value>
+  </data>
+  <data name="InactiveMembersAlertSent" xml:space="preserve">
+    <value>Identified {0} inactive members and alerted admin!</value>
+  </data>
+  <data name="QRCodeRefreshSuccess" xml:space="preserve">
+    <value>Successfully refreshed {0} access keys!</value>
+  </data>
+  <data name="AllTasksExecuted" xml:space="preserve">
+    <value>All scheduled tasks executed successfully!</value>
+  </data>
+  <data name="AllNotifications" xml:space="preserve">
+    <value>All Notifications</value>
+  </data>
+  <data name="NoNotificationsYet" xml:space="preserve">
+    <value>No notifications yet</value>
+  </data>
+  <data name="NoNotificationsDesc" xml:space="preserve">
+    <value>System alerts and reminders will appear here once they arrive.</value>
+  </data>
+  <data name="BackToDashboard" xml:space="preserve">
+    <value>Back to Dashboard</value>
+  </data>
+  <data name="MarkAsRead" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ViewAllNotifications" xml:space="preserve">
+    <value>View All Notifications</value>
+  </data>
+  <data name="UpdateSettings" xml:space="preserve">
+    <value>Update Settings</value>
+  </data>
+  <data name="NotSpecified" xml:space="preserve">
+    <value>Not specified</value>
+  </data>
+  <data name="AccountType" xml:space="preserve">
+    <value>Account Type</value>
+  </data>
+  <data name="MarkAllRead" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="AccountSettings" xml:space="preserve">
+    <value>Account Settings</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>Change Email</value>
+  </data>
+  <data name="UpdateSecurityPassword" xml:space="preserve">
+    <value>Update Security Password</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="EnterCurrentPassword" xml:space="preserve">
+    <value>Enter current password</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="EnterNewPassword" xml:space="preserve">
+    <value>Enter new password</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Confirm New Password</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Update Password</value>
+  </data>
+  <data name="UpdateEmailIdentity" xml:space="preserve">
+    <value>Update Email Identity</value>
+  </data>
+  <data name="EmailChangeAuditNote" xml:space="preserve">
+    <value>Changing your email requires OTP verification for security.</value>
+  </data>
+  <data name="NewEmailAddress" xml:space="preserve">
+    <value>New Email Address</value>
+  </data>
+  <data name="EnterNewEmail" xml:space="preserve">
+    <value>Enter new email address</value>
+  </data>
+  <data name="SendVerificationCode" xml:space="preserve">
+    <value>Send Verification Code</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Select Language</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="ChangeTheme" xml:space="preserve">
+    <value>Toggle Theme</value>
+  </data>
+  <data name="EmailUpdatedSuccess" xml:space="preserve">
+    <value>Email updated successfully!</value>
+  </data>
+  <data name="InvalidOTP" xml:space="preserve">
+    <value>Invalid, expired, or mismatching OTP code.</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>Invalid email or password</value>
+  </data>
+  <data name="AccountLockedOut" xml:space="preserve">
+    <value>Your account is locked out. Please try again later.</value>
+  </data>
+  <data name="SignInNotAllowed" xml:space="preserve">
+    <value>Sign-in is currently not allowed for this account.</value>
+  </data>
+  <data name="InvalidSignInAttempt" xml:space="preserve">
+    <value>Invalid sign-in attempt.</value>
+  </data>
+  <data name="VerifyEmailOTP" xml:space="preserve">
+    <value>Verify Email OTP</value>
+  </data>
+  <data name="VerifyYourEmail" xml:space="preserve">
+    <value>Verify Your Email</value>
+  </data>
+  <data name="VerificationCodeSentTo" xml:space="preserve">
+    <value>We've sent a 6-digit verification code to</value>
+  </data>
+  <data name="VerifyCode" xml:space="preserve">
+    <value>Verify Code</value>
+  </data>
+  <data name="DidNotReceiveCode" xml:space="preserve">
+    <value>Didn't receive the code?</value>
+  </data>
+  <data name="TryAnotherEmail" xml:space="preserve">
+    <value>Try another email</value>
+  </data>
+  <data name="EmailVerificationSubject" xml:space="preserve">
+    <value>Email Verification Code</value>
+  </data>
+  <data name="EmailVerificationBody" xml:space="preserve">
+    <value>Your verification code to change email is: {0}. This code is valid for 10 minutes only.</value>
+  </data>
+  <data name="EmailSendError" xml:space="preserve">
+    <value>Failed to send verification email. Please check SMTP settings.</value>
+  </data>
+  <data name="FinancialReports" xml:space="preserve">
+    <value>Financial Reports</value>
+  </data>
+  <data name="FinancialAnalytics" xml:space="preserve">
+    <value>Financial Analytics</value>
+  </data>
+  <data name="FinancialAnalyticsDesc" xml:space="preserve">
+    <value>Advanced revenue and profitability insights for</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="EstimatedExpenses" xml:space="preserve">
+    <value>Estimated Expenses</value>
+  </data>
+  <data name="EstimatedExpensesDesc" xml:space="preserve">
+    <value>Operating &amp; Maintenance</value>
+  </data>
+  <data name="NetProfitDesc" xml:space="preserve">
+    <value>Final earnings</value>
+  </data>
+  <data name="RevenueTrend" xml:space="preserve">
+    <value>Revenue Trend By Month</value>
+  </data>
+  <data name="MembershipStatus" xml:space="preserve">
+    <value>Membership Status</value>
+  </data>
+  <data name="TopPerformingPlans" xml:space="preserve">
+    <value>Top Performing Plans</value>
+  </data>
+  <data name="MonthlyBreakdownDetail" xml:space="preserve">
+    <value>Monthly Breakdown Detail</value>
+  </data>
+  <data name="Subscribers" xml:space="preserve">
+    <value>Subscribers</value>
+  </data>
+  <data name="Revenue" xml:space="preserve">
+    <value>Revenue</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Subs" xml:space="preserve">
+    <value>Subs</value>
+  </data>
+  <data name="RevenueEGP" xml:space="preserve">
+    <value>Revenue (EGP)</value>
+  </data>
+  <data name="NetProfit" xml:space="preserve">
+    <value>Net Profit</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="ExpenseTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="ExpenseAmount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="ExpenseDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="ExpenseCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ExpenseNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="ManageExpenses" xml:space="preserve">
+    <value>Manage Expenses</value>
+  </data>
+  <data name="AddExpense" xml:space="preserve">
+    <value>Add Expense</value>
+  </data>
+  <data name="NoExpensesFound" xml:space="preserve">
+    <value>No expenses recorded yet.</value>
+  </data>
+  <data name="DeleteExpenseConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this expense?</value>
+  </data>
+  <data name="ExpensesDesc" xml:space="preserve">
+    <value>Track and manage your gym's operational costs.</value>
+  </data>
+  <data name="Cat_Rent" xml:space="preserve">
+    <value>Rent</value>
+  </data>
+  <data name="Cat_Utilities" xml:space="preserve">
+    <value>Utilities (Electricity, Water, Internet)</value>
+  </data>
+  <data name="Cat_Salaries" xml:space="preserve">
+    <value>Salaries</value>
+  </data>
+  <data name="Cat_Maintenance" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="Cat_Equipment" xml:space="preserve">
+    <value>Equipment</value>
+  </data>
+  <data name="Cat_Marketing" xml:space="preserve">
+    <value>Marketing</value>
+  </data>
+  <data name="Cat_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="YesDelete" xml:space="preserve">
+    <value>Yes, delete it!</value>
+  </data>
+  <data name="SelectDateRange" xml:space="preserve">
+    <value>Select Date Range</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="FeatureUnderDevelopment" xml:space="preserve">
+    <value>This feature is under development.</value>
+  </data>
+  <data name="ManageGymIdentityAndSystemPreferences" xml:space="preserve">
+    <value>Manage Gym Identity and System Preferences</value>
+  </data>
+  <data name="GymIdentity" xml:space="preserve">
+    <value>Gym Identity</value>
+  </data>
+  <data name="GymName" xml:space="preserve">
+    <value>Gym Name</value>
+  </data>
+  <data name="SystemPreferences" xml:space="preserve">
+    <value>System Preferences</value>
+  </data>
+  <data name="LivePreview" xml:space="preserve">
+    <value>Live Preview</value>
+  </data>
+  <data name="NeedHelp" xml:space="preserve">
+    <value>Need Help?</value>
+  </data>
+  <data name="SettingsHelpText" xml:space="preserve">
+    <value>These settings will be reflected across all reports, receipts, and the website's header.</value>
+  </data>
+  <data name="SettingsTip1" xml:space="preserve">
+    <value>Ensure the phone number is correct for member support.</value>
+  </data>
+  <data name="SettingsTip2" xml:space="preserve">
+    <value>Gym name appears in the browser tab title.</value>
+  </data>
+  <data name="ExportPdf" xml:space="preserve">
+    <value>Export PDF</value>
+  </data>
+  <data name="CreateMembershipTitle" xml:space="preserve">
+    <value>Create Membership</value>
+  </data>
+  <data name="ActivateSubscriptionPlanDesc" xml:space="preserve">
+    <value>Activate a new subscription plan for a member.</value>
+  </data>
+  <data name="BackToMemberships" xml:space="preserve">
+    <value>Back to Memberships</value>
+  </data>
+  <data name="SelectMember" xml:space="preserve">
+    <value>Select Member</value>
+  </data>
+  <data name="ChooseAMember" xml:space="preserve">
+    <value>-- Choose a member --</value>
+  </data>
+  <data name="SelectMemberInfo" xml:space="preserve">
+    <value>Select the member who will subscribe to this plan.</value>
+  </data>
+  <data name="SelectPlan" xml:space="preserve">
+    <value>Select Plan</value>
+  </data>
+  <data name="ChooseASubscriptionPlan" xml:space="preserve">
+    <value>-- Choose a subscription plan --</value>
+  </data>
+  <data name="ChooseFromActivePlans" xml:space="preserve">
+    <value>Choose from available active plans.</value>
+  </data>
+  <data name="ReceiptEmailLanguage" xml:space="preserve">
+    <value>Receipt Email Language</value>
+  </data>
+  <data name="Arabic" xml:space="preserve">
+    <value>Arabic </value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="ReceiptLanguageDesc" xml:space="preserve">
+    <value>Choose the language in which the member will receive their confirmation receipt.</value>
+  </data>
+  <data name="MembershipStartImmediately" xml:space="preserve">
+    <value>The membership will start immediately upon creation.</value>
+  </data>
+  <data name="EndDateCalculationInfo" xml:space="preserve">
+    <value>End date will be calculated based on the plan duration.</value>
+  </data>
+  <data name="ExpiryNotificationInfo" xml:space="preserve">
+    <value>Member will be notified when the membership is about to expire.</value>
+  </data>
+  <data name="ImportantInformation" xml:space="preserve">
+    <value>Important Information</value>
+  </data>
+  <data name="CreateMembership" xml:space="preserve">
+    <value>Create Membership</value>
+  </data>
+  <data name="TrainerNamePlaceholder" xml:space="preserve">
+    <value>Trainer Name</value>
+  </data>
+  <data name="EmailLanguage" xml:space="preserve">
+    <value>Email Language</value>
+  </data>
+  <data name="TrainerWelcomeEmailDesc" xml:space="preserve">
+    <value>Choose the language for the trainer welcome email.</value>
+  </data>
+  <data name="GeneralFitness" xml:space="preserve">
+    <value>General Fitness</value>
+  </data>
+  <data name="Yoga" xml:space="preserve">
+    <value>Yoga</value>
+  </data>
+  <data name="Boxing" xml:space="preserve">
+    <value>Boxing</value>
+  </data>
+  <data name="CrossFit" xml:space="preserve">
+    <value>CrossFit</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="CountryRequired" xml:space="preserve">
+    <value>Country is required.</value>
+  </data>
+  <data name="Egypt" xml:space="preserve">
+    <value>Egypt</value>
+  </data>
+  <data name="ManageBookingsDesc" xml:space="preserve">
+    <value>Manage and book training sessions for members.</value>
+  </data>
+  <data name="UpcomingSessionsDesc" xml:space="preserve">
+    <value>Sessions valid for managing bookings.</value>
+  </data>
+  <data name="OngoingSessionsDesc" xml:space="preserve">
+    <value>Sessions valid for managing attendance.</value>
+  </data>
+  <data name="NoUpcomingSessions" xml:space="preserve">
+    <value>No upcoming sessions available.</value>
+  </data>
+  <data name="NoOngoingSessions" xml:space="preserve">
+    <value>No ongoing sessions available.</value>
+  </data>
+  <data name="ViewMembers" xml:space="preserve">
+    <value>View Members</value>
+  </data>
+  <data name="TrainerColon" xml:space="preserve">
+    <value>Trainer:</value>
+  </data>
+  <data name="DateColon" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="TimeColon" xml:space="preserve">
+    <value>Time:</value>
+  </data>
+  <data name="DurationColon" xml:space="preserve">
+    <value>Duration:</value>
+  </data>
+  <data name="CapacityColon" xml:space="preserve">
+    <value>Capacity:</value>
+  </data>
+  <data name="Slots" xml:space="preserve">
+    <value>slots</value>
+  </data>
+  <data name="AuditLogs" xml:space="preserve">
+    <value>Audit Logs</value>
+  </data>
+  <data name="SystemAuditLogs" xml:space="preserve">
+    <value>System Audit Logs</value>
+  </data>
+  <data name="TrackActions" xml:space="preserve">
+    <value>Track administrative actions and data changes.</value>
+  </data>
+  <data name="Timestamp" xml:space="preserve">
+    <value>Timestamp</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="EntityID" xml:space="preserve">
+    <value>Entity ID</value>
+  </data>
+  <data name="AuditLogDetails" xml:space="preserve">
+    <value>Audit Log Details</value>
+  </data>
+  <data name="OldValues" xml:space="preserve">
+    <value>Old Values</value>
+  </data>
+  <data name="NewValues" xml:space="preserve">
+    <value>New Values</value>
+  </data>
+  <data name="NoPreviousData" xml:space="preserve">
+    <value>No previous data</value>
+  </data>
+  <data name="NoNewData" xml:space="preserve">
+    <value>No new data</value>
+  </data>
+  <data name="Registry" xml:space="preserve">
+    <value>Registry</value>
+  </data>
+  <data name="SessionRegistry" xml:space="preserve">
+    <value>Session Registry</value>
+  </data>
+  <data name="EnrollMember" xml:space="preserve">
+    <value>Enroll Member</value>
+  </data>
+  <data name="EnrollMemberDesc" xml:space="preserve">
+    <value>Only members with active subscriptions will appear in the selection below.</value>
+  </data>
+  <data name="BookingPolicy" xml:space="preserve">
+    <value>Booking Policy</value>
+  </data>
+  <data name="BookingPolicyDesc" xml:space="preserve">
+    <value>Members can only book if their plan is valid for the session date. If a member is missing, ensure they have an active plan.</value>
+  </data>
+  <data name="ConfirmEnrollment" xml:space="preserve">
+    <value>Confirm Enrollment</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>processing...</value>
+  </data>
+  <data name="CancelAndReturn" xml:space="preserve">
+    <value>Cancel and return</value>
+  </data>
+  <data name="RegistryEmpty" xml:space="preserve">
+    <value>Registry is empty</value>
+  </data>
+  <data name="RegistryEmptyDesc" xml:space="preserve">
+    <value>No members booked for this session yet.</value>
+  </data>
+  <data name="BackToSessions" xml:space="preserve">
+    <value>Back to Sessions</value>
+  </data>
+  <data name="RemoveMember" xml:space="preserve">
+    <value>Remove Member</value>
+  </data>
+  <data name="MemberName" xml:space="preserve">
+    <value>Member Name</value>
+  </data>
+  <data name="BookingDate" xml:space="preserve">
+    <value>Booking Date</value>
+  </data>
+  <data name="Excel" xml:space="preserve">
+    <value>Excel</value>
+  </data>
+  <data name="PDF" xml:space="preserve">
+    <value>PDF</value>
+  </data>
+  <data name="SelectAvailableMember" xml:space="preserve">
+    <value>-- Select available member --</value>
+  </data>
+  <data name="NoAvailableMembers" xml:space="preserve">
+    <value>-- No available members with active plans --</value>
+  </data>
+  <data name="RepeatFor" xml:space="preserve">
+    <value>Repeat For</value>
+  </data>
+  <data name="Times" xml:space="preserve">
+    <value>Times</value>
+  </data>
+  <data name="RecurrenceNote" xml:space="preserve">
+    <value>Use this to automatically schedule multiple sessions at once.</value>
+  </data>
+  <data name="DiscardChanges" xml:space="preserve">
+    <value>Discard Changes</value>
+  </data>
+  <data name="TrainingSession" xml:space="preserve">
+    <value>Training Session</value>
+  </data>
+  <data name="BookedMembers" xml:space="preserve">
+    <value>Booked Members</value>
+  </data>
+  <data name="RegistryTitle" xml:space="preserve">
+    <value>Registry</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="RepeatPattern" xml:space="preserve">
+    <value>Repeat Pattern</value>
+  </data>
+  <data name="UpdateSessionSchedule" xml:space="preserve">
+    <value>Update Session Schedule</value>
+  </data>
+  <data name="SessionEditNotice" xml:space="preserve">
+    <value>Category and basic structure cannot be changed once session is created and bookings might exist.</value>
+  </data>
+  <data name="ScheduleEditWarning" xml:space="preserve">
+    <value>Changing schedule might affect members who already booked this session.</value>
+  </data>
+  <data name="Ongoing" xml:space="preserve">
+    <value>Ongoing</value>
+  </data>
+  <data name="DeleteSessionWarning" xml:space="preserve">
+    <value>This action cannot be undone. All session data and bookings will be permanently deleted.</value>
+  </data>
+  <data name="ConfirmDeleteSession" xml:space="preserve">
+    <value>Are you sure you want to delete this session?</value>
+  </data>
+  <data name="SessionMembers" xml:space="preserve">
+    <value>Session Members</value>
+  </data>
+  <data name="SessionMembersDesc" xml:space="preserve">
+    <value>List of members registered for this session.</value>
+  </data>
+  <data name="AttendanceStatus" xml:space="preserve">
+    <value>Attendance Status</value>
+  </data>
+  <data name="Attended" xml:space="preserve">
+    <value>Attended</value>
+  </data>
+  <data name="Absent" xml:space="preserve">
+    <value>Not Yet / Absent</value>
+  </data>
+  <data name="NoMembersRegistered" xml:space="preserve">
+    <value>No members registered yet</value>
+  </data>
+  <data name="NoMembersRegisteredDesc" xml:space="preserve">
+    <value>Once members book this session, they will appear here.</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="MemberSession" xml:space="preserve">
+    <value>Member Session</value>
+  </data>
+  <data name="BookingManagement" xml:space="preserve">
+    <value>Booking Management</value>
+  </data>
+  <data name="AttendanceSheet" xml:space="preserve">
+    <value>Attendance Sheet</value>
+  </data>
+  <data name="AttendanceProgress" xml:space="preserve">
+    <value>Attendance Progress</value>
+  </data>
+  <data name="Present" xml:space="preserve">
+    <value>Present</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="MarkPresent" xml:space="preserve">
+    <value>Mark Present</value>
+  </data>
+  <data name="Logged" xml:space="preserve">
+    <value>Logged</value>
+  </data>
+  <data name="NoMembersMatched" xml:space="preserve">
+    <value>No members matched this session</value>
+  </data>
+  <data name="NoMembersMatchedDesc" xml:space="preserve">
+    <value>You cannot mark attendance if no members were booked before the session started.</value>
+  </data>
+  <data name="BackToBookings" xml:space="preserve">
+    <value>Back to Bookings</value>
+  </data>
+  <data name="BackToLiveList" xml:space="preserve">
+    <value>Back to Live List</value>
+  </data>
+  <data name="ActiveMember" xml:space="preserve">
+    <value>Active Member</value>
+  </data>
+  <data name="AttendanceHistoryAnalysis" xml:space="preserve">
+    <value>Attendance History &amp; Analysis</value>
+  </data>
+  <data name="EmailLanguageDesc" xml:space="preserve">
+    <value>Choose the language for the QR access code email.</value>
+  </data>
+  <data name="NoPlansAvailable" xml:space="preserve">
+    <value>No Plans Available</value>
+  </data>
+  <data name="Access" xml:space="preserve">
+    <value>Access</value>
+  </data>
+  <data name="DeniedText" xml:space="preserve">
+    <value>Denied</value>
+  </data>
+  <data name="AccessDeniedDesc" xml:space="preserve">
+    <value>We're sorry, but you don't have permission to access this resource. Your current user role or membership status doesn't grant you access to this section.</value>
+  </data>
+  <data name="ErrorCode" xml:space="preserve">
+    <value>Error Code</value>
+  </data>
+  <data name="ForbiddenAccess" xml:space="preserve">
+    <value>Forbidden Access</value>
+  </data>
+  <data name="AccessDeniedHelp" xml:space="preserve">
+    <value>If you believe this is an error or need elevated permissions, please contact the system administrator or your membership manager for assistance.</value>
+  </data>
+  <data name="ReturnToHome" xml:space="preserve">
+    <value>Return to Home</value>
+  </data>
+  <data name="RetentionRate" xml:space="preserve">
+    <value>Retention Rate</value>
+  </data>
+  <data name="AuditLogsDesc" xml:space="preserve">
+    <value>Track administrative actions and data changes.</value>
+  </data>
+  <data name="on" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No Data</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Expired</value>
+  </data>
+  <data name="NoAttendanceThisWeek" xml:space="preserve">
+    <value>No attendance records found for this week.</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>Audit Log</value>
+  </data>
+  <data name="VisitsPerMonth" xml:space="preserve">
+    <value>Visits per Month</value>
+  </data>
+  <data name="AuditLogAction_Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="AuditLogAction_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="AuditLogAction_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
+  <data name="AttendanceHistory" xml:space="preserve">
+    <value>Attendance History</value>
+  </data>
+  <data name="ReviewWeeklyAttendance" xml:space="preserve">
+    <value>Review weekly attendance log</value>
+  </data>
+  <data name="DailyAttendanceHistory" xml:space="preserve">
+    <value>Daily Attendance History</value>
+  </data>
+  <data name="MonthlyMemberAttendance" xml:space="preserve">
+    <value>Monthly Member Attendance</value>
+  </data>
+  <data name="MonthlyLeaderboard" xml:space="preserve">
+    <value>Monthly Leaderboard</value>
+  </data>
+  <data name="TrackMemberConsistency" xml:space="preserve">
+    <value>Track member consistency and participation</value>
+  </data>
+  <data name="ExportReport" xml:space="preserve">
+    <value>Export Report</value>
+  </data>
+  <data name="TotalAttendees" xml:space="preserve">
+    <value>Total Attendees</value>
+  </data>
+  <data name="TopMember" xml:space="preserve">
+    <value>Most Consistent Member</value>
+  </data>
+  <data name="AvgAttendance" xml:space="preserve">
+    <value>Avg. Attendance</value>
+  </data>
+  <data name="AttendanceRanking" xml:space="preserve">
+    <value>Attendance Ranking</value>
+  </data>
+  <data name="SearchByMemberName" xml:space="preserve">
+    <value>Search by member name</value>
+  </data>
+  <data name="Ranking" xml:space="preserve">
+    <value>Rank</value>
+  </data>
+  <data name="DaysVisited" xml:space="preserve">
+    <value>Days Visited</value>
+  </data>
+  <data name="AttendanceLevel" xml:space="preserve">
+    <value>Attendance Level</value>
+  </data>
+  <data name="LastSeen" xml:space="preserve">
+    <value>Last Seen</value>
+  </data>
+  <data name="Verified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="CheckedIn" xml:space="preserve">
+    <value>Checked In</value>
+  </data>
+  <data name="TotalVisitsToday" xml:space="preserve">
+    <value>Total Visits Today</value>
+  </data>
+  <data name="WeeklyTotal" xml:space="preserve">
+    <value>Weekly Total</value>
+  </data>
+  <data name="DailyAverage" xml:space="preserve">
+    <value>Daily Average</value>
+  </data>
+  <data name="CheckIns" xml:space="preserve">
+    <value>Check-ins</value>
+  </data>
+
+  <data name="ReviewWeeklyAttendanceAnalytics" xml:space="preserve">
+    <value>Review detailed attendance analytics and logs</value>
+  </data>
+  <data name="DailyMemberAttendance" xml:space="preserve">
+    <value>Daily Member Attendance</value>
+  </data>
+  <data name="TotalCheckIns" xml:space="preserve">
+    <value>Total Check-ins</value>
+  </data>
+
+  <data name="BusyTime" xml:space="preserve">
+    <value>Busy Time</value>
+  </data>
+  <data name="HighestEntryPeak" xml:space="preserve">
+    <value>Highest entry peak recorded</value>
+  </data>
+  <data name="AverageDuration" xml:space="preserve">
+    <value>Average Duration</value>
+  </data>
+  <data name="EstimatedAvgStay" xml:space="preserve">
+    <value>Estimated average stay duration</value>
+  </data>
+  <data name="NoCheckInsFound" xml:space="preserve">
+    <value>No Check-ins Found</value>
+  </data>
+  <data name="AttendanceLogs" xml:space="preserve">
+    <value>Attendance Logs</value>
+  </data>
+  <data name="NewAttendance" xml:space="preserve">
+    <value>New Attendance</value>
+  </data>
+  <data name="Plan" xml:space="preserve">
+    <value>Plan</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Visits" xml:space="preserve">
+    <value>Visits</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="NoRecordsFound" xml:space="preserve">
+    <value>No records found</value>
+  </data>
+
+  <data name="DailyAttendanceReport" xml:space="preserve">
+    <value>Daily Attendance Report</value>
+  </data>
+  <data name="GymCurrentState" xml:space="preserve">
+    <value>Current Gym State</value>
+  </data>
+  <data name="MemberLogs" xml:space="preserve">
+    <value>Member Logs</value>
+  </data>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>Search members</value>
+  </data>
+  <data name="TrainerLogs" xml:space="preserve">
+    <value>Trainer Logs</value>
+  </data>
+  <data name="SearchTrainers" xml:space="preserve">
+    <value>Search trainers</value>
+  </data>
+  <data name="NoTrainerAttendance" xml:space="preserve">
+    <value>No trainer attendance records for today</value>
+  </data>
+  <data name="DailyAttendance" xml:space="preserve">
+    <value>Daily Attendance</value>
+  </data>
+  <data name="TrainerMonthlyReport" xml:space="preserve">
+    <value>Trainer Monthly Report</value>
+  </data>
+  <data name="TrainerMonthlyLeaderboard" xml:space="preserve">
+    <value>Trainer Monthly Leaderboard</value>
+  </data>
+  <data name="TrainerAttendanceRanking" xml:space="preserve">
+    <value>Trainer Attendance Ranking</value>
+  </data>
+  <data name="SearchByTrainerName" xml:space="preserve">
+    <value>Search by trainer name...</value>
+  </data>
+  <data name="AttendanceDays" xml:space="preserve">
+    <value>Attendance Days</value>
+  </data>
+  <data name="TotalHours" xml:space="preserve">
+    <value>Total Hours</value>
+  </data>
+  <data name="TotalDelay" xml:space="preserve">
+    <value>Total Delay</value>
+  </data>
+  <data name="MonthlyTrainerAttendance" xml:space="preserve">
+    <value>Monthly Trainer Attendance</value>
+  </data>
+  <data name="ReadyForScan" xml:space="preserve">
+    <value>Ready to scan...</value>
+  </data>
+  <data name="ReadyForNextMember" xml:space="preserve">
+    <value>Ready for next member...</value>
+  </data>
+  <data name="ManageSpecialties" xml:space="preserve">
+    <value>Manage Specialties</value>
+  </data>
+  <data name="TrainerSpecialties" xml:space="preserve">
+    <value>Trainer Specialties</value>
+  </data>
+  <data name="ManageSpecialtiesDesc" xml:space="preserve">
+    <value>Manage different categories and classifications of trainers in the system.</value>
+  </data>
+  <data name="AddNewSpecialty" xml:space="preserve">
+    <value>Add New Specialty</value>
+  </data>
+  <data name="EditSpecialty" xml:space="preserve">
+    <value>Edit Specialty</value>
+  </data>
+  <data name="SpecialtyName" xml:space="preserve">
+    <value>Specialty Name</value>
+  </data>
+  <data name="TrainersCount" xml:space="preserve">
+    <value>Trainers Count</value>
+  </data>
+  <data name="SpecialtyCreated" xml:space="preserve">
+    <value>Specialty added successfully!</value>
+  </data>
+  <data name="SpecialtyUpdated" xml:space="preserve">
+    <value>Specialty updated successfully!</value>
+  </data>
+  <data name="SpecialtyDeleted" xml:space="preserve">
+    <value>Specialty deleted successfully!</value>
+  </data>
+  <data name="DeleteSpecialtyConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this specialty? It will be unassigned from all linked trainers.</value>
+  </data>
+  <data name="SearchSpecialties" xml:space="preserve">
+    <value>Search specialties...</value>
+  </data>
+  <data name="NoSpecialtiesFound" xml:space="preserve">
+    <value>No specialties found.</value>
+  </data>
+  <data name="AddSpecialty" xml:space="preserve">
+    <value>Add Specialty</value>
+  </data>
+  <data name="ExpiredMembershipNotificationsSent" xml:space="preserve">
+    <value>Sent {0} expired membership notification(s) successfully.</value>
+  </data>
+  <data name="ExpiringSoonMembers" xml:space="preserve">
+    <value>Memberships Expiring Soon</value>
+  </data>
+  <data name="DaysRemainingLabel" xml:space="preserve">
+    <value>{0} days left</value>
+  </data>
+  <data name="RecentActivities" xml:space="preserve">
+    <value>Recent System Activities</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>View All</value>
+  </data>
+  <data name="NoExpiringMembers" xml:space="preserve">
+    <value>No memberships expiring soon.</value>
+  </data>
+  <data name="ExpiringToday" xml:space="preserve">
+    <value>Expires today</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Just now</value>
+  </data>
+  <data name="AuditLogAction_Create" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="AuditLogAction_Update" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="AuditLogAction_Delete" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="QuickAccess" xml:space="preserve">
+    <value>Quick Access</value>
+  </data>
+  <data name="Scanner" xml:space="preserve">
+    <value>Scanner</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="SendByEmail" xml:space="preserve">
+    <value>Send by Email</value>
+  </data>
+  <data name="ExpiresOn" xml:space="preserve">
+    <value>Expires On</value>
+  </data>
+  <data name="ThankYouForChoosing" xml:space="preserve">
+    <value>Thank you for choosing</value>
+  </data>
+  <data name="Waitlisted" xml:space="preserve">
+    <value>Waitlisted</value>
+  </data>
+  <data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+  </data>
+  <data name="Waitlist" xml:space="preserve">
+    <value>Waitlist</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>FULL</value>
+  </data>
+  <data name="RemoveFromWaitlist" xml:space="preserve">
+    <value>Remove from Waitlist</value>
+  </data>
+  <data name="HealthProgression" xml:space="preserve">
+    <value>Health Progression</value>
+  </data>
+  <data name="TrackProgress" xml:space="preserve">
+    <value>Track Progress</value>
+  </data>
+  <data name="AddMeasurement" xml:space="preserve">
+    <value>Add Measurement</value>
+  </data>
+  <data name="WeightTrend" xml:space="preserve">
+    <value>Weight Trend</value>
+  </data>
+  <data name="BMITrend" xml:space="preserve">
+    <value>BMI Trend</value>
+  </data>
+  <data name="ProgressHistory" xml:space="preserve">
+    <value>Progress History</value>
+  </data>
+  <data name="BodyFat" xml:space="preserve">
+    <value>Body Fat (%)</value>
+  </data>
+  <data name="MuscleMass" xml:space="preserve">
+    <value>Muscle Mass (kg)</value>
+  </data>
+  <data name="NoProgressRecords" xml:space="preserve">
+    <value>No progress records found. Add your first measurement!</value>
+  </data>
+  <data name="Progression" xml:space="preserve">
+    <value>Progression</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
+  <data name="CurrentWeight" xml:space="preserve">
+    <value>Current Weight</value>
+  </data>
+  <data name="LastCheck" xml:space="preserve">
+    <value>Last Check</value>
+  </data>
+  <data name="BMIUpdateInfo" xml:space="preserve">
+    <value>BMI is automatically calculated based on the recorded height.</value>
+  </data>
+  <data name="Fat" xml:space="preserve">
+    <value>Fat</value>
+  </data>
+  <data name="SaveMeasurement" xml:space="preserve">
+    <value>Save Measurement</value>
+  </data>
+</root>
+

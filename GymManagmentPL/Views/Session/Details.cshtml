@@ -1,146 +1,154 @@
-﻿@model SessionViewModel
+﻿@inject IStringLocalizer<SharedResource> Localizer
+@model SessionViewModel
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg border-0">
-                <!-- If Session Ongoing  bg-success -->
-                <!-- If Session Upcoming  bg-primary -->
-                <!-- If Session Completed  bg-secondary -->
-                <div class="card-header  text-white text-center py-4 @(Model.Status == "Ongoing" ? "bg-success" : Model.Status == "Upcoming" ? "bg-primary" : "bg-secondary")">
-                    <i class="bi bi-calendar-event display-4 mb-3"></i>
-                    <h2 class="mb-2">@Model.CategoryName</h2>
-                    <span class="badge bg-light text-dark fs-6">@Model.Status</span>
+@{
+    ViewData["Title"] = Localizer["SessionDetails"];
+    var statusClass = Model.Status == "Ongoing" ? "bg-success" : Model.Status == "Upcoming" ? "bg-primary" : "bg-secondary";
+    var statusIcon = Model.Status == "Ongoing" ? "fa-play-circle" : Model.Status == "Upcoming" ? "fa-calendar-alt" : "fa-check-double";
+}
+
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">@Localizer["Sessions"]</a></li>
+                <li class="breadcrumb-item active">@Localizer["Details"]</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">
+            <i class="fas fa-info-circle text-primary me-2"></i>@Localizer["SessionDetails"]
+        </h2>
+    </div>
+    <div class="col-md-6 text-md-end">
+        @if (Model.Status == "Upcoming")
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2 shadow-sm">
+                <i class="fas fa-edit me-2"></i>@Localizer["Reschedule"]
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>@Localizer["BackToSchedule"]
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <div class="col-lg-10">
+        <div class="premium-card overflow-hidden">
+            <!-- Dynamic Header -->
+            <div class="p-5 text-center position-relative text-white @statusClass" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.2));">
+                <div class="mb-3">
+                    <i class="fas @statusIcon fa-4x opacity-75"></i>
+                </div>
+                <h1 class="fw-bold mb-2">@Localizer[Model.CategoryName]</h1>
+                <div class="d-flex justify-content-center gap-2 align-items-center mt-3">
+                    <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold">
+                        <i class="fas fa-tag me-1 text-primary"></i>@Localizer[Model.Status]
+                    </span>
+                    <span class="badge bg-white bg-opacity-25 px-3 py-2 rounded-pill">
+                        <i class="fas fa-clock me-1"></i>@Model.Duration.Hours @Localizer["Hour"] @Model.Duration.Minutes @Localizer["Minutes"]
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-4 p-md-5">
+                <!-- Description Section -->
+                <div class="mb-5">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-align-left text-primary me-2"></i>@Localizer["AboutSession"]</h5>
+                    <p class="lead text-secondary">@Model.Description</p>
                 </div>
 
-                <div class="card-body p-4">
-                    <!-- Description -->
-                    <div class="mb-4 p-3 bg-light rounded">
-                        <h6 class="text-primary-color mb-2">
-                            <i class="bi bi-file-text me-2"></i>Description
-                        </h6>
-                        <p class="mb-0">@Model.Description</p>
+                <div class="row g-4">
+                    <!-- Key Info Boxes -->
+                    <div class="col-md-4">
+                        <div class="p-4 bg-light rounded-4 h-100 border-start border-4 border-primary">
+                            <div class="small text-secondary text-uppercase fw-bold mb-2">@Localizer["LeadTrainer"]</div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="h6 fw-bold mb-0">@Model.TrainerName</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Session Details -->
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="detail-box p-3 border rounded">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon-box me-3">
-                                        <i class="bi bi-person-circle text-primary-color fs-3"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Trainer</small>
-                                        <strong>@Model.TrainerName</strong>
-                                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 bg-light rounded-4 h-100 border-start border-4 border-info">
+                            <div class="small text-secondary text-uppercase fw-bold mb-2">@Localizer["Participation"]</div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <div class="h6 fw-bold mb-0">@Model.AvailableSlot / @Model.Capacity</div>
+                                    <div class="small text-secondary">@Localizer["ConfirmedBookings"]</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <div class="detail-box p-3 border rounded">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon-box me-3">
-                                        <i class="bi bi-people text-primary-color fs-3"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Capacity</small>
-                                        <strong>@Model.AvailableSlot / @Model.Capacity spots</strong>
-                                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 bg-light rounded-4 h-100 border-start border-4 border-warning">
+                            <div class="small text-secondary text-uppercase fw-bold mb-2">@Localizer["Location"]</div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                    <i class="fas fa-map-marker-alt"></i>
                                 </div>
+                                <div class="h6 fw-bold mb-0">@Localizer["MainGymHall"] <small class="fw-normal text-secondary block">(@Localizer["Default"])</small></div>
                             </div>
                         </div>
-
-                        <div class="col-md-6">
-                            <div class="detail-box p-3 border rounded">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon-box me-3">
-                                        <i class="bi bi-calendar-check text-primary-color fs-3"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Start Time</small>
-                                        <strong>@Model.StartDate</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="detail-box p-3 border rounded">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon-box me-3">
-                                        <i class="bi bi-calendar-x text-primary-color fs-3"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">End Time</small>
-                                        <strong>@Model.EndDate</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="detail-box p-3 border rounded bg-light">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon-box me-3">
-                                        <i class="bi bi-hourglass-split text-primary-color fs-3"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <small class="text-muted d-block">Session Duration</small>
-                                        <strong class="text-primary-color fs-5">
-											@Model.Duration.Hours Hours @Model.Duration.Minutes Minutes
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (Model.Status == "Ongoing")
-                        {
-                            <div class="col-12">
-                                <div class="detail-box p-3 border rounded" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-box me-3">
-                                            <i class="bi bi-clock-history text-success fs-3 animated-pulse"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <small class="text-muted d-block mb-1">Real-time Duration</small>
-                                            <div class="d-flex align-items-baseline gap-3">
-                                                <div>
-                                                    <span id="elapsedHours" class="fs-4 fw-bold text-success">00</span>
-                                                    <small class="text-muted ms-1">Hours</small>
-                                                </div>
-                                                <div>
-                                                    <span id="elapsedMinutes" class="fs-4 fw-bold text-success">00</span>
-                                                    <small class="text-muted ms-1">Minutes</small>
-                                                </div>
-                                                <div>
-                                                    <span id="elapsedSeconds" class="fs-4 fw-bold text-success">00</span>
-                                                    <small class="text-muted ms-1">Seconds</small>
-                                                </div>
-                                            </div>
-                                            <div class="progress mt-2" style="height: 6px;">
-                                                <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                                            </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <span id="remainingTime"></span>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
                     </div>
                 </div>
 
-                <div class="card-footer bg-white border-0 p-4">
-                    <div class="d-flex justify-content-between gap-2">
-                        <a asp-action="Index" class="btn btn-outline flex-fill">
-                            <i class="bi bi-arrow-left me-1"></i>Back to List
-                        </a>
+                <!-- Timeline Section -->
+                <div class="mt-5 p-4 rounded-4 border border-light shadow-sm">
+                    <h5 class="fw-bold mb-4"><i class="fas fa-calendar-check text-primary me-2"></i>@Localizer["ScheduleTimeline"]</h5>
+                    <div class="row text-center g-0 position-relative">
+                        <div class="col-5">
+                            <div class="h5 fw-bold text-primary mb-1">@Model.StartDate.ToString("hh:mm tt")</div>
+                            <div class="small text-secondary fw-bold">@Model.StartDate.ToString("MMM dd, yyyy")</div>
+                            <div class="mt-2 small"><i class="fas fa-sign-in-alt me-1"></i>@Localizer["Start"]</div>
+                        </div>
+                        <div class="col-2 d-flex align-items-center justify-content-center">
+                            <div class="border-top w-100 border-2 dashed-border"></div>
+                        </div>
+                        <div class="col-5">
+                            <div class="h5 fw-bold text-dark mb-1">@Model.EndDate.ToString("hh:mm tt")</div>
+                            <div class="small text-secondary fw-bold">@Model.EndDate.ToString("MMM dd, yyyy")</div>
+                            <div class="mt-2 small"><i class="fas fa-sign-out-alt me-1"></i>@Localizer["End"]</div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Ongoing Tracker -->
+                @if (Model.Status == "Ongoing")
+                {
+                    <div class="mt-4 p-4 rounded-4 bg-success bg-opacity-10 border border-success border-opacity-25">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="spinner-grow text-success spinner-grow-sm me-2" role="status"></div>
+                            <h6 class="fw-bold text-success mb-0">@Localizer["SessionInProgress"]</h6>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="progress mb-2" style="height: 10px; border-radius: 10px;">
+                                    <div id="sessionProgress" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between small text-secondary fw-bold">
+                                    <span id="elapsedDisplay">0m 0s @Localizer["Elapsed"]</span>
+                                    <span id="remainingDisplay">0m 0s @Localizer["Remaining"]</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <div class="h3 fw-bold text-success mb-0" id="timerDisplay">00:00:00</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <div class="p-4 bg-light border-top text-center @(Model.Status == "Completed" ? "opacity-75" : "")">
+                <i class="fas fa-shield-alt text-secondary me-2"></i>
+                <small class="text-secondary">@Localizer["SessionID"]: #@Model.Id | @Localizer["SystemProfile"]</small>
             </div>
         </div>
     </div>
@@ -148,65 +156,50 @@
 
 @if (Model.Status == "Ongoing")
 {
-    <script>
-        const startDate = new Date('@Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")');
-        const endDate = new Date('@Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")');
-        const totalDuration = endDate - startDate;
+    @section Scripts {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const start = new Date('@Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+                const end = new Date('@Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+                const total = end - start;
 
-        function updateRealTimeDuration() {
-            const now = new Date();
-            const elapsed = now - startDate;
-            const remaining = endDate - now;
+                function updateTracker() {
+                    const now = new Date();
+                    const elapsed = now - start;
+                    const remaining = end - now;
+                    
+                    if (elapsed < 0) return;
+                    
+                    // Progress Bar
+                    const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
+                    document.getElementById('sessionProgress').style.width = pct + '%';
+                    
+                    // Timer Display
+                    const h = Math.floor(elapsed / 3600000);
+                    const m = Math.floor((elapsed % 3600000) / 60000);
+                    const s = Math.floor((elapsed % 60000) / 1000);
+                    document.getElementById('timerDisplay').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                    
+                    // Elapsed/Remaining Text
+                    document.getElementById('elapsedDisplay').textContent = `${Math.floor(elapsed/60000)}m ${Math.floor((elapsed%60000)/1000)}s elapsed`;
+                    if (remaining > 0) {
+                        document.getElementById('remainingDisplay').textContent = `${Math.floor(remaining/60000)}m ${Math.floor((remaining%60000)/1000)}s remaining`;
+                    } else {
+                        document.getElementById('remainingDisplay').textContent = 'Completed';
+                        document.getElementById('timerDisplay').classList.replace('text-success', 'text-secondary');
+                    }
+                }
 
-            // Calculate elapsed time
-            const elapsedHours = Math.floor(elapsed / (1000 * 60 * 60));
-            const elapsedMinutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-            const elapsedSeconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-
-            // Calculate remaining time
-            const remainingHours = Math.floor(remaining / (1000 * 60 * 60));
-            const remainingMinutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-            const remainingSeconds = Math.floor((remaining % (1000 * 60)) / 1000);
-
-            // Update DOM
-            document.getElementById('elapsedHours').textContent = String(elapsedHours).padStart(2, '0');
-            document.getElementById('elapsedMinutes').textContent = String(elapsedMinutes).padStart(2, '0');
-            document.getElementById('elapsedSeconds').textContent = String(elapsedSeconds).padStart(2, '0');
-
-            // Update progress bar
-            const progress = (elapsed / totalDuration) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-
-            // Update remaining time text
-            if (remaining > 0) {
-                document.getElementById('remainingTime').textContent = 
-                    `${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s remaining`;
-            } else {
-                document.getElementById('remainingTime').textContent = 'Session completed!';
-                document.getElementById('progressBar').classList.remove('bg-success');
-                document.getElementById('progressBar').classList.add('bg-danger');
-            }
-        }
-
-        // Update every second
-        updateRealTimeDuration();
-        setInterval(updateRealTimeDuration, 1000);
-    </script>
-
-    <style>
-        .animated-pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @@keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.1);
-            }
-        }
-    </style>
+                updateTracker();
+                setInterval(updateTracker, 1000);
+            });
+        </script>
+    }
 }
+
+<style>
+    .dashed-border {
+        border-top-style: dashed !important;
+        opacity: 0.3;
+    }
+</style>

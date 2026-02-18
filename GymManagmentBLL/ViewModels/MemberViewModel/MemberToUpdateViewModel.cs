@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GymManagmentDAL.Entities.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace GymManagmentBLL.ViewModels.MemberViewModel
@@ -18,36 +19,45 @@ namespace GymManagmentBLL.ViewModels.MemberViewModel
         public IFormFile? PhotoFile { get; set; }
 
         // Email Validation (Partially visible/standard)
-        [Required(ErrorMessage = "Email Is Required!")]
-        [EmailAddress(ErrorMessage = "Invalid Email Format!")] // Partially visible
+        [Required(ErrorMessage = "EmailRequired")]
+        [EmailAddress(ErrorMessage = "InvalidEmail")]
         [DataType(DataType.EmailAddress)]
-        [StringLength(maximumLength: 100, MinimumLength = 5, ErrorMessage = "Email Must Be Between 5 and 100 Chars!")]
+        [StringLength(maximumLength: 100, MinimumLength = 5, ErrorMessage = "EmailLength")]
         public string Email { get; set; } = null!;
 
         // Phone Validation (Visible)
-        [Required(ErrorMessage = "Phone Is Required!")]
-        [Phone(ErrorMessage = "Invalid Phone Number!")]
-        [RegularExpression(@"^01(0|1|2|5)\d{8}$", ErrorMessage = "Phone must be a valid Egyptian number (01XXXXXXXXX)")]
-
-
+        [Required(ErrorMessage = "PhoneRequired")]
+        [Phone(ErrorMessage = "InvalidPhone")]
+        [RegularExpression(@"^01(0|1|2|5)\d{8}$", ErrorMessage = "EgyptianPhone")]
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; } = null!;
 
+        [Required(ErrorMessage = "DateOfBirthRequired")]
+        [DataType(DataType.Date)]
+        public DateOnly DateOfBirth { get; set; } = default;
+
+        [Required(ErrorMessage = "GenderRequired")]
+        public Gender Gender { get; set; }
+
         // Building Number Validation (Visible)
-        [Required(ErrorMessage = "Building Number Is Required!")]
-        [Range(minimum: 1, maximum: 9000, ErrorMessage = "Building Number Must Be Between 1 and 9000!")]
+        [Required(ErrorMessage = "BuildingNumberRequired")]
+        [Range(minimum: 1, maximum: 9000, ErrorMessage = "Building number must be between 1 and 9000.")]
         public int BuildingNumber { get; set; } = default;
 
         // Street Validation (Visible)
-        [Required(ErrorMessage = "Street Is Required!")]
-        [StringLength(maximumLength: 30, MinimumLength = 2, ErrorMessage = "Street Must Be Between 2 and 30 Chars!")]
+        [Required(ErrorMessage = "StreetRequired")]
+        [StringLength(maximumLength: 30, MinimumLength = 2, ErrorMessage = "StreetLength")]
         public string Street { get; set; } = null!;
 
         // City Validation (Visible)
-        [Required(ErrorMessage = "City Is Required!")]
-        [StringLength(maximumLength: 30, MinimumLength = 2, ErrorMessage = "City Must Be Between 2 and 30 Chars!")]
-        [RegularExpression(@"[a-zA-Z\s]*$", ErrorMessage = "City Can Contain Only Letters And Spaces!")]
+        [Required(ErrorMessage = "CityRequired")]
+        [StringLength(maximumLength: 30, MinimumLength = 2, ErrorMessage = "CityLength")]
         public string City { get; set; } = null!;
+
+        [Required(ErrorMessage = "CountryRequired")]
+        public string Country { get; set; } = "Egypt";
+
+        public HealthRecordViewModel HealthRecord { get; set; } = new HealthRecordViewModel();
 
     }
 }

@@ -1,0 +1,123 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@model GymManagmentBLL.ViewModels.AccountViewModel.ChangePasswordViewModel
+@{
+    ViewData["Title"] = Localizer["Settings"];
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-10">
+        <h2 class="fw-bold mb-4">
+            <i class="fas fa-sliders-h text-primary me-2"></i>@Localizer["AccountSettings"]
+        </h2>
+
+        <div class="row g-4">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3">
+                <div class="premium-card p-3 border-0 shadow-sm sticky-top" style="top: 100px;">
+                    <nav class="nav flex-column nav-pills custom-settings-nav" id="settingsTabs">
+                        <a class="nav-link active rounded-pill mb-2 px-4" href="#passwordTab" data-bs-toggle="pill">
+                            <i class="fas fa-lock me-2"></i>@Localizer["ChangePassword"]
+                        </a>
+                        <a class="nav-link rounded-pill mb-2 px-4" href="#emailTab" data-bs-toggle="pill">
+                            <i class="fas fa-envelope me-2"></i>@Localizer["ChangeEmail"]
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-md-9">
+                <div class="tab-content" id="settingsContent">
+                    
+                    <!-- Password Tab -->
+                    <div class="tab-pane fade show active" id="passwordTab">
+                        <div class="premium-card p-4 p-md-5 border-0 shadow-sm bg-white">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-danger">
+                                <i class="fas fa-shield-alt me-2"></i>@Localizer["UpdateSecurityPassword"]
+                            </h5>
+                            <form asp-action="ChangePassword" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                                
+                                <div class="mb-4">
+                                    <label asp-for="CurrentPassword" class="form-label small fw-bold text-secondary text-uppercase">@Localizer["CurrentPassword"]</label>
+                                    <input asp-for="CurrentPassword" class="form-control rounded-pill px-3" placeholder="@Localizer["EnterCurrentPassword"]" />
+                                    <span asp-validation-for="CurrentPassword" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-4">
+                                    <label asp-for="NewPassword" class="form-label small fw-bold text-secondary text-uppercase">@Localizer["NewPassword"]</label>
+                                    <input asp-for="NewPassword" class="form-control rounded-pill px-3" placeholder="@Localizer["EnterNewPassword"]" />
+                                    <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-4">
+                                    <label asp-for="ConfirmPassword" class="form-label small fw-bold text-secondary text-uppercase">@Localizer["ConfirmNewPassword"]</label>
+                                    <input asp-for="ConfirmPassword" class="form-control rounded-pill px-3" placeholder="@Localizer["ConfirmNewPassword"]" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                                
+                                <div class="pt-3">
+                                    <button type="submit" class="btn btn-danger px-4 py-2 rounded-pill fw-bold shadow-sm">
+                                        @Localizer["UpdatePassword"]
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Email Tab -->
+                    <div class="tab-pane fade" id="emailTab">
+                        <div class="premium-card p-4 p-md-5 border-0 shadow-sm bg-white">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">
+                                <i class="fas fa-at me-2"></i>@Localizer["UpdateEmailIdentity"]
+                            </h5>
+                            <p class="text-secondary small mb-4">
+                                <i class="fas fa-info-circle me-1"></i> @Localizer["EmailChangeAuditNote"]
+                            </p>
+                            <form asp-action="SendEmailOTP" method="post">
+                                <div class="mb-4">
+                                    <label class="form-label small fw-bold text-secondary text-uppercase">@Localizer["NewEmailAddress"]</label>
+                                    <input name="NewEmail" type="email" class="form-control rounded-pill px-3" placeholder="@Localizer["EnterNewEmail"]" required />
+                                </div>
+                                
+                                <div class="pt-3">
+                                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm">
+                                        @Localizer["SendVerificationCode"]
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    .custom-settings-nav .nav-link {
+        color: var(--text-main);
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+    [dir="ltr"] .custom-settings-nav .nav-link { text-align: left; }
+    [dir="rtl"] .custom-settings-nav .nav-link { text-align: right; }
+
+    .custom-settings-nav .nav-link.active {
+        background: var(--primary) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+    .custom-settings-nav .nav-link:hover:not(.active) {
+        background: var(--body-bg);
+        transform: translateX(5px);
+    }
+    [dir="rtl"] .custom-settings-nav .nav-link:hover:not(.active) {
+        transform: translateX(-5px);
+    }
+</style>

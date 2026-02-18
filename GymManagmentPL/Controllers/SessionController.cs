@@ -1,155 +1,250 @@
 ﻿using GymManagmentBLL.Service.Interfaces;
+using GymManagmentBLL.Service.Implementations;
 using GymManagmentBLL.ViewModels.SessionViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
+using System.Linq;
 
 namespace GymManagmentPL.Controllers
 {
+    [Authorize]
     public class SessionController : Controller
     {
         private readonly ISessionService _sessionService;
+        private readonly ITrainerService _trainerService;
+        private readonly IMemberService _memberService;
+        private readonly IMemberSessionService _memberSessionService;
+        private readonly IEmailService _emailService;
+        private readonly IGymSettingsService _gymSettingsService;
+        private readonly ILogger<SessionController> _logger;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public SessionController(ISessionService sessionService)
+        public SessionController(
+            ISessionService sessionService, 
+            ITrainerService trainerService, 
+            IMemberService memberService,
+            IMemberSessionService memberSessionService,
+            IEmailService emailService, 
+            IGymSettingsService gymSettingsService,
+            IStringLocalizer<SharedResource> localizer,
+            ILogger<SessionController> logger)
         {
             _sessionService = sessionService;
-        }
-        public IActionResult Index()
-        {
-            var sessions = _sessionService.GetAllSession();
-            return View(sessions);
+            _trainerService = trainerService;
+            _memberService = memberService;
+            _memberSessionService = memberSessionService;
+            _emailService = emailService;
+            _gymSettingsService = gymSettingsService;
+            _localizer = localizer;
+            _logger = logger;
         }
 
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string? searchTerm = null)
         {
+            var pagedResult = await _sessionService.GetSessionsPagedAsync(pageNumber, pageSize, searchTerm);
+            ViewData["SearchTerm"] = searchTerm;
+            return View(pagedResult);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            if (id <= 0) return BadRequest();
             
-            if(id <= 0)
+            var session = await _sessionService.GetSessionByIdAsync(id);
+            if (session == null)
             {
-                TempData["ErrorMessage"] = "Invalid Session Id";
-                return RedirectToAction(nameof(Index));
-            }
-            var session = _sessionService.GetSessionById(id);
-            if(session is null)
-            {
-                TempData["ErrorMessage"] = "Session Not Found.";
+                TempData["ErrorMessage"] = "Session not found.";
                 return RedirectToAction(nameof(Index));
             }
             return View(session);
-
         }
 
-        public ActionResult Create()
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<IActionResult> Create()
         {
-            LoadDropDownCategory();
-            LoadDropDownTrainer();
+            await LoadDropDownsAsync();
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(CreateSessionViewModel createSession)
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateSessionViewModel createSession)
         {
             if (!ModelState.IsValid)
             {
-                LoadDropDownCategory();
-                LoadDropDownTrainer();
+                var errors = string.Join("<br>", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                TempData["ErrorMessage"] = errors;
+                await LoadDropDownsAsync();
                 return View(createSession);
             }
-            var result = _sessionService.CreateSession(createSession);
+
+            var result = await _sessionService.CreateSessionAsync(createSession);
             if (result)
             {
-                TempData["SuccessMessage"] = "Session Created Successfully.";
+                // Notify Trainer
+                try
+                {
+                    var trainer = await _trainerService.GetTrainerDetailsAsync(createSession.TrainerId);
+                    if (trainer != null && !string.IsNullOrEmpty(trainer.Email))
+                    {
+                        bool isArabic = System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("ar");
+                        var gymSettings = await _gymSettingsService.GetSettingsAsync();
+                        string assignmentTemplate = EmailTemplates.SessionAssignment(trainer.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, createSession.Description ?? "Gym Session", createSession.StartDate, isArabic);
+                        await _emailService.SendEmailAsync(trainer.Email, isArabic ? "تكليف بجلسة تدريبية جديدة" : "New Training Session Assigned", assignmentTemplate);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to send assignment email to Trainer for session {Session}", createSession.Description);
+                }
+
+                TempData["SuccessMessage"] = _localizer["CreateSuccess"].Value;
                 return RedirectToAction(nameof(Index));
             }
-            else {
-                TempData["ErrorMessage"] = "Failed to Create Session.";
-                LoadDropDownCategory();
-                LoadDropDownTrainer();
-                return View(createSession);
-            }
+
+            TempData["ErrorMessage"] = _localizer["InvalidInput"].Value;
+            await LoadDropDownsAsync();
+            return View(createSession);
         }
 
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id <= 0)
+            if (id <= 0) return BadRequest();
+
+            var session = await _sessionService.GetSessionToUpdateAsync(id);
+            if (session == null)
             {
-                TempData["ErrorMessage"] = "Invalid Session Id";
+                TempData["ErrorMessage"] = "Session not edit-able (already started) or not found.";
                 return RedirectToAction(nameof(Index));
             }
-            var session = _sessionService.GetSessionToUpdate(id);
-            if (session is null)
-            {
-                TempData["ErrorMessage"] = "Session Not Found.";
-                return RedirectToAction(nameof(Index));
-            }
-            LoadDropDownTrainer();
+
+            await LoadDropDownsAsync();
             return View(session);
         }
 
         [HttpPost]
-        public ActionResult Edit([FromRoute]int id,UpdateSessionViewModel updateSession)
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdateSessionViewModel updateSession)
         {
             if (!ModelState.IsValid)
             {
-                LoadDropDownTrainer();
+                var errors = string.Join("<br>", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                TempData["ErrorMessage"] = errors;
+                await LoadDropDownsAsync();
                 return View(updateSession);
             }
-            var result = _sessionService.UpdateSession(id, updateSession);
+
+            var result = await _sessionService.UpdateSessionAsync(id, updateSession);
             if (result)
             {
-                TempData["SuccessMessage"] = "Session Updated Successfully.";
-                
+                TempData["SuccessMessage"] = _localizer["UpdateSuccess"].Value;
+                return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                TempData["ErrorMessage"] = "Failed to Update Session.";
-                
-            }
-            return RedirectToAction(nameof(Index));
-        }
 
-        public ActionResult Delete(int id)
-        {
-            if (id <= 0)
-            {
-                TempData["ErrorMessage"] = "Invalid Session Id";
-                return RedirectToAction(nameof(Index));
-            }
-            var session = _sessionService.GetSessionById(id);
-            if (session is null)
-            {
-                TempData["ErrorMessage"] = "Session Not Found";
-                return RedirectToAction(nameof(Index));
-            }
-            ViewBag.SessionId = session.Id;
-            return View();
+            TempData["ErrorMessage"] = _localizer["OperationFailed"].Value;
+            await LoadDropDownsAsync();
+            return View(updateSession);
         }
 
         [HttpPost]
-        public ActionResult DeleteConfirmed(int id)
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _sessionService.RemoveSession(id);
+            if (id <= 0) return BadRequest();
+
+            // Capture details BEFORE deletion for notifications
+            var session = await _sessionService.GetSessionByIdAsync(id);
+            var bookedData = await _memberSessionService.GetMembersForUpcomingSessionAsync(id);
+
+            var result = await _sessionService.RemoveSessionAsync(id);
             if (result)
             {
-                TempData["SuccessMessage"] = "Session Deleted Successfully.";
+                if (session != null)
+                {
+                    try
+                    {
+                        var now = DateTime.Now;
+                        var isUpcoming = session.StartDate > now;
+
+                        // Only notify if the session was upcoming (not completed)
+                        if (isUpcoming)
+                        {
+                            // Notify Trainer
+                            var trainer = await _trainerService.GetTrainerDetailsAsync(session.TrainerId);
+                            if (trainer != null && !string.IsNullOrEmpty(trainer.Email))
+                            {
+                                bool isArabic = System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("ar");
+                                var gymSettings = await _gymSettingsService.GetSettingsAsync();
+                                await _emailService.SendEmailAsync(trainer.Email, isArabic ? "عاجل: إلغاء جلسة تدريبية" : "Urgent: Training Session Cancelled", 
+                                    EmailTemplates.SessionCancelled(trainer.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, session.Description, session.StartDate, isArabic));
+                            }
+
+                            // Notify Members
+                            if (bookedData != null && bookedData.Bookings.Any())
+                            {
+                                foreach (var booking in bookedData.Bookings)
+                                {
+                                    var member = await _memberService.GetMemberDetailsAsync(booking.MemberId);
+                                    if (member != null && !string.IsNullOrEmpty(member.Email))
+                                    {
+                                        bool isArabic = System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("ar");
+                                        var gymSettings = await _gymSettingsService.GetSettingsAsync();
+                                        await _emailService.SendEmailAsync(member.Email, isArabic ? "إشعار بإلغاء جلسة تدريبية" : "Training Session Cancellation Notice", 
+                                            EmailTemplates.SessionCancelled(member.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, session.Description, session.StartDate, isArabic));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error sending cancellation emails for session {Id}", id);
+                    }
+                }
+
+                TempData["SuccessMessage"] = "Session deleted and participants notified.";
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to Delete Session.";
+                TempData["ErrorMessage"] = "Cannot delete session. It may have started or is ongoing.";
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private void LoadDropDownCategory()
+        public async Task<IActionResult> Members(int id)
         {
-            var category = _sessionService.GetCategoryForDropDown();
-            ViewBag.Categories = new SelectList(category, "Id", "Name");
-            
+            if (id <= 0) return BadRequest();
+
+            var members = await _memberSessionService.GetSessionMembersAsync(id);
+            if (members == null)
+            {
+                TempData["ErrorMessage"] = "Session not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(members);
         }
 
-        private void LoadDropDownTrainer()
+        private async Task LoadDropDownsAsync()
         {
-            
-            var trainer = _sessionService.GetTrainerForDropDown();
-            ViewBag.Trainers = new SelectList(trainer, "Id", "Name");
+            var categories = await _sessionService.GetCategoryForDropDownAsync();
+            var localizedCategories = categories.Select(c => new { 
+                Id = c.Id, 
+                Name = _localizer[c.Name].Value 
+            });
+
+            ViewBag.Categories = new SelectList(localizedCategories, "Id", "Name");
+            ViewBag.Trainers = new SelectList(await _sessionService.GetTrainerForDropDownAsync(), "Id", "Name");
         }
     }
 }

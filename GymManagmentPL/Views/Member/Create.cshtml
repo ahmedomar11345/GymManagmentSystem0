@@ -1,172 +1,272 @@
-﻿@model CreateMemberViewModel
-
-<header class="mb-4">
-    <h3 class="text-primary">Add Member</h3>
-</header>
-
-@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey("DataMissed"))
-{
-    <div class="alert alert-danger">
-        @Html.ValidationMessage("DataMissed")
-    </div>
+﻿@inject IStringLocalizer<SharedResource> Localizer
+@model GymManagmentBLL.ViewModels.MemberViewModel.CreateMemberViewModel
+@{
+    ViewData["Title"] = Localizer["AddNewMember"];
 }
 
-<form asp-action="CreateMember" method="post" enctype="multipart/form-data">
-    <ul class="nav nav-tabs mb-4" id="addMemberTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="member-tab" data-bs-toggle="tab"
-                    data-bs-target="#member-info" type="button" role="tab" aria-controls="member-info" aria-selected="true">
-                Member Info
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="health-tab" data-bs-toggle="tab"
-                    data-bs-target="#health-info" type="button" role="tab" aria-controls="health-info" aria-selected="false">
-                Health Data
-            </button>
-        </li>
-    </ul>
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">@Localizer["Members"]</a></li>
+                <li class="breadcrumb-item active">@Localizer["AddNewMember"]</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">
+            <i class="fas fa-user-plus text-primary me-2"></i>@Localizer["RegisterMemberTitle"]
+        </h2>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-times me-2"></i>@Localizer["Cancel"]
+        </a>
+    </div>
+</div>
 
-    <div class="tab-content" id="myTabContent">
+<form asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
 
-        <div class="tab-pane fade show active" id="member-info" role="tabpanel" aria-labelledby="member-tab">
-            <div class="section-header mb-3">
-                <h5 class="text-primary fw-bold">Personal Information</h5>
-				<hr class="mt-2">
-                <div class="mt-2">
-                    <img id="photoPreview" src="#" alt="Photo Preview" style="max-width: 200px; display: none;"
-                         class="img-thumbnail" />
+    <div class="row g-4">
+        <!-- Photo Section -->
+        <div class="col-lg-4">
+            <div class="premium-card p-4 text-center sticky-top" style="top: 2rem; z-index: 10;">
+                <h5 class="fw-bold mb-4">@Localizer["ProfilePhoto"]</h5>
+                <div class="position-relative d-inline-block mb-4">
+                    <img id="photoPreview" src="~/images/members/default-avatar.png" alt="Preview" 
+                         class="rounded-circle shadow-lg"
+                         style="width: 180px; height: 180px; object-fit: cover; border: 4px solid #fff;" />
+                    
+                    <label for="photoInput" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" 
+                           style="width: 45px; height: 45px; cursor: pointer; border: 3px solid #fff;">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="photoInput" asp-for="PhotoFile" class="d-none" accept="image/*" />
                 </div>
-                <label asp-for="PhotoFile" class="control-label">Profile Photo <span class="text-danger">*</span></label>
-                <input asp-for="PhotoFile" type="file" class="form-control" accept="image/*" id="photoInput" required />
-                <span asp-validation-for="PhotoFile" class="text-danger"></span>
-                <small class="form-text text-muted">Max size: 3 MB. Allowed types: JPG, PNG, JPEG (Required)</small>
-            </div>
-            <div class="row g-3"> 
-                <div class="col-12 col-md-6">
-                    <label asp-for="Name" class="form-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                
+                <h5 class="fw-bold text-secondary mb-3">@Localizer["UploadImage"]</h5>
+                <div class="alert alert-info py-2 small border-0 bg-primary bg-opacity-10 text-primary mb-0 text-start">
+                    <p class="mb-1 fw-bold"><i class="fas fa-info-circle me-1"></i>@Localizer["Requirements"]:</p>
+                    <ul class="mb-0 ps-3">
+                        <li>@Localizer["MaxSize"]: 3MB</li>
+                        <li>@Localizer["Format"]: JPG, PNG, JPEG</li>
+                    </ul>
                 </div>
-
-                <div class="col-12 col-md-6">
-                    <label asp-for="Email" class="form-label"></label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label asp-for="Phone" class="form-label"></label>
-                    <input asp-for="Phone" class="form-control" />
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label asp-for="DateOfBirth" class="form-label"></label>
-                    <input asp-for="DateOfBirth" type="date" class="form-control" />
-                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label asp-for="Gender" class="form-label"></label>
-                    <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-select">
-                        <option value="">-- Select Gender --</option>
-                    </select>
-                    <span asp-validation-for="Gender" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="section-header mb-3 mt-4">
-                <h5 class="text-primary fw-bold">Address Information</h5>
-                <hr class="mt-2">
-            </div>
-            <div class="row g-3">
-                <div class="col-12 col-md-4">
-                    <label asp-for="BuildingNumber" class="form-label"></label>
-                    <input asp-for="BuildingNumber" class="form-control" />
-                    <span asp-validation-for="BuildingNumber" class="text-danger"></span>
-                </div>
-                <div class="col-12 col-md-4">
-                    <label asp-for="Street" class="form-label"></label>
-                    <input asp-for="Street" class="form-control" />
-                    <span asp-validation-for="Street" class="text-danger"></span>
-                </div>
-                <div class="col-12 col-md-4">
-                    <label asp-for="City" class="form-label"></label>
-                    <input asp-for="City" class="form-control" />
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
+                <span asp-validation-for="PhotoFile" class="text-danger small mt-2 d-block"></span>
             </div>
         </div>
 
-        <div class="tab-pane fade" id="health-info" role="tabpanel" aria-labelledby="health-tab">
-            <div class="section-header mb-3">
-                <h5 class="text-primary fw-bold">Health Metrics</h5>
-                <hr class="mt-2">
+        <!-- Form Sections -->
+        <div class="col-lg-8">
+            <!-- Basic Information -->
+            <div class="premium-card p-4 mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">@Localizer["BasicInformation"]</h5>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="Name" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["FullName"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-user text-secondary"></i></span>
+                            <input asp-for="Name" class="form-control border-start-0" placeholder="@Localizer["FullNamePlaceholder"]" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["EmailAddress"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-secondary"></i></span>
+                            <input asp-for="Email" class="form-control border-start-0" placeholder="@Localizer["EmailPlaceholder"]" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["Phone"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-phone text-secondary"></i></span>
+                            <input asp-for="Phone" class="form-control border-start-0" placeholder="@Localizer["PhonePlaceholder"]" />
+                        </div>
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="DateOfBirth" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["DateOfBirth"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-birthday-cake text-secondary"></i></span>
+                            <input asp-for="DateOfBirth" type="date" class="form-control border-start-0" />
+                        </div>
+                        <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Gender" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["Gender"]</label>
+                        <div class="d-flex gap-4 mt-1">
+                            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" asp-for="Gender" value="@gender" id="gender_@gender">
+                                    <label class="form-check-label" for="gender_@gender">
+                                        @Localizer[gender.ToString()]
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <span asp-validation-for="Gender" class="text-danger small"></span>
+                    </div>
+                </div>
             </div>
-            <div class="row g-3">
-                <div class="col-12 col-md-6">
-                    <label asp-for="HealthRecord.Height" class="form-label">Height (cm)</label>
-                    <input asp-for="HealthRecord.Height" type="number" step="0.1" class="form-control" />
-                    <span asp-validation-for="HealthRecord.Height" class="text-danger"></span>
-                </div>
 
-                <div class="col-12 col-md-6">
-                    <label asp-for="HealthRecord.Weight" class="form-label">Weight (kg)</label>
-                    <input asp-for="HealthRecord.Weight" type="number" step="0.1" class="form-control" />
-                    <span asp-validation-for="HealthRecord.Weight" class="text-danger"></span>
+            <!-- Address -->
+            <div class="premium-card p-4 mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-shape bg-success bg-opacity-10 text-success me-3">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">@Localizer["AddressDetails"]</h5>
                 </div>
-
-                <div class="col-12 col-md-6">
-                    <label asp-for="HealthRecord.BloodType" class="form-label">Blood Type</label>
-                    <select asp-for="HealthRecord.BloodType" class="form-select">
-                        <option value="">Select Type</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                    </select>
-                    <span asp-validation-for="HealthRecord.BloodType" class="text-danger"></span>
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label asp-for="City" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["City"]</label>
+                        <input asp-for="City" class="form-control" placeholder="@Localizer["CityPlaceholder"]" />
+                        <span asp-validation-for="City" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="Street" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["Street"]</label>
+                        <input asp-for="Street" class="form-control" placeholder="@Localizer["StreetPlaceholder"]" />
+                        <span asp-validation-for="Street" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="BuildingNumber" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["BuildingNumber"]</label>
+                        <input asp-for="BuildingNumber" class="form-control" placeholder="@Localizer["BuildingPlaceholder"]" />
+                        <span asp-validation-for="BuildingNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="Country" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["Country"]</label>
+                        <input asp-for="Country" class="form-control" placeholder="@Localizer["Country"]" value="@Localizer["Egypt"]" />
+                        <span asp-validation-for="Country" class="text-danger small"></span>
+                    </div>
                 </div>
+            </div>
 
-                <div class="col-12 col-md-6">
-                    <label asp-for="HealthRecord.Note" class="form-label"></label>
-                    <textarea asp-for="HealthRecord.Note" class="form-control" rows="1"></textarea>
-                    <span asp-validation-for="HealthRecord.Note" class="text-danger"></span>
+            <!-- Email Language -->
+            <div class="premium-card p-4 mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-shape bg-info bg-opacity-10 text-info me-3">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">@Localizer["EmailLanguage"]</h5>
+                </div>
+                
+                <div class="d-flex gap-4 mt-1">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="SendInArabic" value="true" id="langWelcomeAr" checked>
+                        <label class="form-check-label" for="langWelcomeAr">العربية</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="SendInArabic" value="false" id="langWelcomeEn">
+                        <label class="form-check-label" for="langWelcomeEn">English</label>
+                    </div>
+                </div>
+                <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i> @Localizer["EmailLanguageDesc"]</div>
+            </div>
+
+            <!-- Health Information -->
+            <div class="premium-card p-4 mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-shape bg-danger bg-opacity-10 text-danger me-3">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">@Localizer["HealthStatus"]</h5>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3">
+                            <label asp-for="HealthRecord.Weight" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["WeightKg"]</label>
+                            <input asp-for="HealthRecord.Weight" class="form-control" placeholder="0.0" />
+                            <span asp-validation-for="HealthRecord.Weight" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3">
+                            <label asp-for="HealthRecord.Height" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["HeightCm"]</label>
+                            <input asp-for="HealthRecord.Height" class="form-control" placeholder="0.0" />
+                            <span asp-validation-for="HealthRecord.Height" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <label asp-for="HealthRecord.BloodType" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["BloodType"]</label>
+                            <select asp-for="HealthRecord.BloodType" class="form-select">
+                                <option value="">@Localizer["Select"]</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                            <span asp-validation-for="HealthRecord.BloodType" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="HealthRecord.Note" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["MedicalNotes"] @Localizer["Optional"]</label>
+                        <textarea asp-for="HealthRecord.Note" class="form-control" rows="2" placeholder="@Localizer["MedicalNotesPlaceholder"]"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membership Plan (Optional) -->
+            <div class="premium-card p-4 mb-4 accent-card">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">@Localizer["MembershipPlan"] @Localizer["Optional"]</h5>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="PlanId" class="form-label fw-bold small text-uppercase text-secondary">@Localizer["MembershipPlan"]</label>
+                        <select asp-for="PlanId" class="form-select shadow-sm" style="border-radius: 10px;">
+                            <option value="">@Localizer["NoActiveMembership"]</option>
+                            @if (Model?.Plans != null)
+                            {
+                                foreach (var plan in Model.Plans)
+                                {
+                                    <option value="@plan.Id">@plan.Name (@plan.DurationDays @Localizer["DaysText"] - @plan.Price.ToString("C"))</option>
+                                }
+                            }
+                        </select>
+                        <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i> @Localizer["SkipAssignLater"]</div>
+                        <span asp-validation-for="PlanId" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="premium-card p-4 bg-primary bg-opacity-10 border-primary border-opacity-25">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-1"><i class="fas fa-check-circle me-2 text-primary"></i>@Localizer["ReadyToRegister"]</h6>
+                        <p class="text-secondary small mb-0">@Localizer["MemberAddedImmediately"]</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-5 py-3 fw-bold shadow-lg rounded-pill">
+                        <i class="fas fa-user-plus me-2"></i> @Localizer["RegisterAndActivate"]
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-    <footer class="d-flex justify-content-end gap-3 mt-4">
-        <a asp-action="Index" class="btn btn-outline-secondary px-4">
-            <i class="bi bi-arrow-left me-2"></i> Back to List
-        </a>
-        <button type="submit" class="btn btn-primary px-4">
-            <i class="bi bi-plus-circle me-2"></i> Add Member
-        </button>
-    </footer>
 </form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        // Preview photo before upload
-        document.getElementById('photoInput').addEventListener('change', function(e) {
-            var file = e.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var preview = document.getElementById('photoPreview');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
+    <script src="~/js/member.js" asp-append-version="true"></script>
 }

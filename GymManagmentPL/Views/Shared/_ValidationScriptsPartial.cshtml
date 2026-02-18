@@ -1,2 +1,29 @@
-﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+﻿@inject IStringLocalizer<SharedResource> Localizer
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $(function () {
+        // Global handler for invalid forms using jQuery Validation's native event
+        $(document).on('invalid-form.validate', 'form', function (event, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '@Localizer["OperationFailed"]',
+                        html: '@Localizer["InvalidInput"]' + '<br><small class="text-muted">(' + errors + ' @Localizer["ErrorsFound"]) </small>',
+                        timer: 4000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        customClass: {
+                            popup: 'premium-swal-popup'
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>

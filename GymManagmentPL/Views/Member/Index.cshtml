@@ -1,137 +1,186 @@
-﻿@model IEnumerable<MemberViewModel>
+﻿@inject IStringLocalizer<SharedResource> Localizer
+@using GymManagmentDAL.Repositories.Interfaces
+@model PagedResult<GymManagmentBLL.ViewModels.MemberViewModel.MemberViewModel>
 
 @{
-    ViewData["Title"] = "Members"; 
+    ViewData["Title"] = Localizer["Members"];
 }
 
-@if(TempData["SuccessMessage"] is not null){
-            <div id="Alert" class="alert alert-success alert-dismissible fade show">
-                <i class="bi bi-check-circle-fill me-2"></i>
-    @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-}
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-0">@Localizer["Members"]</h2>
+        <p class="text-secondary">@Localizer["ManageProfiles"]</p>
     </div>
+    <div class="col-md-6 text-md-end">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary shadow-sm me-2">
+            <i class="fas fa-arrow-left me-2"></i> @Localizer["Dashboard"]
+        </a>
+        <a asp-action="ExportToExcel" class="btn btn-outline-success shadow-sm me-2">
+            <i class="fas fa-file-excel me-2"></i> @Localizer["ExportExcel"]
+        </a>
+        <a id="btnExportPdf" href="javascript:void(0);" class="btn btn-outline-danger shadow-sm me-2">
+            <i class="fas fa-file-pdf me-2"></i> @Localizer["ExportPdf"]
+        </a>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus me-2"></i> @Localizer["Create"] @Localizer["Members"]
+        </a>
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light">
+            <tr>
+                <th class="ps-4">@Localizer["Member"]</th>
+                <th>@Localizer["ContactInfo"]</th>
+                <th>@Localizer["Gender"]</th>
+                <th>@Localizer["DateOfBirth"]</th>
+                <th class="text-center">@Localizer["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <img src="/images/members/@item.Photo" 
+                                     class="rounded-circle border" 
+                                     style="width: 45px; height: 45px; object-fit: cover;"
+                                     onerror="this.src='https://ui-avatars.com/api/?name=@item.Name&background=random'" />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-0">@item.Name</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div><i class="fas fa-envelope me-1 text-secondary small"></i> @item.Email</div>
+                            <div><i class="fas fa-phone me-1 text-secondary small"></i> @item.Phone</div>
+                        </td>
+                        <td>
+                            @if (item.Gender == "Male")
+                            {
+                                <span class="badge bg-primary bg-opacity-10 text-primary">
+                                    <i class="fas fa-mars me-1"></i> @Localizer["Male"]
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger bg-opacity-10 text-danger">
+                                    <i class="fas fa-venus me-1"></i> @Localizer["Female"]
+                                </span>
+                            }
+                        </td>
+                        <td>@item.DateOfBirth</td>
+                        <td class="text-center">
+                            <div class="btn-group shadow-sm">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info border-0" title="@Localizer["ViewDetails"]">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning border-0" title="@Localizer["EditProfile"]">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger border-0 delete-member-btn" 
+                                        data-member-id="@item.Id"
+                                        data-member-name="@item.Name"
+                                        title="@Localizer["DeleteMember"]">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <div class="py-4">
+                            <i class="fas fa-users-slash fs-1 text-secondary mb-3"></i>
+                            <h5 class="text-secondary">@Localizer["NoMembersFound"]</h5>
+                            <p class="text-muted">@Localizer["NoMembersDesc"]</p>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Hidden Delete Form -->
+<form id="deleteForm" method="post" asp-action="Delete" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteMemberId" />
+</form>
+
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" 
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" 
+                   asp-route-searchTerm='@ViewData["SearchTerm"]'>
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Index" 
+                       asp-route-pageNumber="@i" 
+                       asp-route-searchTerm='@ViewData["SearchTerm"]'>@i</a>
+                </li>
+            }
+
+            <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" 
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" 
+                   asp-route-searchTerm='@ViewData["SearchTerm"]'>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 }
-
-
-            <div class="container">
-                <header class="d-flex justify-content-end mt-5 mb-4 align-items-center">
-                    <a asp-controller="Member" asp-action="Create" class="btn btn-fill fw-medium rounded-pill px-3 py-3">
-                        + Add Member
-                    </a>
-                </header>
-
-                @if(Model is not null && Model.Any())
-                {
-                    <div class="table-responsive " style="overflow: visible;">
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th><span>@nameof(MemberViewModel.Photo)</span></th>
-                                    <th><span>@nameof(MemberViewModel.Name)</span></th>
-                                    <th><span>@nameof(MemberViewModel.Email)</span></th>
-                                    <th><span>@nameof(MemberViewModel.Gender)</span></th>
-                                    <th><span>@nameof(MemberViewModel.Phone)</span></th>
-                                    <th><span>Action</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var member in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            <span class="avatar">
-                                                @if (string.IsNullOrEmpty(member.Photo))
-                                                {
-                                                    <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
-                                                    style="width: 40px; height: 40px;" />
-                                                }
-                                                else
-                                                {
-                                                    <img src="~/images/members/@member.Photo" alt="Default Avatar" class="rounded-circle"
-                                                         style="width: 40px; height: 40px;" />
-                                                }
-                                            </span>
-                                        </td>
-                                        <td><span>@member.Name</span></td>
-                                        <td><span>@member.Email</span></td>
-                                        <td><span>@member.Gender</span></td>
-                                        <td><span>@member.Phone</span></td>
-                                        <td class="action position-relative">
-                                            <div class="dropdown">
-                                                <button class="btn btn-link p-0 border-0" type="button"
-                                                id="dropdownMenuButton-@member.Id" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                    <img src="~/images/action dots.jpg" alt="action icon" />
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-start"
-                                                aria-labelledby="dropdownMenuButton-@member.Id">
-                                                    <li>
-                                            <a asp-controller="Member" asp-action="MemberDetails" asp-route-id="@member.Id"
-                                                        class="dropdown-item d-flex align-items-center gap-3">
-                                                            <img src="~/images/info 1.jpg" alt="info icon"
-                                                            style="width: 20px; height: 20px;" />
-                                                            <span>View Member Data</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                            <a asp-controller="Member" asp-action="HealthrecordDetails" asp-route-id="@member.Id"
-                                                        class="dropdown-item d-flex align-items-center gap-3">
-                                                            <img src="~/images/info 1.jpg" alt="info icon"
-                                                            style="width: 20px; height: 20px;" />
-                                                            <span>View Health Record Data</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <hr class="dropdown-divider">
-                                                    </li>
-                                                    <li>
-                                            <a asp-controller="Member" asp-action="MemberEdit" asp-route-id="@member.Id"
-                                                        class="dropdown-item d-flex align-items-center gap-3">
-                                                            <img src="~/images/edit.jpg" alt="edit icon"
-                                                            style="width: 20px; height: 20px;" />
-                                                            <span>Edit Member Data</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <hr class="dropdown-divider">
-                                                    </li>
-                                                    <li>
-                                            <a asp-controller="Member" asp-action="Delete" asp-route-id="@member.Id"
-                                                        class="dropdown-item d-flex align-items-center gap-3 text-danger">
-                                                            <img src="~/images/x-circle 1.jpg" alt="delete icon"
-                                                            style="width: 20px; height: 20px;" />
-                                                            <span>Delete</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center py-5">
-                        <i class="bi bi-person-workspace display-1 text-muted"></i>
-                        <h4 class="mt-3 text-muted">No Members Available</h4>
-                        <p class="text-muted">Add your first Member to get started</p>
-                    </div>
-                }
-
-            </div>
 
 @section Scripts {
-    <partial name="_AlertBoxScript" />
-    <script src="~/js/bootstrap.bundle.min.js"></script>
-    }
+    <script src="~/js/member.js" asp-append-version="true"></script>
+    <script>
+        document.getElementById('btnExportPdf').addEventListener('click', function () {
+            // Hide elements we don't want in PDF
+            const elementsToHide = document.querySelectorAll('.btn-group, .pagination, .row.mb-4, #btnExportPdf, .btn-outline-success, .btn-primary, .btn-outline-secondary, .ms-3 p small');
+            
+            // Temporary style for print
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @@media print {
+                    /* Hide non-essential elements */
+                    .btn-group, .pagination, .row.mb-4, #btnExportPdf, .btn-outline-success, .btn-primary, .btn-outline-secondary { display: none !important; }
+                    
+                    /* Hide Actions column (the 5th column) */
+                    th:nth-child(5), td:nth-child(5) { display: none !important; }
+                    
+                    .table { width: 100% !important; border-collapse: collapse !important; }
+                    .table th, .table td { border: 1px solid #dee2e6 !important; padding: 12px !important; }
+                    body { visibility: hidden; }
+                    .table-responsive { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; border: none !important; }
+                    .table-responsive * { visibility: visible; }
+                    thead { background-color: #f8f9fa !important; -webkit-print-color-adjust: exact; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            window.print();
+
+            // Clear style after printing
+            setTimeout(() => {
+                document.head.removeChild(style);
+            }, 1000);
+        });
+    </script>
+}

@@ -1,86 +1,93 @@
-@model SessionMembersViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@model GymManagmentBLL.ViewModels.MemberSessionViewModel.SessionMembersViewModel
 
-@if (TempData["SuccessMessage"] is not null)
-{
-    <div id="Alert" class="alert alert-success alert-dismissible fade show">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+@{
+    ViewData["Title"] = Localizer["SessionRegistry"];
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="row mb-4 align-items-center mt-4">
+    <div class="col-md-6">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">@Localizer["Bookings"]</a></li>
+                <li class="breadcrumb-item active">@Localizer["Registry"]</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">@Localizer["Registry"]: @Model.SessionName</h2>
     </div>
-}
-
-<header class="bg-primary text-white rounded-3 p-4 shadow-sm mt-5 mb-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h2 class="mb-1 fw-semibold">@Model.SessionName - Members</h2>
-            <p class="mb-0 text-light opacity-75">Members That Already Booked This Session</p>
-        </div>
-        <div class="text-end">
-            <a asp-action="Create" asp-route-id="@Model.SessionId" class="btn btn-light">
-                <i class="fas fa-plus me-1"></i> New Booking
-            </a>
-        </div>
-    </div>
-</header>
-
-<div class="card shadow-sm">
-    <div class="card-body">
-        @if (Model.Bookings.Any())
-        {
-            <table class="table table-striped table-hover align-middle text-center">
-                <thead>
-                    <tr>
-                        <th>Member</th>
-                        <th>Booking Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var booking in Model.Bookings)
-                    {
-                        <tr>
-                            <td>@booking.MemberName</td>
-                            <td>@booking.BookingDate</td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-1">
-                                    <form asp-action="Cancel" method="post" class="m-0">
-                                        <input type="hidden" name="memberId" value="@booking.MemberId" />
-                                        <input type="hidden" name="sessionId" value="@booking.SessionId" />
-                                        <button type="submit" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Are you sure you want to cancel this booking?');">
-                                            <i class="fas fa-times"></i> Cancel
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="text-center py-5">
-                <i class="bi bi-person-workspace display-1 text-muted"></i>
-                <h4 class="mt-3 text-muted">No Bookings Available</h4>
-                <p class="text-muted">Add your first booking to get started</p>
-            </div>
-        }
-    </div>
-    <div class="card-footer">
-        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    <div class="col-md-6 text-md-end">
+        <a asp-action="Create" asp-route-id="@Model.SessionId" class="btn btn-primary rounded-pill px-4">
+            <i class="fas fa-plus me-1"></i> @Localizer["EnrollMember"]
+        </a>
     </div>
 </div>
 
+<div class="premium-card p-0 shadow-sm border-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4">@Localizer["MemberName"]</th>
+                    <th>@Localizer["BookingDate"]</th>
+                    <th class="text-center">@Localizer["Status"]</th>
+                    <th class="text-center">@Localizer["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Bookings != null && Model.Bookings.Any())
+                {
+                    @foreach (var booking in Model.Bookings)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold">@booking.MemberName</td>
+                            <td>@booking.BookingDate</td>
+                            <td class="text-center">
+                                @if (booking.Status == "Waitlisted")
+                                {
+                                    <span class="badge bg-warning text-dark">@Localizer["Waitlisted"]</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@Localizer["Confirmed"]</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-outline-danger border-0 remove-member-btn rounded-pill px-3" 
+                                        data-member-id="@booking.MemberId"
+                                        data-member-name="@booking.MemberName">
+                                    <i class="fas fa-user-minus me-1"></i> @Localizer["Remove"]
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center py-5">
+                            <div class="py-4 text-secondary">
+                                <i class="fas fa-clipboard-list fs-1 opacity-25 mb-3"></i>
+                                <h5>@Localizer["RegistryEmpty"]</h5>
+                                <p>@Localizer["RegistryEmptyDesc"]</p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-light border rounded-pill px-4"><i class="fas fa-arrow-left me-2"></i> @Localizer["BackToSessions"]</a>
+</div>
+
+<form id="removeForm" asp-action="Cancel" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="memberId" id="removeMemberId" />
+    <input type="hidden" name="sessionId" value="@Model.SessionId" />
+</form>
+
 @section Scripts {
-    <partial name="_AlertBoxScript" />
+    <script src="~/js/session.js" asp-append-version="true"></script>
 }

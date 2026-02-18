@@ -1,0 +1,140 @@
+@using GymManagmentDAL.Entities
+@using Microsoft.Extensions.Localization
+@model IEnumerable<Notification>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["AllNotifications"];
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">
+                <i class="fas fa-bell text-primary me-2"></i>@Localizer["Notifications"]
+            </h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-danger rounded-pill px-4" onclick="markAllAsReadAndReload()">
+                    <i class="fas fa-trash-alt me-2"></i>@Localizer["MarkAllRead"]
+                </button>
+            </div>
+        </div>
+
+        <div class="premium-card p-0 overflow-hidden border-0 shadow-sm">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                        <i class="fas fa-bell-slash fs-1 text-muted opacity-50"></i>
+                    </div>
+                    <h4 class="fw-bold">@Localizer["NoNotificationsYet"]</h4>
+                    <p class="text-secondary">@Localizer["NoNotificationsDesc"]</p>
+                    <a href="/" class="btn btn-primary rounded-pill px-4 mt-2">@Localizer["BackToDashboard"]</a>
+                </div>
+            }
+            else
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var n in Model)
+                    {
+                        var icon = n.Type switch
+                        {
+                            "success" => "check-circle",
+                            "danger" => "exclamation-triangle",
+                            "warning" => "bell",
+                            _ => "info-circle"
+                        };
+                        var bgClass = n.Type switch
+                        {
+                            "success" => "success",
+                            "danger" => "danger",
+                            "warning" => "warning",
+                            _ => "primary"
+                        };
+
+                        <div class="list-group-item p-4 bg-transparent @(n.IsRead ? "opacity-75" : "border-start border-4 border-"+bgClass)" id="notification-@n.Id">
+                            <div class="d-flex gap-3">
+                                <div class="bg-@bgClass bg-opacity-10 text-@bgClass rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px;">
+                                    <i class="fas fa-@icon fs-4"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <h6 class="fw-bold mb-0 @(!n.IsRead ? "text-dark" : "text-muted")">@n.Title</h6>
+                                        <small class="text-secondary">@n.CreatedAt.ToString("g")</small>
+                                    </div>
+                                    <p class="mb-2 text-secondary">@n.Message</p>
+                                    <div class="d-flex gap-3 align-items-center">
+                                        @if (!string.IsNullOrEmpty(n.Url))
+                                        {
+                                            <a href="@n.Url" class="btn btn-sm btn-link p-0 text-decoration-none fw-bold" onclick="markAsRead(@n.Id, '@n.Url')">
+                                                @Localizer["ViewDetails"] <i class="fas fa-chevron-right ms-1 small"></i>
+                                            </a>
+                                        }
+                                        <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger small" onclick="markAsReadAndHide(@n.Id)">
+                                            <i class="fas fa-trash-alt me-1"></i> @Localizer["MarkAsRead"]
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function markAsReadAndHide(id) {
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                const response = await fetch(`/Notification/MarkAsRead/${id}`, { 
+                    method: 'POST',
+                    headers: {
+                        'X-XSRF-TOKEN': token,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (response.ok) {
+                    const el = document.getElementById(`notification-${id}`);
+                    if (el) {
+                        el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateX(20px)';
+                        setTimeout(() => {
+                            el.remove();
+                            const list = document.querySelector('.list-group');
+                            if (list && list.children.length === 0) {
+                                window.location.reload();
+                            }
+                        }, 300);
+                    }
+                    loadNotifications(); // Update badge in header
+                } else {
+                    console.error('Failed to mark notification as read');
+                }
+            } catch (err) {
+                console.error('Error:', err);
+            }
+        }
+
+        async function markAllAsReadAndReload() {
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                const response = await fetch('/Notification/MarkAllAsRead', { 
+                    method: 'POST',
+                    headers: {
+                        'X-XSRF-TOKEN': token,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                if (response.ok) {
+                    window.location.reload();
+                }
+            } catch (err) {
+                console.error('Error:', err);
+            }
+        }
+    </script>
+}

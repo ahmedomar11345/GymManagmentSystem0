@@ -10,6 +10,7 @@ namespace GymManagmentBLL.ViewModels.MemberSessionViewModel
     public class CreateBookingViewModel
     {
         [Required(ErrorMessage = "Member is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a member")]
         [Display(Name = "Member")]
         public int MemberId { get; set; }
 

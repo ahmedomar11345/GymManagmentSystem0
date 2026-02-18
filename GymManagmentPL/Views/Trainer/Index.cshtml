@@ -1,108 +1,237 @@
-﻿@model IEnumerable<TrainerViewModel>
+﻿@using GymManagmentDAL.Repositories.Interfaces
+@using GymManagmentDAL.Entities
+@using Microsoft.Extensions.Localization
+@model PagedResult<GymManagmentBLL.ViewModels.TrainerViewModel.TrainerViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
 @{
-    ViewData["Title"] = "Trainer";
+    ViewData["Title"] = Localizer["TrainersManagement"];
+    var specialties = (IEnumerable<TrainerSpecialty>)ViewBag.Specialties;
 }
 
-
-@if (TempData["SuccessMessage"] is not null)
-{
-    <div id="Alert" class="alert alert-success alert-dismissible fade show">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-0">@Localizer["Trainers"]</h2>
+        <p class="text-secondary">@Localizer["TrainersDesc"]</p>
     </div>
-}
-else if (TempData["ErrorMessage"] is not null)
-{
-    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-} 
-
-<div class="container">
-    <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
-        <div>
-            <h2 class="text-primary-color mb-0">Our Trainers</h2>
-            <p class="text-muted">Professional fitness instructors</p>
-        </div>
-        <a asp-controller="Trainer" asp-action="Create" class="btn btn-fill fw-medium rounded-pill px-4 py-3">
-            <i class="bi bi-plus-lg me-2"></i>Add Trainer
+    <div class="col-md-6 text-md-end">
+        <a asp-controller="Attendance" asp-action="Scanner" class="btn btn-outline-primary shadow-sm me-2">
+            <i class="fas fa-qrcode me-2"></i> @Localizer["Scanner"]
         </a>
-    </header>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus me-2"></i> @Localizer["AddNewTrainer"]
+        </a>
+    </div>
+</div>
 
-    @if (Model != null && Model.Any())
+<!-- Tabs Navigation -->
+<ul class="nav nav-pills mb-4" id="trainerTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-pill px-4 me-2" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab" aria-selected="true">
+            @Localizer["AllStaff"]
+        </button>
+    </li>
+    @foreach (var spec in specialties)
     {
-        <div class="table-responsive" style="overflow: visible;">
-            <table class="table table-borderless">
-                <thead>
-                    <tr>
-                        <th><span>Name</span></th>
-                        <th><span>Email</span></th>
-                        <th><span>Phone</span></th>
-                        <th><span>Specialization</span></th>
-                        <th><span>Action</span></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var trainer in Model)
-                    {
-                        <tr>
-                            <td><span class="fw-bold">@trainer.Name</span></td>
-                            <td><span>@trainer.Email</span></td>
-                            <td><span>@trainer.Phone</span></td>
-                            <td>
-                                <span class="badge bg-primary-color">@trainer.Specialties</span>
-                            </td>
-                            <td class="action position-relative">
-                                <div class="dropdown">
-                                    <button class="btn btn-link p-0 border-0" type="button" id="dropdownMenuButton-@trainer.Id" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="~/images/action dots.jpg" alt="action icon" />
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownMenuButton-@trainer.Id">
-                                        <li>
-                                            <a asp-controller="Trainer" asp-action="Details" asp-route-Id="@trainer.Id" class="dropdown-item d-flex align-items-center gap-3">
-                                                <i class="bi bi-eye text-primary-color"></i>
-                                                <span>View Details</span>
-                                            </a>
-                                        </li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a asp-controller="Trainer" asp-action="Edit" asp-route-Id="@trainer.Id" class="dropdown-item d-flex align-items-center gap-3">
-                                                <i class="bi bi-pencil text-primary-color"></i>
-                                                <span>Edit Details</span>
-                                            </a>
-                                        </li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a asp-controller="Trainer" asp-action="Delete" asp-route-Id="@trainer.Id" class="dropdown-item d-flex align-items-center gap-3 text-danger">
-                                                <i class="bi bi-trash"></i>
-                                                <span>Delete</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill px-4 me-2" id="spec-@spec.Id-tab" data-bs-toggle="pill" data-bs-target="#spec-@spec.Id" type="button" role="tab" aria-selected="false">
+                @spec.Name
+            </button>
+        </li>
     }
-    else
+</ul>
+
+<div class="tab-content" id="trainerTabsContent">
+    <!-- All Trainers Tab -->
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        <div class="premium-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">@Localizer["Trainer"]</th>
+                            <th>@Localizer["Specialty"]</th>
+                            <th>@Localizer["ContactInfo"]</th>
+                            <th>@Localizer["Shift"]</th>
+                            <th class="text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Items != null && Model.Items.Any())
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                                 style="width: 45px; height: 45px;">
+                                                <span class="fw-bold">@item.Name.Substring(0, 1).ToUpper()</span>
+                                            </div>
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-0">@item.Name</p>
+                                                <small class="text-secondary">@item.Email</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                            <i class="fas fa-certificate me-1"></i> @item.Specialties
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div><i class="fas fa-phone me-1 text-secondary small"></i> @item.Phone</div>
+                                    </td>
+                                    <td>
+                                        <small class="fw-bold text-muted">
+                                            <i class="far fa-clock me-1"></i> @item.ShiftStart - @item.ShiftEnd
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info border-0">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning border-0">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger border-0 delete-trainer-btn" 
+                                                    data-trainer-id="@item.Id"
+                                                    data-trainer-name="@item.Name">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="py-4">
+                                        <i class="fas fa-user-ninja fs-1 text-secondary mb-3"></i>
+                                        <h5 class="text-secondary">@Localizer["NoTrainersFound"]</h5>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Specialty Tabs -->
+    @foreach (var spec in specialties)
     {
-        <div class="text-center py-5">
-            <i class="bi bi-person-workspace display-1 text-muted"></i>
-            <h4 class="mt-3 text-muted">No Trainers Available</h4>
-            <p class="text-muted">Add your first trainer to get started</p>
+        <div class="tab-pane fade" id="spec-@spec.Id" role="tabpanel" aria-labelledby="spec-@spec.Id-tab">
+            <div class="premium-card">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">@Localizer["Trainer"]</th>
+                                <th>@Localizer["ContactInfo"]</th>
+                                <th>@Localizer["Shift"]</th>
+                                <th class="text-center">@Localizer["Actions"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var specTrainers = Model.Items?.Where(t => t.Specialties == spec.Name) ?? Enumerable.Empty<GymManagmentBLL.ViewModels.TrainerViewModel.TrainerViewModel>();
+                            }
+                            @if (specTrainers.Any())
+                            {
+                                @foreach (var item in specTrainers)
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                                     style="width: 45px; height: 45px;">
+                                                    <span class="fw-bold">@item.Name.Substring(0, 1).ToUpper()</span>
+                                                </div>
+                                                <div class="ms-3">
+                                                    <p class="fw-bold mb-0">@item.Name</p>
+                                                    <small class="text-secondary">@item.Email</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div><i class="fas fa-phone me-1 text-secondary small"></i> @item.Phone</div>
+                                        </td>
+                                        <td>
+                                            <small class="fw-bold text-muted">
+                                                <i class="far fa-clock me-1"></i> @item.ShiftStart - @item.ShiftEnd
+                                            </small>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info border-0">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning border-0">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center py-5">
+                                        <i class="fas fa-info-circle text-secondary mb-2"></i>
+                                        <p class="text-secondary mb-0">No trainers in this category yet.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     }
 </div>
 
-@section Scripts {
-    <partial name="_AlertBoxScript.cshtml" />
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" 
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" 
+                   asp-route-searchTerm='@ViewData["SearchTerm"]'>
+                   <i class="fas fa-chevron-left me-1"></i> @Localizer["Previous"]
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Index" 
+                       asp-route-pageNumber="@i" 
+                       asp-route-searchTerm='@ViewData["SearchTerm"]'>@i</a>
+                </li>
+            }
+            <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" 
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" 
+                   asp-route-searchTerm='@ViewData["SearchTerm"]'>
+                   @Localizer["Next"] <i class="fas fa-chevron-right ms-1"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 }
 
+<!-- Hidden Delete Form -->
+<form id="deleteForm" method="post" asp-action="Delete" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteTrainerId" />
+</form>
 
+@section Scripts {
+    <script src="~/js/trainer.js" asp-append-version="true"></script>
+}

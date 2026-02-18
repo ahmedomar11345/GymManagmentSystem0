@@ -18,7 +18,10 @@ namespace GymManagmentBLL.ViewModels.MemberSessionViewModel
         public string Duration { get; set; } = null!;
         public int Capacity { get; set; }
         public int BookedCount { get; set; }
-        public int AvailableSlots => Capacity - BookedCount;
+        public int WaitlistCount { get; set; }
+        public int AvailableSlots => Math.Max(0, Capacity - BookedCount);
         public string Status { get; set; } = null!; // Upcoming or Ongoing
+        public bool CanBook { get; set; }
+        public bool IsFull => BookedCount >= Capacity;
     }
 }

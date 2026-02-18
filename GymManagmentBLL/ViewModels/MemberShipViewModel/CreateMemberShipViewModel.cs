@@ -9,12 +9,15 @@ namespace GymManagmentBLL.ViewModels.MemberShipViewModel
 {
     public class CreateMemberShipViewModel
     {
-        [Required(ErrorMessage = "Member is required")]
+        [Required(ErrorMessage = "MemberRequired")]
         [Display(Name = "Member")]
         public int MemberId { get; set; }
 
-        [Required(ErrorMessage = "Plan is required")]
+        [Required(ErrorMessage = "PlanRequired")]
         [Display(Name = "Plan")]
         public int PlanId { get; set; }
+
+        [Display(Name = "Send Email in Arabic")]
+        public bool SendInArabic { get; set; } = true;
     }
 }

@@ -13,9 +13,9 @@ namespace GymManagmentDAL.Data.Configrations
     {
         public void Configure(EntityTypeBuilder<T> builder)
         {
-            builder.Property(x => x.Name).HasColumnType("VarChar").HasMaxLength(50);
-            builder.Property(x => x.Email).HasColumnType("VarChar").HasMaxLength(100);
-            builder.Property(x=> x.Phone).HasColumnType("VarChar").HasMaxLength(11);
+            builder.Property(x => x.Name).HasMaxLength(50);
+            builder.Property(x => x.Email).HasMaxLength(100);
+            builder.Property(x=> x.Phone).HasMaxLength(11);
 
             builder.ToTable(tb =>
             {
@@ -27,10 +27,11 @@ namespace GymManagmentDAL.Data.Configrations
             builder.HasIndex(x => x.Phone).IsUnique();
             builder.OwnsOne(x=> x.Address , addressbuilder =>
             {
-               addressbuilder.Property(a => a.Street).HasColumnType("VarChar").HasMaxLength(30).HasColumnName("Street");
-                addressbuilder.Property(a => a.City).HasColumnType("VarChar").HasMaxLength(50).HasColumnName("City");
-                addressbuilder.Property(a=> a.BuildingNumber).HasColumnName("BuildingNumber");
+               addressbuilder.Property(a => a.Street).HasMaxLength(30).HasColumnName("Street").IsRequired();
+                addressbuilder.Property(a => a.City).HasMaxLength(50).HasColumnName("City").IsRequired();
+                addressbuilder.Property(a=> a.BuildingNumber).HasColumnName("BuildingNumber").IsRequired();
             });
+            builder.Navigation(x => x.Address).IsRequired();
 
 
         }

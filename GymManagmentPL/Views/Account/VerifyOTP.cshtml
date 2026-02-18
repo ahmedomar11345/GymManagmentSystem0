@@ -1,0 +1,46 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@model GymManagmentBLL.ViewModels.AccountViewModel.VerifyOtpViewModel
+@{
+    ViewData["Title"] = Localizer["VerifyEmailOTP"];
+}
+
+<div class="row justify-content-center animate-fade-in py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="premium-card p-4 p-md-5 border-0 shadow-sm text-center">
+            <div class="icon-shape bg-primary bg-opacity-10 text-primary mb-4 mx-auto" style="width: 80px; height: 80px; border-radius: 20px;">
+                <i class="fas fa-envelope-open-text fs-2"></i>
+            </div>
+            
+            <h3 class="fw-bold mb-2">@Localizer["VerifyYourEmail"]</h3>
+            <p class="text-secondary mb-4">@Localizer["VerificationCodeSentTo"] <br><span class="fw-bold text-dark">@Model.Email</span></p>
+
+            <form asp-action="VerifyEmailOTP" method="post">
+                <input type="hidden" asp-for="Email" />
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="mb-4">
+                    <label asp-for="OtpCode" class="form-label d-none"></label>
+                    <input asp-for="OtpCode" class="form-control form-control-lg text-center fw-bold letter-spacing-5 shadow-none border-2" 
+                           placeholder="000000" maxlength="6" autofocus />
+                    <span asp-validation-for="OtpCode" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm mb-3">
+                    @Localizer["VerifyCode"]
+                </button>
+
+                <div class="mt-4 small text-secondary">
+                    @Localizer["DidNotReceiveCode"] 
+                    <a href="javascript:history.back()" class="text-primary text-decoration-none fw-bold">@Localizer["TryAnotherEmail"]</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .letter-spacing-5 {
+        letter-spacing: 0.5rem;
+    }
+</style>

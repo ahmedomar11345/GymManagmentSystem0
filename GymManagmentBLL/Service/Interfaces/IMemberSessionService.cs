@@ -9,13 +9,15 @@ namespace GymManagmentBLL.Service.Interfaces
 {
     public interface IMemberSessionService
     {
-        IEnumerable<SessionForBookingViewModel> GetUpcomingSessions();
-        IEnumerable<SessionForBookingViewModel> GetOngoingSessions();
-        SessionMembersViewModel? GetMembersForUpcomingSession(int sessionId);
-        SessionMembersViewModel? GetMembersForOngoingSession(int sessionId);
-        bool CreateBooking(CreateBookingViewModel createBooking);
-        bool CancelBooking(int memberId, int sessionId);
-        bool MarkAttendance(int memberId, int sessionId);
-        IEnumerable<MemberForBookingSelectViewModel> GetMembersWithActiveMembershipForDropDown(int sessionId);
+        Task<IEnumerable<SessionForBookingViewModel>> GetUpcomingSessionsAsync();
+        Task<IEnumerable<SessionForBookingViewModel>> GetOngoingSessionsAsync();
+        Task<SessionMembersViewModel?> GetMembersForUpcomingSessionAsync(int sessionId);
+        Task<SessionMembersViewModel?> GetMembersForOngoingSessionAsync(int sessionId);
+        Task<(bool Success, string Message)> CreateBookingAsync(CreateBookingViewModel createBooking);
+        Task<bool> CancelBookingAsync(int memberId, int sessionId);
+        Task<bool> MarkAttendanceAsync(int memberId, int sessionId);
+        Task<IEnumerable<MemberForBookingSelectViewModel>> GetMembersWithActiveMembershipForDropDownAsync(int sessionId);
+        Task<string?> GetSessionNameAsync(int sessionId);
+        Task<SessionMembersViewModel?> GetSessionMembersAsync(int sessionId);
     }
 }

@@ -1,0 +1,234 @@
+@model GymManagmentBLL.ViewModels.ReportViewModel.FinancialReportViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["FinancialReports"];
+}
+
+<div class="animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-0">@Localizer["FinancialAnalytics"]</h1>
+            <p class="text-secondary">@Localizer["FinancialAnalyticsDesc"] @Model.ReportPeriod</p>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle rounded-pill px-4" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-calendar-alt me-2"></i> @Localizer["Year"]: @Model.ReportPeriod
+                </button>
+                <ul class="dropdown-menu shadow border-0">
+                    @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 5; y--)
+                    {
+                        <li><a class="dropdown-item" asp-action="Financial" asp-route-year="@y">@y</a></li>
+                    }
+                </ul>
+            </div>
+            <a asp-action="ExportExcel" asp-route-year="@Model.ReportPeriod" class="btn btn-success rounded-pill px-4">
+                <i class="fas fa-file-excel me-2"></i> Excel
+            </a>
+            <a asp-action="ExportPdf" asp-route-year="@Model.ReportPeriod" class="btn btn-danger rounded-pill px-4">
+                <i class="fas fa-file-pdf me-2"></i> PDF
+            </a>
+             <a asp-controller="Expense" asp-action="Index" class="btn btn-primary rounded-pill px-4">
+                <i class="fas fa-calculator me-2"></i> @Localizer["ManageExpenses"]
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="premium-card p-4 border-start border-4 border-primary h-100">
+                <h6 class="text-uppercase small fw-bold text-secondary">@Localizer["TotalRevenue"]</h6>
+                <h2 class="fw-bold mb-0">@Model.TotalRevenue.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
+                <div class="mt-2 small text-primary">
+                    <i class="fas fa-arrow-up me-1"></i> @Localizer["Total"] @Localizer["Revenue"] @Model.ReportPeriod
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="premium-card p-4 border-start border-4 border-danger h-100">
+                <h6 class="text-uppercase small fw-bold text-secondary">@Localizer["EstimatedExpenses"]</h6>
+                <h2 class="fw-bold mb-0">@Model.TotalExpenses.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
+                <div class="mt-2 small text-danger text-opacity-75">
+                    <i class="fas fa-minus-circle me-1"></i> @Localizer["EstimatedExpensesDesc"]
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="premium-card p-4 border-start border-4 border-success h-100">
+                <h6 class="text-uppercase small fw-bold text-secondary">@Localizer["NetProfit"]</h6>
+                <h2 class="fw-bold mb-0">@Model.NetProfit.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
+                <div class="mt-2 small text-success fw-bold">
+                    <i class="fas fa-coins me-1"></i> @Localizer["NetProfitDesc"]
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Monthly Chart -->
+        <div class="col-lg-8">
+            <div class="premium-card p-4 h-100">
+                <h5 class="fw-bold mb-4">@Localizer["RevenueTrend"]</h5>
+                <div style="height: 350px;">
+                    <canvas id="monthlyRevenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Member Stats -->
+        <div class="col-lg-4">
+            <div class="premium-card p-4 h-100">
+                <h5 class="fw-bold mb-4">@Localizer["MembershipStatus"]</h5>
+                <div style="height: 250px;">
+                    <canvas id="memberStatusChart"></canvas>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-secondary"><i class="fas fa-circle text-success me-2"></i> @Localizer["Active"]</span>
+                        <span class="fw-bold">@Model.ActiveMembersCount</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-secondary"><i class="fas fa-circle text-danger me-2"></i> @Localizer["Expired"]</span>
+                        <span class="fw-bold">@Model.ExpiredMembersCount</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-secondary"><i class="fas fa-circle text-info me-2"></i> @Localizer["Frozen"]</span>
+                        <span class="fw-bold">@Model.FrozenMembersCount</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Plans and Monthly Table -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="premium-card p-4 h-100">
+                <h5 class="fw-bold mb-4">@Localizer["TopPerformingPlans"]</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>@Localizer["PlanName"]</th>
+                                <th class="text-center">@Localizer["Subscribers"]</th>
+                                <th class="text-end">@Localizer["Revenue"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var plan in Model.TopPlans)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@plan.PlanName</td>
+                                    <td class="text-center">@plan.SubscriberCount</td>
+                                    <td class="text-end fw-bold text-primary">@plan.TotalRevenue.ToString("N0") <small>@Localizer["EGP"]</small></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="premium-card p-4 h-100">
+                <h5 class="fw-bold mb-4">@Localizer["MonthlyBreakdownDetail"]</h5>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>@Localizer["Month"]</th>
+                                <th class="text-center">@Localizer["Subs"]</th>
+                                <th class="text-end">@Localizer["Revenue"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var month in Model.MonthlyRevenue)
+                            {
+                                <tr>
+                                    <td>@month.MonthName</td>
+                                    <td class="text-center">@month.SubscriptionsCount</td>
+                                    <td class="text-end fw-bold">@month.Revenue.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td>@Localizer["Total"]</td>
+                                <td class="text-center">@Model.MonthlyRevenue.Sum(x => x.SubscriptionsCount)</td>
+                                <td class="text-end">@Model.TotalRevenue.ToString("N2")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Line Chart for Monthly Revenue
+            const blue = '#0d6efd';
+            const green = '#28a745';
+            const red = '#dc3545';
+            const gray = '#6c757d';
+
+            new Chart(document.getElementById('monthlyRevenueChart'), {
+                type: 'line',
+                data: {
+                    labels: @Json.Serialize(Model.MonthlyRevenue.Select(m => m.MonthName)),
+                    datasets: [{
+                        label: '@Localizer["RevenueEGP"]',
+                        data: @Json.Serialize(Model.MonthlyRevenue.Select(m => m.Revenue)),
+                        borderColor: blue,
+                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { borderDash: [5, 5] }
+                        }
+                    }
+                }
+            });
+
+            // Doughnut Chart for Member Status
+            new Chart(document.getElementById('memberStatusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['@Localizer["Active"]', '@Localizer["Expired"]', '@Localizer["Frozen"]'],
+                    datasets: [{
+                        data: [@Model.ActiveMembersCount, @Model.ExpiredMembersCount, @Model.FrozenMembersCount],
+                        backgroundColor: [green, red, '#0dcaf0'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        });
+    </script>
+}

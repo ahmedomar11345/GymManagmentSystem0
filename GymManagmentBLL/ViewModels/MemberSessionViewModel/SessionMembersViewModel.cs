@@ -10,6 +10,6 @@ namespace GymManagmentBLL.ViewModels.MemberSessionViewModel
     {
         public int SessionId { get; set; }
         public string SessionName { get; set; } = null!;
-        public IEnumerable<BookingViewModel> Bookings { get; set; } = null!;
+        public IEnumerable<BookingViewModel> Bookings { get; set; } = new List<BookingViewModel>();
     }
 }

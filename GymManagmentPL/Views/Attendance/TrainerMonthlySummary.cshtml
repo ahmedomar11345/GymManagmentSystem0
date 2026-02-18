@@ -1,0 +1,191 @@
+@model IEnumerable<GymManagmentBLL.Service.Interfaces.TrainerMonthlySummaryViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["MonthlyTrainerAttendance"];
+    int currentYear = ViewBag.Year;
+    int currentMonth = ViewBag.Month;
+}
+
+<div class="container-fluid py-4">
+    <!-- Header: Professional & Simple -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="work-header p-3 rounded-3 shadow-sm d-flex flex-wrap justify-content-between align-items-center bg-white dark-bg-slate border">
+                <div class="d-flex align-items-center">
+                    <div class="header-icon bg-soft-indigo text-indigo rounded-3 me-3 p-2">
+                        <i class="fas fa-user-tie fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0">@Localizer["TrainerMonthlyLeaderboard"]</h4>
+                        <p class="text-muted small mb-0">@(new DateTime(currentYear, currentMonth, 1).ToString("MMMM yyyy"))</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-wrap gap-2 align-items-center mt-2 mt-md-0">
+                    <form asp-action="TrainerMonthlySummary" method="get" class="d-flex gap-2">
+                        <select name="month" class="form-select form-select-sm" onchange="this.form.submit()">
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                <option value="@m" selected="@(m == currentMonth)">@(new DateTime(1, m, 1).ToString("MMMM"))</option>
+                            }
+                        </select>
+                        <select name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                            @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 5; y--)
+                            {
+                                <option value="@y" selected="@(y == currentYear)">@y</option>
+                            }
+                        </select>
+                    </form>
+                    
+                    <div class="vr mx-1"></div>
+                    
+                    <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-secondary px-3">
+                        <i class="fas fa-print me-1"></i> @Localizer["Print"]
+                    </button>
+                    <a asp-action="History" class="btn btn-sm btn-outline-secondary px-3">
+                         <i class="fas fa-arrow-left me-1"></i> @Localizer["Back"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content: Clean Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white dark-bg-slate border-bottom p-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="mb-0 fw-bold">@Localizer["TrainerAttendanceRanking"]</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" id="trainerFilter" class="form-control border-start-0" 
+                                       placeholder="@Localizer["SearchByTrainerName"]..." onkeyup="filterTable()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="summaryTable">
+                            <thead class="bg-light dark-bg-navy">
+                                <tr>
+                                    <th class="ps-4 py-3 text-muted small fw-bold">#</th>
+                                    <th class="py-3 text-muted small fw-bold">@Localizer["Trainer"]</th>
+                                    <th class="py-3 text-center text-muted small fw-bold">@Localizer["AttendanceDays"]</th>
+                                    <th class="py-3 text-center text-muted small fw-bold">@Localizer["TotalHours"]</th>
+                                    <th class="py-3 text-center text-muted small fw-bold">@Localizer["TotalDelay"]</th>
+                                    <th class="pe-4 py-3 text-muted small fw-bold">@Localizer["LastAttendance"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Any())
+                                {
+                                    int rank = 1;
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="trainer-row">
+                                            <td class="ps-4">
+                                                @if(rank <= 3) {
+                                                    <span class="badge @(rank == 1 ? "bg-warning" : rank == 2 ? "bg-secondary" : "bg-danger") rounded-circle py-1">@rank</span>
+                                                } else {
+                                                    <span class="text-muted small">@rank</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                     @if (!string.IsNullOrEmpty(item.TrainerPhoto))
+                                                    {
+                                                        <img src="/images/trainers/@item.TrainerPhoto" class="avatar-init-sm rounded-circle me-2 shadow-sm" style="object-fit: cover;" alt="" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="avatar-init-sm rounded-circle me-2">@item.TrainerName.Substring(0, 1).ToUpper()</div>
+                                                    }
+                                                    <div class="fw-bold text-dark dark-text-white">@item.TrainerName</div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="fw-bold text-primary">@item.AttendanceCount</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge bg-soft-success text-success fw-bold">@item.TotalHours.ToString("F1") hrs</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge @(item.TotalDelayMinutes > 0 ? "bg-soft-danger text-danger" : "bg-soft-success text-success") fw-bold">
+                                                    @item.TotalDelayMinutes min
+                                                </span>
+                                            </td>
+                                            <td class="pe-4"><span class="small text-muted">@item.LastAttendance</span></td>
+                                        </tr>
+                                        rank++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <i class="fas fa-user-clock fa-3x text-muted opacity-25 mb-3"></i>
+                                            <p class="text-muted">@Localizer["NoRecordsFound"]</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filterTable() {
+            const val = document.getElementById('trainerFilter').value.toLowerCase();
+            const rows = document.querySelectorAll('.trainer-row');
+            rows.forEach(row => {
+                const name = row.querySelector('.fw-bold').innerText.toLowerCase();
+                row.style.display = name.includes(val) ? '' : 'none';
+            });
+        }
+    </script>
+}
+
+<style>
+    .text-indigo { color: #6366f1; }
+    .bg-soft-indigo { background-color: rgba(99, 102, 241, 0.1); }
+    .bg-soft-success { background-color: rgba(16, 185, 129, 0.1); }
+    .bg-soft-danger { background-color: rgba(239, 68, 68, 0.1); }
+    
+    .work-header { border-color: #eee !important; }
+    [data-theme="dark"] .work-header { border-color: #334155 !important; }
+
+    .avatar-init-sm {
+        width: 32px;
+        height: 32px;
+        background: #f1f5f9;
+        color: #6366f1;
+        font-size: 0.75rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e2e8f0;
+    }
+    
+    [data-theme="dark"] .avatar-init-sm { background: #0f172a; border-color: #334155; color: #818cf8; }
+    
+    .table-hover tbody tr:hover { background-color: #fafbfc; }
+    [data-theme="dark"] .table-hover tbody tr:hover { background-color: #1e293b; }
+
+    [data-theme="dark"] .bg-white { background-color: #1e293b !important; }
+    [data-theme="dark"] .bg-light { background-color: #0f172a !important; }
+    [data-theme="dark"] .dark-bg-slate { background-color: #1e293b !important; }
+    [data-theme="dark"] .dark-bg-navy { background-color: #0f172a !important; }
+    [data-theme="dark"] .dark-text-white { color: #f1f5f9 !important; }
+    [data-theme="dark"] .text-dark { color: #f1f5f9 !important; }
+</style>

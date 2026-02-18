@@ -1,0 +1,9 @@
+/* RTL specific styles */
+body {
+    font-family: 'Cairo', sans-serif;
+}
+
+.nav-link i {
+    margin-right: 0;
+    margin-left: 12px;
+}

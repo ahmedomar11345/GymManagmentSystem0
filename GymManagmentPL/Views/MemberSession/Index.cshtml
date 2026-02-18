@@ -1,9 +1,10 @@
+@inject IStringLocalizer<SharedResource> Localizer
 @{
     var upcomingSessions = ViewBag.UpcomingSessions as IEnumerable<SessionForBookingViewModel> ?? [];
     var ongoingSessions = ViewBag.OngoingSessions as IEnumerable<SessionForBookingViewModel> ?? [];
 }
 @{
-    ViewData["Title"] = "MemberSession";
+    ViewData["Title"] = Localizer["MemberSession"];
 }
 
 @if (TempData["SuccessMessage"] is not null)
@@ -24,12 +25,25 @@
     </div>
 }
 
+<div class="row mb-4 align-items-center mt-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-0">@Localizer["BookingManagement"]</h2>
+        <p class="text-secondary">@Localizer["ManageBookingsDesc"]</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i> @Localizer["Dashboard"]
+        </a>
+    </div>
+</div>
+
+
 <div class="container">
     <!-- Upcoming Sessions -->
     <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
         <div>
-            <h2 class="text-primary-color mb-0">Upcoming Sessions</h2>
-            <p class="text-muted">Sessions Valid For Manage Booking</p>
+            <h3 class="text-primary-color mb-0">@Localizer["UpcomingSessions"]</h3>
+            <p class="text-muted">@Localizer["UpcomingSessionsDesc"]</p>
         </div>
     </header>
 
@@ -39,45 +53,56 @@
             @foreach (var session in upcomingSessions)
             {
                 <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0 session-card">
+                    <div class="premium-card h-100 shadow-sm border-0 session-card p-0 overflow-hidden">
                         <div class="card-header text-white py-3 bg-primary">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center px-3">
                                 <h5 class="mb-0">
-                                    <i class="bi bi-calendar-event me-2"></i>@session.CategoryName
+                                    <i class="bi bi-calendar-event me-2"></i>@Localizer[session.CategoryName]
                                 </h5>
-                                <span class="badge bg-light text-dark">@session.Status</span>
+                                <span class="badge bg-light text-dark">@Localizer[session.Status]</span>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <p class="text-muted mb-3">@session.Description</p>
 
                             <div class="session-info mb-3">
                                 <div class="info-item mb-2">
                                     <i class="bi bi-person-circle text-primary me-2"></i>
-                                    <strong>Trainer:</strong> @session.TrainerName
+                                    <strong>@Localizer["TrainerColon"]</strong> @session.TrainerName
                                 </div>
                                 <div class="info-item mb-2">
                                     <i class="bi bi-calendar3 text-primary me-2"></i>
-                                    <strong>Date:</strong> @session.Date
+                                    <strong>@Localizer["DateColon"]</strong> @session.Date
                                 </div>
                                 <div class="info-item mb-2">
                                     <i class="bi bi-clock text-primary me-2"></i>
-                                    <strong>Time:</strong> @session.StartTime - @session.EndTime
+                                    <strong>@Localizer["TimeColon"]</strong> @session.StartTime - @session.EndTime
                                 </div>
                                 <div class="info-item mb-2">
                                     <i class="bi bi-hourglass-split text-primary me-2"></i>
-                                    <strong>Duration:</strong> @session.Duration
+                                    <strong>@Localizer["DurationColon"]</strong> @session.Duration
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-people text-primary me-2"></i>
-                                    <strong>Capacity:</strong> @session.BookedCount/@session.Capacity slots
+                                    <strong>@Localizer["CapacityColon"]</strong> @session.BookedCount/@session.Capacity @Localizer["Slots"]
+                                    @if (session.IsFull)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">@Localizer["Full"]</span>
+                                    }
                                 </div>
+                                @if (session.WaitlistCount > 0)
+                                {
+                                    <div class="info-item mt-2">
+                                        <i class="bi bi-list-stars text-warning me-2"></i>
+                                        <strong>@Localizer["Waitlist"]:</strong> <span class="text-warning fw-bold">@session.WaitlistCount</span>
+                                    </div>
+                                }
                             </div>
                         </div>
-                        <div class="card-footer bg-white border-0">
+                        <div class="card-footer bg-white border-0 p-4">
                             <div class="d-grid gap-2">
-                                <a asp-action="GetMembersForUpcomingSession" asp-route-id="@session.Id" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-eye me-1"></i> View Members
+                                <a asp-action="GetMembersForUpcomingSession" asp-route-id="@session.Id" class="btn btn-primary rounded-pill">
+                                    <i class="bi bi-eye me-1"></i> @Localizer["ViewMembers"]
                                 </a>
                             </div>
                         </div>
@@ -90,15 +115,15 @@
     {
         <div class="text-center py-5">
             <i class="bi bi-calendar-x display-1 text-muted"></i>
-            <h4 class="mt-3 text-muted">No Upcoming Sessions Available</h4>
+            <h4 class="mt-3 text-muted">@Localizer["NoUpcomingSessions"]</h4>
         </div>
     }
 
     <!-- Ongoing Sessions -->
     <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
         <div>
-            <h2 class="text-primary-color mb-0">Ongoing Sessions</h2>
-            <p class="text-muted">Sessions Valid For Manage Attendance</p>
+            <h3 class="text-primary-color mb-0">@Localizer["OngoingSessions"]</h3>
+            <p class="text-muted">@Localizer["OngoingSessionsDesc"]</p>
         </div>
     </header>
 
@@ -108,45 +133,56 @@
             @foreach (var session in ongoingSessions)
             {
                 <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0 session-card">
+                    <div class="premium-card h-100 shadow-sm border-0 session-card p-0 overflow-hidden">
                         <div class="card-header text-white py-3 bg-success">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center px-3">
                                 <h5 class="mb-0">
-                                    <i class="bi bi-calendar-event me-2"></i>@session.CategoryName
+                                    <i class="bi bi-calendar-event me-2"></i>@Localizer[session.CategoryName]
                                 </h5>
-                                <span class="badge bg-light text-dark">@session.Status</span>
+                                <span class="badge bg-light text-dark">@Localizer[session.Status]</span>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <p class="text-muted mb-3">@session.Description</p>
 
                             <div class="session-info mb-3">
                                 <div class="info-item mb-2">
                                     <i class="bi bi-person-circle text-success me-2"></i>
-                                    <strong>Trainer:</strong> @session.TrainerName
+                                    <strong>@Localizer["TrainerColon"]</strong> @session.TrainerName
                                 </div>
                                 <div class="info-item mb-2">
                                     <i class="bi bi-calendar3 text-success me-2"></i>
-                                    <strong>Date:</strong> @session.Date
+                                    <strong>@Localizer["DateColon"]</strong> @session.Date
                                 </div>
                                 <div class="info-item mb-2">
                                     <i class="bi bi-clock text-success me-2"></i>
-                                    <strong>Time:</strong> @session.StartTime - @session.EndTime
+                                    <strong>@Localizer["TimeColon"]</strong> @session.StartTime - @session.EndTime
                                 </div>
                                 <div class="info-item mb-2">
                                     <i class="bi bi-hourglass-split text-success me-2"></i>
-                                    <strong>Duration:</strong> @session.Duration
+                                    <strong>@Localizer["DurationColon"]</strong> @session.Duration
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-people text-success me-2"></i>
-                                    <strong>Capacity:</strong> @session.BookedCount/@session.Capacity slots
+                                    <strong>@Localizer["CapacityColon"]</strong> @session.BookedCount/@session.Capacity @Localizer["Slots"]
+                                    @if (session.IsFull)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">@Localizer["Full"]</span>
+                                    }
                                 </div>
+                                @if (session.WaitlistCount > 0)
+                                {
+                                    <div class="info-item mt-2">
+                                        <i class="bi bi-list-stars text-warning me-2"></i>
+                                        <strong>@Localizer["Waitlist"]:</strong> <span class="text-warning fw-bold">@session.WaitlistCount</span>
+                                    </div>
+                                }
                             </div>
                         </div>
-                        <div class="card-footer bg-white border-0">
+                        <div class="card-footer bg-white border-0 p-4">
                             <div class="d-grid gap-2">
-                                <a asp-action="GetMembersForOngoingSession" asp-route-id="@session.Id" class="btn btn-outline-success btn-sm">
-                                    <i class="bi bi-eye me-1"></i> View Members
+                                <a asp-action="GetMembersForOngoingSession" asp-route-id="@session.Id" class="btn btn-success rounded-pill">
+                                    <i class="bi bi-eye me-1"></i> @Localizer["ViewMembers"]
                                 </a>
                             </div>
                         </div>
@@ -159,7 +195,7 @@
     {
         <div class="text-center py-5">
             <i class="bi bi-calendar-x display-1 text-muted"></i>
-            <h4 class="mt-3 text-muted">No Ongoing Sessions Available</h4>
+            <h4 class="mt-3 text-muted">@Localizer["NoOngoingSessions"]</h4>
         </div>
     }
 </div>

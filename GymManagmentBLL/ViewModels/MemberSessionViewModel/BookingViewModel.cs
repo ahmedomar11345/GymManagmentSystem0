@@ -13,5 +13,6 @@ namespace GymManagmentBLL.ViewModels.MemberSessionViewModel
         public int SessionId { get; set; }
         public string BookingDate { get; set; } = null!;
         public bool IsAttended { get; set; }
+        public string Status { get; set; } = "Confirmed";
     }
 }

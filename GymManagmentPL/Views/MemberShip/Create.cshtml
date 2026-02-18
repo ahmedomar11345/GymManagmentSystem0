@@ -1,51 +1,126 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model CreateMemberShipViewModel
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+@{
+    ViewData["Title"] = Localizer["CreateMembershipTitle"];
 }
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Create Membership</h4>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Create" method="post">
-                        <div class="mb-3">
-                            <label asp-for="MemberId" class="form-label">Member</label>
-                            <select asp-for="MemberId" asp-items="@ViewBag.Members" class="form-select">
-                                <option value="">-- Select Member --</option>
-                            </select>
-                            <span asp-validation-for="MemberId" class="text-danger"></span>
-                        </div>
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-0">
+            <i class="fas fa-id-card text-primary me-2"></i>@Localizer["CreateMembership"]
+        </h2>
+        <p class="text-secondary">@Localizer["ActivateSubscriptionPlanDesc"]</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>@Localizer["BackToMemberships"]
+        </a>
+    </div>
+</div>
 
-                        <div class="mb-3">
-                            <label asp-for="PlanId" class="form-label">Plan</label>
-                            <select asp-for="PlanId" asp-items="@ViewBag.Plans" class="form-select">
-                                <option value="">-- Select Plan --</option>
-                            </select>
-                            <span asp-validation-for="PlanId" class="text-danger"></span>
-                        </div>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="premium-card p-4 p-md-5">
+            <form asp-action="Create" method="post" id="membershipForm">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4" role="alert"></div>
 
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Create Membership</button>
-                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
+                <!-- Member Selection -->
+                <div class="mb-4">
+                    <label asp-for="MemberId" class="form-label fw-bold mb-2">
+                        <i class="fas fa-user me-2 text-primary"></i>@Localizer["SelectMember"]
+                    </label>
+                    <select asp-for="MemberId" asp-items="@ViewBag.Members" class="form-select form-select-lg shadow-sm">
+                        <option value="">@Localizer["ChooseAMember"]</option>
+                    </select>
+                    <span asp-validation-for="MemberId" class="text-danger small d-block mt-2"></span>
+                    <small class="text-secondary d-block mt-2">
+                        <i class="fas fa-info-circle me-1"></i>@Localizer["SelectMemberInfo"]
+                    </small>
                 </div>
-            </div>
+
+                <!-- Plan Selection -->
+                <div class="mb-4">
+                    <label asp-for="PlanId" class="form-label fw-bold mb-2">
+                        <i class="fas fa-gem me-2 text-primary"></i>@Localizer["SelectPlan"]
+                    </label>
+                    <select asp-for="PlanId" asp-items="@ViewBag.Plans" class="form-select form-select-lg shadow-sm">
+                        <option value="">@Localizer["ChooseASubscriptionPlan"]</option>
+                    </select>
+                    <span asp-validation-for="PlanId" class="text-danger small d-block mt-2"></span>
+                    <small class="text-secondary d-block mt-2">
+                        <i class="fas fa-info-circle me-1"></i>@Localizer["ChooseFromActivePlans"]
+                    </small>
+                </div>
+
+                <!-- Email Language Selection -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-2">
+                        <i class="fas fa-language me-2 text-primary"></i>@Localizer["ReceiptEmailLanguage"]
+                    </label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" asp-for="SendInArabic" value="true" id="langReceiptAr" checked>
+                            <label class="form-check-label" for="langReceiptAr">@Localizer["Arabic"]</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" asp-for="SendInArabic" value="false" id="langReceiptEn">
+                            <label class="form-check-label" for="langReceiptEn">@Localizer["English"]</label>
+                        </div>
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        @Localizer["ReceiptLanguageDesc"]
+                    </small>
+                </div>
+
+                <!-- Info Box -->
+                <div class="alert alert-info border-0 rounded-3 mb-4" role="alert">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3">
+                            <i class="fas fa-lightbulb fs-4"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading fw-bold mb-2">@Localizer["ImportantInformation"]</h6>
+                            <ul class="mb-0 ps-3 small">
+                                <li>@Localizer["MembershipStartImmediately"]</li>
+                                <li>@Localizer["EndDateCalculationInfo"]</li>
+                                <li>@Localizer["ExpiryNotificationInfo"]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3 justify-content-end pt-3 border-top">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                        <i class="fas fa-times me-2"></i>@Localizer["Cancel"]
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                        <i class="fas fa-check-circle me-2"></i>@Localizer["CreateMembership"]
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <partial name="_AlertBoxScript" />
+    <script>
+        // Add form validation feedback
+        (function () {
+            'use strict';
+            const form = document.getElementById('membershipForm');
+            if (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            }
+        })();
+    </script>
 }

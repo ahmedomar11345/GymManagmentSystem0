@@ -1,23 +1,41 @@
 using GymManagmentBLL.Service.Interfaces;
+using GymManagmentBLL.Service.Implementations;
 using GymManagmentBLL.ViewModels.MemberSessionViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
+using System.Linq;
 
 namespace GymManagmentPL.Controllers
 {
+    [Authorize]
     public class MemberSessionController : Controller
     {
         private readonly IMemberSessionService _memberSessionService;
+        private readonly IMemberService _memberService;
+        private readonly IEmailService _emailService;
+        private readonly IGymSettingsService _gymSettingsService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public MemberSessionController(IMemberSessionService memberSessionService)
+        public MemberSessionController(
+            IMemberSessionService memberSessionService, 
+            IMemberService memberService, 
+            IEmailService emailService, 
+            IGymSettingsService gymSettingsService,
+            IStringLocalizer<SharedResource> localizer)
         {
             _memberSessionService = memberSessionService;
+            _memberService = memberService;
+            _emailService = emailService;
+            _gymSettingsService = gymSettingsService;
+            _localizer = localizer;
         }
 
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var upcomingSessions = _memberSessionService.GetUpcomingSessions();
-            var ongoingSessions = _memberSessionService.GetOngoingSessions();
+            var upcomingSessions = await _memberSessionService.GetUpcomingSessionsAsync();
+            var ongoingSessions = await _memberSessionService.GetOngoingSessionsAsync();
 
             ViewBag.UpcomingSessions = upcomingSessions;
             ViewBag.OngoingSessions = ongoingSessions;
@@ -25,7 +43,7 @@ namespace GymManagmentPL.Controllers
             return View();
         }
 
-        public ActionResult GetMembersForUpcomingSession(int id)
+        public async Task<IActionResult> GetMembersForUpcomingSession(int id)
         {
             if (id <= 0)
             {
@@ -33,7 +51,7 @@ namespace GymManagmentPL.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var sessionMembers = _memberSessionService.GetMembersForUpcomingSession(id);
+            var sessionMembers = await _memberSessionService.GetMembersForUpcomingSessionAsync(id);
             if (sessionMembers is null)
             {
                 TempData["ErrorMessage"] = "Session not found or is not upcoming.";
@@ -43,7 +61,7 @@ namespace GymManagmentPL.Controllers
             return View(sessionMembers);
         }
 
-        public ActionResult GetMembersForOngoingSession(int id)
+        public async Task<IActionResult> GetMembersForOngoingSession(int id)
         {
             if (id <= 0)
             {
@@ -51,7 +69,7 @@ namespace GymManagmentPL.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var sessionMembers = _memberSessionService.GetMembersForOngoingSession(id);
+            var sessionMembers = await _memberSessionService.GetMembersForOngoingSessionAsync(id);
             if (sessionMembers is null)
             {
                 TempData["ErrorMessage"] = "Session not found or is not ongoing.";
@@ -61,7 +79,7 @@ namespace GymManagmentPL.Controllers
             return View(sessionMembers);
         }
 
-        public ActionResult Create(int id)
+        public async Task<IActionResult> Create(int id)
         {
             if (id <= 0)
             {
@@ -69,70 +87,129 @@ namespace GymManagmentPL.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadMembersDropDown(id);
+            var sessions = await _memberSessionService.GetUpcomingSessionsAsync();
+            var session = sessions.FirstOrDefault(s => s.Id == id) ?? (await _memberSessionService.GetOngoingSessionsAsync()).FirstOrDefault(s => s.Id == id);
+
+            if (session == null || !session.CanBook)
+            {
+                TempData["ErrorMessage"] = "Enrollment is no longer available for this session (it may have ended or reached full capacity).";
+                return RedirectToAction(nameof(Index));
+            }
+
+            await LoadMembersDropDownAsync(id);
             ViewBag.SessionId = id;
+            ViewBag.SessionName = session.Description;
 
             return View(new CreateBookingViewModel { SessionId = id });
         }
 
         [HttpPost]
-        public ActionResult Create(CreateBookingViewModel createBooking)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateBookingViewModel createBooking)
         {
             if (!ModelState.IsValid)
             {
-                LoadMembersDropDown(createBooking.SessionId);
+                var errors = string.Join("<br>", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                TempData["ErrorMessage"] = errors;
+
+                var sessions = await _memberSessionService.GetUpcomingSessionsAsync();
+                var session = sessions.FirstOrDefault(s => s.Id == createBooking.SessionId) ?? (await _memberSessionService.GetOngoingSessionsAsync()).FirstOrDefault(s => s.Id == createBooking.SessionId);
+                
+                await LoadMembersDropDownAsync(createBooking.SessionId);
                 ViewBag.SessionId = createBooking.SessionId;
+                ViewBag.SessionName = session?.Description ?? "Session";
+                
                 return View(createBooking);
             }
 
-            var result = _memberSessionService.CreateBooking(createBooking);
-            if (result)
+            var result = await _memberSessionService.CreateBookingAsync(createBooking);
+            if (result.Success)
             {
-                TempData["SuccessMessage"] = "Booking created successfully.";
+                // Send session confirmation email
+                try
+                {
+                    var member = await _memberService.GetMemberDetailsAsync(createBooking.MemberId);
+                    var sessionName = await _memberSessionService.GetSessionNameAsync(createBooking.SessionId);
+                    
+                    if (member != null && !string.IsNullOrEmpty(member.Email))
+                    {
+                        bool isArabic = System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("ar");
+                        var gymSettings = await _gymSettingsService.GetSettingsAsync();
+                        string sessionTemplate = EmailTemplates.BookingConfirmation(member.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, sessionName ?? "Gym Session", DateTime.Now, isArabic);
+                        await _emailService.SendEmailAsync(member.Email, isArabic ? "تأكيد حجز الجلسة" : "Session Booking Confirmation", sessionTemplate);
+                    }
+                }
+                catch (Exception) { /* Log error if needed */ }
+
+                TempData["SuccessMessage"] = _localizer["BookingSuccess"].Value;
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to create booking. Member may not have active membership, session is full, or member already booked.";
+                TempData["ErrorMessage"] = _localizer["OperationFailed"].Value; // Ideally we'd map result.Message too, but localizer is safer for now or we trust result.Message
+                
+                var sessionName = await _memberSessionService.GetSessionNameAsync(createBooking.SessionId);
+                if (sessionName != null) ViewBag.SessionName = sessionName;
+                await LoadMembersDropDownAsync(createBooking.SessionId);
+                
+                return View(createBooking);
+            }
+
+            // Determine where to redirect based on session status
+            var ongoingList = await _memberSessionService.GetOngoingSessionsAsync();
+            if (ongoingList.Any(s => s.Id == createBooking.SessionId))
+            {
+                return RedirectToAction(nameof(GetMembersForOngoingSession), new { id = createBooking.SessionId });
             }
 
             return RedirectToAction(nameof(GetMembersForUpcomingSession), new { id = createBooking.SessionId });
         }
 
         [HttpPost]
-        public ActionResult Cancel([FromForm] int memberId, [FromForm] int sessionId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(int memberId, int sessionId)
         {
-            var result = _memberSessionService.CancelBooking(memberId, sessionId);
+            var result = await _memberSessionService.CancelBookingAsync(memberId, sessionId);
             if (result)
             {
-                TempData["SuccessMessage"] = "Booking cancelled successfully.";
+                TempData["SuccessMessage"] = _localizer["CancelSuccess"].Value;
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to cancel booking. Session may have already started.";
+                TempData["ErrorMessage"] = _localizer["OperationFailed"].Value;
+            }
+
+            // Determine where to redirect based on session status
+            var ongoingList = await _memberSessionService.GetOngoingSessionsAsync();
+            if (ongoingList.Any(s => s.Id == sessionId))
+            {
+                return RedirectToAction(nameof(GetMembersForOngoingSession), new { id = sessionId });
             }
 
             return RedirectToAction(nameof(GetMembersForUpcomingSession), new { id = sessionId });
         }
 
         [HttpPost]
-        public ActionResult MarkAttendance([FromForm] int memberId, [FromForm] int sessionId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkAttendance(int memberId, int sessionId)
         {
-            var result = _memberSessionService.MarkAttendance(memberId, sessionId);
+            var result = await _memberSessionService.MarkAttendanceAsync(memberId, sessionId);
             if (result)
             {
-                TempData["SuccessMessage"] = "Attendance marked successfully.";
+                TempData["SuccessMessage"] = _localizer["UpdateSuccess"].Value;
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to mark attendance.";
+                TempData["ErrorMessage"] = _localizer["OperationFailed"].Value;
             }
 
             return RedirectToAction(nameof(GetMembersForOngoingSession), new { id = sessionId });
         }
 
-        private void LoadMembersDropDown(int sessionId)
+        private async Task LoadMembersDropDownAsync(int sessionId)
         {
-            var members = _memberSessionService.GetMembersWithActiveMembershipForDropDown(sessionId);
+            var members = await _memberSessionService.GetMembersWithActiveMembershipForDropDownAsync(sessionId);
             ViewBag.Members = new SelectList(members, "Id", "Name");
         }
     }

@@ -1,0 +1,123 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.MemberShipViewModel.MemberShipViewModel>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["ExpiringMemberships"];
+    var days = ViewData["Days"] ?? 7;
+}
+
+<div class="row mb-4 align-items-center animate-fade-in">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-0">@Localizer["ExpiringSoon"]</h2>
+        <p class="text-secondary mb-0">@Localizer["ShowingPlansExpiringWithin"] @days @Localizer["Days"].</p>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2 text-nowrap">
+        <form asp-action="SendExpiryReminders" asp-route-days="@days" method="post">
+            <button type="submit" class="btn btn-warning shadow-sm @(Model.Any() ? "" : "disabled") rounded-pill px-4">
+                <i class="fas fa-paper-plane me-2"></i> @Localizer["SendReminders"]
+            </button>
+        </form>
+        <div class="btn-group shadow-sm rounded-pill overflow-hidden border">
+            <a asp-action="Expiring" asp-route-days="7" class="btn btn-sm @(days.ToString() == "7" ? "btn-primary" : "btn-light") px-3">7 @Localizer["DaysShort"]</a>
+            <a asp-action="Expiring" asp-route-days="15" class="btn btn-sm @(days.ToString() == "15" ? "btn-primary" : "btn-light") px-3">15 @Localizer["DaysShort"]</a>
+            <a asp-action="Expiring" asp-route-days="30" class="btn btn-sm @(days.ToString() == "30" ? "btn-primary" : "btn-light") px-3">30 @Localizer["DaysShort"]</a>
+        </div>
+    </div>
+</div>
+
+<div class="premium-card p-0 overflow-hidden shadow-lg border-0 animate-fade-in">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">@Localizer["Member"]</th>
+                    <th>@Localizer["Plan"]</th>
+                    <th>@Localizer["ExpirationDate"]</th>
+                    <th>@Localizer["TimeLeft"]</th>
+                    <th class="text-end pe-4">@Localizer["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">@item.MemberName</h6>
+                                        <small class="text-secondary">#@item.MemberId</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill">
+                                    <i class="fas fa-gem me-1"></i> @item.PlanName
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center text-danger fw-bold">
+                                    <i class="fas fa-calendar-times me-2 opacity-50"></i>
+                                    @item.EndDate
+                                </div>
+                            </td>
+                            <td>
+                                @if (item.DaysRemaining <= 3)
+                                {
+                                    <div class="d-flex align-items-center text-danger">
+                                        <div class="status-pulse bg-danger me-2"></div>
+                                        <span class="fw-bold">@item.DaysRemaining @Localizer["DaysLeft"]</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center text-warning">
+                                        <div class="status-pulse bg-warning me-2"></div>
+                                        <span class="fw-bold">@item.DaysRemaining @Localizer["DaysLeft"]</span>
+                                    </div>
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <a asp-controller="Member" asp-action="Details" asp-route-id="@item.MemberId" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="fas fa-eye me-1"></i> @Localizer["ViewProfile"]
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="py-5">
+                                <div class="display-1 text-secondary opacity-25 mb-3">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <h4 class="text-secondary">@Localizer["NoExpiringMembershipsTitle"]</h4>
+                                <p class="text-muted">@Localizer["NoExpiringMembershipsDesc"]</p>
+                                <a asp-action="Index" class="btn btn-primary rounded-pill mt-3">
+                                    <i class="fas fa-arrow-left me-2"></i> @Localizer["BackToActive"]
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-4 p-4 border border-info border-opacity-10 rounded-4 bg-info bg-opacity-10 animate-fade-in">
+    <div class="d-flex align-items-center">
+        <i class="fas fa-info-circle text-info fs-3 me-3"></i>
+        <div>
+            <h6 class="fw-bold mb-1">@Localizer["HowItWorks"]</h6>
+            <p class="mb-0 small text-secondary">@Localizer["ExpiringSoonInfo"]</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,559 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["QRScanner"];
+    var token = Antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
+
+<!-- Premium UI Enhancements: Glassmorphism, Dynamic Gradients, and Advanced Interactivity -->
+<div class="container py-4">
+    <div class="row mb-5 justify-content-center">
+        <div class="col-lg-8 text-center mt-3">
+            <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-4 py-2 mb-3 fw-bold animate__animated animate__fadeIn">
+                <i class="fas fa-shield-alt me-2"></i>SECURE CHECK-IN SYSTEM
+            </div>
+            <h1 class="display-3 fw-black text-gradient mb-3 animate__animated animate__fadeInDown">
+                @Localizer["QRScanner"]
+            </h1>
+            <p class="fs-5 text-secondary animate__animated animate__fadeInUp animate__delay-1s">
+                Scan, Verify, and Record Attendance in real-time.
+                <span class="d-block mt-1 opacity-75">نظام التحقق الذكي وتسجيل الحضور الموحد</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Center Scanner Hub -->
+        <div class="col-xl-8 col-lg-10">
+            <div class="scanner-main-card shadow-ultra animate__animated animate__fadeIn">
+                
+                <!-- Modern Tab Switcher -->
+                 <div class="premium-tabs d-flex justify-content-center p-2 mb-4 bg-light bg-opacity-50 rounded-4">
+                    <button class="tab-item active" id="tab-camera" style="width: 50%" onclick="switchScannerMode('camera')">
+                        <i class="fas fa-camera-viewfinder me-2"></i>Live Scanner
+                    </button>
+                    <button class="tab-item" id="tab-manual" style="width: 50%" onclick="switchScannerMode('manual')">
+                        <i class="fas fa-keyboard me-2"></i>Manual Entry
+                    </button>
+                </div>
+
+                <div class="position-relative">
+                    <!-- 1. Live Camera Section -->
+                    <div id="sec-camera" class="scanner-section active">
+                        <div class="scanner-frame">
+                            <div id="reader" class="modern-scanner-view"></div>
+                            <div class="scanner-laser"></div>
+                            <div class="scanner-corners">
+                                <span class="corner top-left"></span>
+                                <span class="corner top-right"></span>
+                                <span class="corner bottom-left"></span>
+                                <span class="corner bottom-right"></span>
+                            </div>
+                        </div>
+                        <div class="camera-controls mt-4 text-center">
+                            <div class="d-flex flex-column align-items-center gap-3">
+                                <select id="camera-select" class="form-select-modern d-none">
+                                    <option value="">Choosing camera...</option>
+                                </select>
+                                <div class="btn-group-premium">
+                                    <button id="btn-start-cam" onclick="startDigitalScanner()" class="btn-scan-main">
+                                        <i class="fas fa-power-off me-2"></i>Activate Camera
+                                    </button>
+                                    <button id="btn-stop-cam" onclick="stopDigitalScanner()" class="btn-scan-stop d-none">
+                                        <i class="fas fa-stop-circle me-2"></i>Stop Camera
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 3. Manual Entry Section -->
+                    <div id="sec-manual" class="scanner-section">
+                        <div class="manual-entry-card p-5 text-center">
+                            <i class="fas fa-id-card-alt fa-3x text-soft-blue mb-4"></i>
+                            <h4 class="fw-bold mb-4">Enter Access Key Manually</h4>
+                            <div class="input-group-premium mx-auto" style="max-width: 400px;">
+                                <input type="text" id="manual-key-input" class="form-control-premium" placeholder="Enter ID or Access Key...">
+                                <button onclick="processManualEntry()" class="btn-entry-submit">
+                                    Verify <i class="fas fa-arrow-right ms-2 scale-hover"></i>
+                                </button>
+                            </div>
+                            <p class="small text-muted mt-4">Use this option if the QR code is damaged or unreadable.</p>
+                        </div>
+                    </div>
+
+                    <!-- Universal Result Overlay -->
+                    <div id="result-overlay" class="result-backdrop d-none">
+                        <div id="result-panel" class="result-panel animate__animated">
+                            <div id="result-icon-box" class="mb-4 d-flex justify-content-center"></div>
+                            <h2 id="result-status-title" class="fw-black mb-3"></h2>
+                            <p id="result-status-text" class="fs-5 mb-5 opacity-75"></p>
+                            <div class="d-flex flex-column gap-2">
+                                <button onclick="resetUnifiedScanner()" class="btn btn-primary-premium btn-lg rounded-pill shadow-lg">
+                                    <i class="fas fa-redo-alt me-2"></i>Process Next Call
+                                </button>
+                                <button onclick="resetUnifiedScanner()" class="btn btn-link text-decoration-none text-muted">
+                                    Close / إغلاق
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Feed Panel -->
+        <div class="col-xl-4 col-lg-10">
+            <div class="activity-feed-card shadow-premium p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-wave-square text-primary me-2"></i>Live Activity
+                    </h5>
+                    <div class="live-tag">
+                        <span class="live-dot"></span> REAL-TIME
+                    </div>
+                </div>
+                <div id="history-ajax-content" class="history-list custom-scrollbar">
+                    <div class="text-center py-5">
+                        <div class="spinner-grow text-primary" role="status"></div>
+                        <p class="mt-2 text-muted small">Connecting...</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-top text-center">
+                    <a href="@Url.Action("History", "Attendance")" class="btn-link-action">
+                        View Complete Log <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        // --- Core Variables ---
+        let digitalScanner = null;
+        let activeScannerMode = 'camera';
+        const scannerDomId = "reader";
+        const antiForgeryToken = '@token';
+
+        // --- DOM References ---
+        const ui = {
+            overlay: document.getElementById('result-overlay'),
+            panel: document.getElementById('result-panel'),
+            icon: document.getElementById('result-icon-box'),
+            title: document.getElementById('result-status-title'),
+            text: document.getElementById('result-status-text'),
+            history: document.getElementById('history-ajax-content'),
+            cameraSelect: document.getElementById('camera-select'),
+            startBtn: document.getElementById('btn-start-cam'),
+            stopBtn: document.getElementById('btn-stop-cam'),
+            manualInput: document.getElementById('manual-key-input')
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            digitalScanner = new Html5Qrcode(scannerDomId);
+            // Initially show waiting state in activity feed
+            ui.history.innerHTML = '<div class="text-center py-5 opacity-50"><i class="fas fa-qrcode fa-3x mb-3"></i><p>@Localizer["ReadyForScan"]</p></div>';
+            probeForCameras();
+        });
+
+        // --- Scanner Logic ---
+        async function probeForCameras() {
+            try {
+                const cameras = await Html5Qrcode.getCameras();
+                if (cameras && cameras.length > 0) {
+                    ui.cameraSelect.innerHTML = "";
+                    cameras.forEach(cam => {
+                        const opt = document.createElement("option");
+                        opt.value = cam.id;
+                        opt.text = cam.label || `Camera ${ui.cameraSelect.length + 1}`;
+                        ui.cameraSelect.appendChild(opt);
+                    });
+                    ui.cameraSelect.classList.remove('d-none');
+                }
+            } catch (e) {
+                console.error("Camera probe failed", e);
+            }
+        }
+
+        async function startDigitalScanner() {
+            if (digitalScanner && digitalScanner.isScanning) return;
+
+            const camId = ui.cameraSelect.value;
+            if (!camId) {
+                showToast("Please select a camera", "warning");
+                return;
+            }
+
+            try {
+                ui.startBtn.classList.add('d-none');
+                ui.stopBtn.classList.remove('d-none');
+                ui.cameraSelect.disabled = true;
+
+                await digitalScanner.start(
+                    camId, 
+                    { fps: 20, qrbox: { width: 280, height: 280 }, aspectRatio: 1.0 },
+                    (decodedText) => onSuccessfulDiscovery(decodedText),
+                    (errorMessage) => {} 
+                );
+            } catch (err) {
+                showToast("Camera access denied or failed", "error");
+                resetCameraButtons();
+            }
+        }
+
+        async function stopDigitalScanner() {
+            if (digitalScanner && digitalScanner.isScanning) {
+                try {
+                    await digitalScanner.stop();
+                } catch(e) {}
+                resetCameraButtons();
+            }
+        }
+
+        function resetCameraButtons() {
+            ui.startBtn.classList.remove('d-none');
+            ui.stopBtn.classList.add('d-none');
+            ui.cameraSelect.disabled = false;
+        }
+
+        // --- Manual Entry ---
+        function processManualEntry() {
+            const key = ui.manualInput.value.trim();
+            if (!key) {
+                showToast("Please enter a valid key", "warning");
+                return;
+            }
+            onSuccessfulDiscovery(key);
+            ui.manualInput.value = "";
+        }
+
+        // --- Result Handling ---
+        async function onSuccessfulDiscovery(accessKey) {
+            // Feedback Audio
+            try {
+                const beep = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                beep.play();
+            } catch(e) {}
+
+            // Pause live stream
+            if (digitalScanner.isScanning) {
+                await digitalScanner.pause(true);
+            }
+
+            try {
+                const response = await fetch('@Url.Action("ProcessScan", "Attendance")', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-XSRF-TOKEN': antiForgeryToken
+                    },
+                    body: JSON.stringify({ accessKey: accessKey })
+                });
+
+                const data = await response.json();
+                displayScanUnifiedResult(data.success, data.message);
+                
+                if (data.success) {
+                    // Fetch only the LAST scan for the feed
+                    try {
+                        const histResp = await fetch('@Url.Action("LastCheckIn", "Attendance")');
+                        ui.history.innerHTML = await histResp.text();
+                    } catch(e) {}
+
+                    // CLEAR Live Activity after 3 seconds exactly as requested
+                    setTimeout(() => {
+                        ui.history.innerHTML = '<div class="text-center py-5 opacity-50"><i class="fas fa-qrcode fa-3x mb-3"></i><p>@Localizer["ReadyForNextMember"]</p></div>';
+                    }, 3000);
+                }
+
+                // Automatically Resume Scanner faster for speed (1.5 seconds)
+                setTimeout(() => {
+                    resetUnifiedScanner();
+                }, 1500);
+
+            } catch (error) {
+                displayScanUnifiedResult(false, "@Localizer["SystemError"]");
+                setTimeout(() => { resetUnifiedScanner(); }, 3000);
+            }
+        }
+
+        function displayScanUnifiedResult(success, message) {
+            ui.text.innerText = message;
+            ui.overlay.classList.remove('d-none');
+            ui.panel.classList.remove('animate__zoomIn', 'animate__shakeX');
+            
+            if (success) {
+                ui.panel.classList.add('animate__zoomIn');
+                ui.icon.innerHTML = '<div class="status-icon-circle bg-success shadow-glow"><i class="fas fa-check fa-4x"></i></div>';
+                ui.title.innerText = "DONE";
+                ui.title.className = "fw-black text-success mb-2";
+            } else {
+                ui.panel.classList.add('animate__shakeX');
+                ui.icon.innerHTML = '<div class="status-icon-circle bg-danger shadow-glow-error"><i class="fas fa-times fa-4x"></i></div>';
+                ui.title.innerText = "FAILED";
+                ui.title.className = "fw-black text-danger mb-2";
+            }
+        }
+
+        function resetUnifiedScanner() {
+            ui.overlay.classList.add('d-none');
+            if (digitalScanner && digitalScanner.isPaused) {
+                try { digitalScanner.resume(); } catch(e) {}
+            }
+        }
+
+        function switchScannerMode(mode) {
+            activeScannerMode = mode;
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${mode}`).classList.add('active');
+
+            document.querySelectorAll('.scanner-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`sec-${mode}`).classList.add('active');
+
+            if (mode !== 'camera') stopDigitalScanner(); 
+        }
+
+        async function refreshActivityLog() {
+            // This is now handled by the onSuccessfulDiscovery to be truly "Live"
+        }
+
+        function showToast(msg, type) {
+            // Reusing existing SweetAlert context if available or simple alert
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ text: msg, icon: type, toast: true, position: 'top-end', timer: 3000, showConfirmButton: false });
+            } else {
+                alert(msg);
+            }
+        }
+    </script>
+    
+    <style>
+        /* Advanced Premium Styling */
+        :root {
+            --accent-primary: #6366f1;
+            --accent-secondary: #a855f7;
+            --premium-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="dark"] {
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        .fw-black { font-weight: 900; }
+        .text-gradient {
+            background: var(--premium-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .shadow-ultra {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 30px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Card Layout */
+        .scanner-main-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 3rem;
+            border: 1px solid var(--border-glass);
+            min-height: 600px;
+        }
+
+        .activity-feed-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid var(--border-glass);
+        }
+
+        /* Tabs */
+        .premium-tabs { gap: 10px; width: fit-content; mx: auto; }
+        .tab-item {
+            border: none;
+            background: transparent;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-item.active {
+            background: white;
+            color: var(--accent-primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] .tab-item.active { background: #1e293b; color: #818cf8; }
+
+        /* Scanner Frame */
+        .scanner-frame {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 1;
+            box-shadow: 0 0 0 10px var(--border-glass);
+        }
+
+        .modern-scanner-view { width: 100%; height: 100%; }
+
+        .scanner-laser {
+            position: absolute;
+            top: 10%;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background: #ff0055;
+            box-shadow: 0 0 15px #ff0055;
+            z-index: 10;
+            animation: laserMove 2.5s infinite linear;
+        }
+
+        @@keyframes laserMove {
+            0% { top: 10%; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { top: 90%; opacity: 0; }
+        }
+
+        /* Corner accents */
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--accent-primary);
+            z-index: 11;
+        }
+        .top-left { top: 20px; left: 20px; border-right: 0; border-bottom: 0; border-radius: 12px 0 0 0; }
+        .top-right { top: 20px; right: 20px; border-left: 0; border-bottom: 0; border-radius: 0 12px 0 0; }
+        .bottom-left { bottom: 20px; left: 20px; border-right: 0; border-top: 0; border-radius: 0 0 0 12px; }
+        .bottom-right { bottom: 20px; right: 20px; border-left: 0; border-top: 0; border-radius: 0 0 12px 0; }
+
+        /* Manual & File Sections */
+        .scanner-section { display: none; }
+        .scanner-section.active { display: block; animation: zoomIn 0.3s ease-out; }
+
+        .file-upload-hub {
+            height: 400px;
+            border: 3px dashed var(--accent-primary);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.03);
+            transition: all 0.3s;
+        }
+        .file-upload-hub.drag-over { background: rgba(99, 102, 241, 0.1); border-style: solid; }
+
+        .form-control-premium {
+            background: rgba(255,255,255,0.8);
+            border: 2px solid var(--border-glass);
+            border-radius: 16px 0 0 16px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        [data-theme="dark"] .form-control-premium { background: #0f172a; border-color: #334155; }
+
+        .btn-entry-submit {
+            background: var(--premium-gradient);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 0 16px 16px 0;
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btn-scan-main {
+            background: var(--premium-gradient);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.5);
+            transition: all 0.3s;
+        }
+        .btn-scan-main:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.6); }
+
+        .btn-primary-premium {
+            background: var(--premium-gradient);
+            color: white;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Result Overlay */
+        .result-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(25px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+        }
+
+        .result-panel {
+            background: var(--glass-bg);
+            padding: 4rem;
+            border-radius: 36px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid var(--border-glass);
+        }
+
+        .status-icon-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .shadow-glow { box-shadow: 0 0 50px rgba(16, 185, 129, 0.4); }
+        .shadow-glow-error { box-shadow: 0 0 50px rgba(239, 68, 68, 0.4); }
+
+        /* History */
+        .history-list { max-height: 520px; overflow-y: auto; }
+        .live-tag {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .live-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; animation: blink 1s infinite; }
+        @@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .scanner-main-card { padding: 1.5rem; }
+            .status-icon-circle { width: 100px; height: 100px; }
+            .status-icon-circle i { font-size: 2.5rem; }
+        }
+    </style>
+}

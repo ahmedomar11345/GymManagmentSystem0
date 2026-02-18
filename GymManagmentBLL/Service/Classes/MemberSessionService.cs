@@ -2,7 +2,8 @@ using AutoMapper;
 using GymManagmentBLL.Service.Interfaces;
 using GymManagmentBLL.ViewModels.MemberSessionViewModel;
 using GymManagmentDAL.Entities;
-using GymManagmentDAL.Reposotories.Interfaces;
+using GymManagmentDAL.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,236 +16,285 @@ namespace GymManagmentBLL.Service.Classes
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<MemberSessionService> _logger;
 
-        public MemberSessionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public MemberSessionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<MemberSessionService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public IEnumerable<SessionForBookingViewModel> GetUpcomingSessions()
+        public async Task<IEnumerable<SessionForBookingViewModel>> GetUpcomingSessionsAsync()
         {
-            var sessions = _unitOfWork.GetRepository<Session>().GetAll()
-                .Where(s => s.StartDate > DateTime.Now)
-                .ToList();
-
-            if (!sessions.Any()) return [];
-
-            return MapSessionsToViewModel(sessions, "Upcoming");
+            var sessions = await _unitOfWork.SessionRepository.GetUpcomingSessionsAsync();
+            return await MapSessionsToViewModelAsync(sessions, "Upcoming");
         }
 
-        public IEnumerable<SessionForBookingViewModel> GetOngoingSessions()
+        public async Task<IEnumerable<SessionForBookingViewModel>> GetOngoingSessionsAsync()
         {
-            var sessions = _unitOfWork.GetRepository<Session>().GetAll()
-                .Where(s => s.StartDate <= DateTime.Now && s.EndDate > DateTime.Now)
-                .ToList();
-
-            if (!sessions.Any()) return [];
-
-            return MapSessionsToViewModel(sessions, "Ongoing");
+            var sessions = await _unitOfWork.SessionRepository.GetOngoingSessionsAsync();
+            return await MapSessionsToViewModelAsync(sessions, "Ongoing");
         }
 
-        public SessionMembersViewModel? GetMembersForUpcomingSession(int sessionId)
+        public async Task<SessionMembersViewModel?> GetMembersForUpcomingSessionAsync(int sessionId)
         {
-            var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
-            if (session is null) return null;
+            var session = await _unitOfWork.SessionRepository.GetWithTrainerAndCategoryAsync(sessionId);
+            if (session == null || session.EndDate <= DateTime.Now) return null;
 
-            // Rule: Must be upcoming session
-            if (session.StartDate <= DateTime.Now) return null;
-
-            return GetSessionMembersViewModel(session, sessionId);
+            return await FetchSessionWithMembersAsync(session);
         }
 
-        public SessionMembersViewModel? GetMembersForOngoingSession(int sessionId)
+        public async Task<SessionMembersViewModel?> GetMembersForOngoingSessionAsync(int sessionId)
         {
-            var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
-            if (session is null) return null;
+            var session = await _unitOfWork.SessionRepository.GetWithTrainerAndCategoryAsync(sessionId);
+            if (session == null || session.EndDate <= DateTime.Now) return null;
 
-            // Rule 6: Must be ongoing session (started but not ended)
-            if (session.StartDate > DateTime.Now || session.EndDate <= DateTime.Now) return null;
-
-            return GetSessionMembersViewModel(session, sessionId);
+            return await FetchSessionWithMembersAsync(session);
         }
 
-        public bool CreateBooking(CreateBookingViewModel createBooking)
+        public async Task<(bool Success, string Message)> CreateBookingAsync(CreateBookingViewModel createBooking)
         {
             try
             {
-                // Rule 8: Session must exist
-                var session = _unitOfWork.GetRepository<Session>().GetById(createBooking.SessionId);
-                if (session is null) return false;
-
-                // Rule 8: Member must exist
-                var member = _unitOfWork.GetRepository<Member>().GetById(createBooking.MemberId);
-                if (member is null) return false;
-
-                // Rule 4: Can only book future sessions
-                if (session.StartDate <= DateTime.Now) return false;
-
-                // Rule 1: Member must have active membership
-                var hasActiveMembership = _unitOfWork.GetRepository<MemberShip>().GetAll()
-                    .Any(m => m.MemberId == createBooking.MemberId && m.EndDate > DateTime.Now);
-                if (!hasActiveMembership) return false;
-
-                // Rule 3: Member cannot book same session twice
-                var alreadyBooked = _unitOfWork.GetRepository<MemberSession>().GetAll()
-                    .Any(ms => ms.MemberId == createBooking.MemberId && ms.SessionId == createBooking.SessionId);
-                if (alreadyBooked) return false;
-
-                // Use transactional operation to avoid race on capacity
-                bool result = _unitOfWork.ExecuteInTransaction(() =>
+                var now = DateTime.Now;
+                var session = await _unitOfWork.SessionRepository.GetByIdAsync(createBooking.SessionId);
+                
+                if (session == null) 
                 {
-                    // Rule 2: Session must have available capacity (re-check inside transaction)
-                    var bookedCount = _unitOfWork.sessionRepository.GetCountofBookedSlot(createBooking.SessionId);
-                    if (bookedCount >= session.Capacity) return false;
+                    return (false, "Session not found.");
+                }
 
-                    var booking = _mapper.Map<MemberSession>(createBooking);
-                    _unitOfWork.GetRepository<MemberSession>().Add(booking);
-                    return true; // indicate operation should commit
-                });
+                // 1. Time Check
+                if (now >= session.EndDate) 
+                {
+                    return (false, "This session has already ended.");
+                }
 
-                return result;
+                // 2. Active Membership Check
+                var hasActivePlan = await _unitOfWork.MemberShipRepository.HasActiveMembershipAsync(createBooking.MemberId);
+                if (!hasActivePlan) 
+                {
+                    return (false, "Member does not have an active membership plan.");
+                }
+
+                if (await _unitOfWork.MemberSessionRepository.IsAlreadyBookedAsync(createBooking.MemberId, createBooking.SessionId)) 
+                {
+                    return (false, "Member is already enrolled in this session.");
+                }
+
+                var bookedCount = await _unitOfWork.MemberSessionRepository.GetBookingCountAsync(createBooking.SessionId);
+                
+                var booking = _mapper.Map<MemberSession>(createBooking);
+                
+                if (bookedCount >= session.Capacity) 
+                {
+                    booking.Status = GymManagmentDAL.Entities.Enums.BookingStatus.Waitlisted;
+                }
+                else
+                {
+                    booking.Status = GymManagmentDAL.Entities.Enums.BookingStatus.Confirmed;
+                }
+
+                await _unitOfWork.MemberSessionRepository.AddAsync(booking);
+                
+                var success = await _unitOfWork.SaveChangesAsync() > 0;
+                if (success) 
+                {
+                    return (true, booking.Status == GymManagmentDAL.Entities.Enums.BookingStatus.Waitlisted 
+                        ? "Session is full. You have been added to the waitlist." 
+                        : "Member enrolled successfully.");
+                }
+
+                return (false, "Could not save booking to database. Please try again.");
             }
-            catch
+            catch (Exception ex)
             {
+                // Catching specific DB update exceptions if they occur
+                if (ex.InnerException?.Message.Contains("duplicate") == true || ex.Message.Contains("duplicate") == true)
+                {
+                    return (false, "This member is already booked for this session.");
+                }
+
+                _logger.LogError(ex, "CRITICAL: Database error during booking for member {MemberId} in session {SessionId}.", createBooking.MemberId, createBooking.SessionId);
+                return (false, $"System Error: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> CancelBookingAsync(int memberId, int sessionId)
+        {
+            try
+            {
+                var booking = await _unitOfWork.MemberSessionRepository.GetByCompositeKeyAsync(memberId, sessionId);
+                if (booking == null) return false;
+
+                var session = await _unitOfWork.SessionRepository.GetByIdAsync(sessionId);
+                if (session == null || session.EndDate <= DateTime.Now) return false;
+
+                var wasConfirmed = booking.Status == GymManagmentDAL.Entities.Enums.BookingStatus.Confirmed;
+                _unitOfWork.MemberSessionRepository.Delete(booking);
+                
+                var success = await _unitOfWork.SaveChangesAsync() > 0;
+
+                // Auto-promote from Waitlist if a confirmed spot was opened
+                if (success && wasConfirmed)
+                {
+                    var nextInWaitlist = (await _unitOfWork.MemberSessionRepository
+                        .GetAllAsync(ms => ms.SessionId == sessionId && ms.Status == GymManagmentDAL.Entities.Enums.BookingStatus.Waitlisted))
+                        .OrderBy(ms => ms.CreatedAt)
+                        .FirstOrDefault();
+
+                    if (nextInWaitlist != null)
+                    {
+                        nextInWaitlist.Status = GymManagmentDAL.Entities.Enums.BookingStatus.Confirmed;
+                        _unitOfWork.MemberSessionRepository.Update(nextInWaitlist);
+                        await _unitOfWork.SaveChangesAsync();
+                        
+                        // TODO: Send Email Notification to nextInWaitlist.Member
+                    }
+                }
+
+                return success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to cancel booking for member {MemberId} in session {SessionId}", memberId, sessionId);
                 return false;
             }
         }
 
-        public bool CancelBooking(int memberId, int sessionId)
+        public async Task<bool> MarkAttendanceAsync(int memberId, int sessionId)
         {
             try
             {
-                // Rule 8: Booking must exist
-                var booking = _unitOfWork.GetRepository<MemberSession>().GetAll()
-                    .FirstOrDefault(ms => ms.MemberId == memberId && ms.SessionId == sessionId);
-                if (booking is null) return false;
+                var booking = await _unitOfWork.MemberSessionRepository.GetByCompositeKeyAsync(memberId, sessionId);
+                if (booking == null || booking.IsAttended || booking.Status != GymManagmentDAL.Entities.Enums.BookingStatus.Confirmed) return false;
 
-                // Rule 8: Session must exist
-                var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
-                if (session is null) return false;
-
-                // Rule 5: Can only cancel future sessions (not started yet)
-                if (session.StartDate <= DateTime.Now) return false;
-
-                _unitOfWork.GetRepository<MemberSession>().Delete(booking);
-                return _unitOfWork.SaveChanges() > 0;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool MarkAttendance(int memberId, int sessionId)
-        {
-            try
-            {
-                // Rule 8: Session must exist
-                var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
-                if (session is null) return false;
-
-                // Rule 6: Can only mark attendance for ongoing sessions
-                if (session.StartDate > DateTime.Now || session.EndDate <= DateTime.Now) return false;
-
-                // Rule 8: Booking must exist
-                var booking = _unitOfWork.GetRepository<MemberSession>().GetAll()
-                    .FirstOrDefault(ms => ms.MemberId == memberId && ms.SessionId == sessionId);
-                if (booking is null) return false;
+                var now = DateTime.Now;
+                var session = await _unitOfWork.SessionRepository.GetByIdAsync(sessionId);
+                if (session == null || session.StartDate > now || session.EndDate <= now) return false;
 
                 booking.IsAttended = true;
-                booking.UpdatedAt = DateTime.Now;
+                booking.UpdatedAt = now;
 
-                _unitOfWork.GetRepository<MemberSession>().Update(booking);
-                return _unitOfWork.SaveChanges() > 0;
+                _unitOfWork.MemberSessionRepository.Update(booking);
+                return await _unitOfWork.SaveChangesAsync() > 0;
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to mark attendance for member {MemberId} in session {SessionId}", memberId, sessionId);
                 return false;
             }
         }
 
-        public IEnumerable<MemberForBookingSelectViewModel> GetMembersWithActiveMembershipForDropDown(int sessionId)
+        public async Task<IEnumerable<MemberForBookingSelectViewModel>> GetMembersWithActiveMembershipForDropDownAsync(int sessionId)
         {
-            // Get all members with active membership (Rule 1)
-            var membersWithActiveMembership = _unitOfWork.GetRepository<MemberShip>().GetAll()
-                .Where(m => m.EndDate > DateTime.Now)
-                .Select(m => m.MemberId)
-                .Distinct()
-                .ToList();
+            try
+            {
+                var now = DateTime.Now;
 
-            if (!membersWithActiveMembership.Any()) return [];
+                // 1. Get IDs of members with ANY active membership (inclusive of expiry date)
+                // Optimized: Fetch only IDs instead of full entities
+                var activeIds = await _unitOfWork.MemberShipRepository.GetActiveMemberIdsAsync();
 
-            // Get members who already booked this session (Rule 3)
-            var alreadyBookedMemberIds = _unitOfWork.GetRepository<MemberSession>().GetAll()
-                .Where(ms => ms.SessionId == sessionId)
-                .Select(ms => ms.MemberId)
-                .ToList();
+                if (!activeIds.Any()) 
+                {
+                    _logger.LogInformation("No members with active memberships found for session booking {Id}", sessionId);
+                    return Enumerable.Empty<MemberForBookingSelectViewModel>();
+                }
 
-            // Get members with active membership who haven't booked yet
-            var availableMembers = _unitOfWork.GetRepository<Member>().GetAll()
-                .Where(m => membersWithActiveMembership.Contains(m.Id) && !alreadyBookedMemberIds.Contains(m.Id))
-                .ToList();
+                // 2. Get IDs of members already booked for this session
+                var bookedIds = (await _unitOfWork.MemberSessionRepository.GetAllAsync(ms => ms.SessionId == sessionId))
+                               .Select(ms => ms.MemberId).ToList();
 
-            return _mapper.Map<IEnumerable<MemberForBookingSelectViewModel>>(availableMembers);
+                // 3. Filter members who are active AND not already booked
+                var eligibleIds = activeIds.Except(bookedIds).ToList();
+
+                if (!eligibleIds.Any()) return Enumerable.Empty<MemberForBookingSelectViewModel>();
+
+                // 4. Get the full member objects for the dropdown
+                var members = await _unitOfWork.MemberRepository.GetAllAsync(m => eligibleIds.Contains(m.Id));
+
+                return _mapper.Map<IEnumerable<MemberForBookingSelectViewModel>>(members.OrderBy(m => m.Name));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error populating member dropdown for session {Id}", sessionId);
+                return Enumerable.Empty<MemberForBookingSelectViewModel>();
+            }
+        }
+
+        public async Task<string?> GetSessionNameAsync(int sessionId)
+        {
+            var session = await _unitOfWork.SessionRepository.GetByIdAsync(sessionId);
+            if (session == null) return null;
+            var cat = await _unitOfWork.GetRepository<Category>().GetByIdAsync(session.CategoryId);
+            return $"{cat?.CategoryName} - {session.Description}";
+        }
+
+        public async Task<SessionMembersViewModel?> GetSessionMembersAsync(int sessionId)
+        {
+            var session = await _unitOfWork.SessionRepository.GetWithTrainerAndCategoryAsync(sessionId);
+            if (session == null) return null;
+
+            return await FetchSessionWithMembersAsync(session);
         }
 
         #region Helper Methods
-        private SessionMembersViewModel GetSessionMembersViewModel(Session session, int sessionId)
+        private async Task<SessionMembersViewModel> FetchSessionWithMembersAsync(Session session)
         {
-            var category = _unitOfWork.GetRepository<Category>().GetById(session.CategoryId);
-
-            var bookings = _unitOfWork.GetRepository<MemberSession>().GetAll()
-                .Where(ms => ms.SessionId == sessionId)
-                .ToList();
-
-            var bookingViewModels = _mapper.Map<List<BookingViewModel>>(bookings);
-
-            // Fill MemberName after mapping
-            foreach (var bookingVm in bookingViewModels)
+            var bookings = await _unitOfWork.MemberSessionRepository.GetSessionBookingsWithMembersAsync(session.Id);
+            
+            var bookingVms = bookings.Select(b => new BookingViewModel
             {
-                var member = _unitOfWork.GetRepository<Member>().GetById(bookingVm.MemberId);
-                bookingVm.MemberName = member?.Name ?? "Unknown";
-            }
+                MemberId = b.MemberId,
+                MemberName = b.Member?.Name ?? "Unknown",
+                IsAttended = b.IsAttended,
+                BookingDate = b.CreatedAt.ToString("g"),
+                Status = b.Status.ToString()
+            }).ToList();
 
             return new SessionMembersViewModel
             {
-                SessionId = sessionId,
-                SessionName = category?.CategoryName.ToString() ?? "Unknown",
-                Bookings = bookingViewModels
+                SessionId = session.Id,
+                SessionName = session.SessionCategory?.CategoryName.ToString() ?? "Unknown",
+                Bookings = bookingVms
             };
         }
 
-        private IEnumerable<SessionForBookingViewModel> MapSessionsToViewModel(List<Session> sessions, string status)
+        private async Task<IEnumerable<SessionForBookingViewModel>> MapSessionsToViewModelAsync(IEnumerable<Session> sessions, string status)
         {
-            var viewModels = new List<SessionForBookingViewModel>();
-
-            foreach (var session in sessions)
+            var result = new List<SessionForBookingViewModel>();
+            var now = DateTime.Now;
+            foreach (var s in sessions)
             {
-                var category = _unitOfWork.GetRepository<Category>().GetById(session.CategoryId);
-                var trainer = _unitOfWork.GetRepository<Trainer>().GetById(session.TrainerId);
-                var bookedCount = _unitOfWork.GetRepository<MemberSession>().GetAll()
-                    .Count(ms => ms.SessionId == session.Id);
+                var duration = s.EndDate - s.StartDate;
+                var midpoint = s.StartDate.Add(duration / 2);
+                var bookedCount = await _unitOfWork.MemberSessionRepository.GetBookingCountAsync(s.Id);
+                var waitlistCount = await _unitOfWork.MemberSessionRepository.GetWaitlistCountAsync(s.Id);
 
-                var duration = session.EndDate - session.StartDate;
+                // Re-calculate business rule for CanBook flag
+                bool isFinished = now >= s.EndDate;
+                bool canBookTimeWise = !isFinished; 
 
-                viewModels.Add(new SessionForBookingViewModel
+                result.Add(new SessionForBookingViewModel
                 {
-                    Id = session.Id,
-                    CategoryName = category?.CategoryName.ToString() ?? "Unknown",
-                    Description = session.Description,
-                    TrainerName = trainer?.Name ?? "Unknown",
-                    Date = session.StartDate.ToString("MMM dd, yyyy"),
-                    StartTime = session.StartDate.ToString("hh:mm tt"),
-                    EndTime = session.EndDate.ToString("hh:mm tt"),
-                    Duration = $"{duration.Hours:D2}:{duration.Minutes:D2}:{duration.Seconds:D2}",
-                    Capacity = session.Capacity,
+                    Id = s.Id,
+                    CategoryName = s.SessionCategory?.CategoryName.ToString() ?? "Unknown",
+                    Description = s.Description,
+                    TrainerName = s.SessionTrainer?.Name ?? "Unknown",
+                    Date = s.StartDate.ToString("MMM dd, yyyy"),
+                    StartTime = s.StartDate.ToString("hh:mm tt"),
+                    EndTime = s.EndDate.ToString("hh:mm tt"),
+                    Duration = duration.ToString(@"hh\:mm"),
+                    Capacity = s.Capacity,
                     BookedCount = bookedCount,
-                    Status = status
+                    WaitlistCount = waitlistCount,
+                    Status = status,
+                    CanBook = canBookTimeWise 
                 });
             }
-
-            return viewModels;
+            return result;
         }
         #endregion
     }

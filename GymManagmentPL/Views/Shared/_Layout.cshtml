@@ -1,87 +1,365 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Microsoft.Extensions.Localization
+@using GymManagmentBLL.Service.Interfaces
+@inject IStringLocalizer<SharedResource> Localizer
+@inject IGymSettingsService GymService
+@{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture;
+    var isRtl = culture.TextInfo.IsRightToLeft;
+    var direction = isRtl ? "rtl" : "ltr";
+    var lang = culture.TwoLetterISOLanguageName;
+    var gymSettings = await GymService.GetSettingsAsync();
+}
+<!DOCTYPE html>
+<html lang="@lang" dir="@direction">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="~/images/icon.svg" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
-          rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-    <!-- ^ Bootstrap 5.3.8 css file -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- ^ Our main css file -->
-    <link rel="stylesheet" href="~/css/style.css" />
-    <title>Power fitness | @ViewData["Title"]</title>
+    <title>@ViewData["Title"] - @gymSettings.GymName</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    @if (System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+    {
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    }
+    else
+    {
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    }
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <link rel="stylesheet" href="~/css/ironpulse-dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    @if (System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+    {
+        <link rel="stylesheet" href="~/css/rtl.css" asp-append-version="true" />
+    }
+    @await RenderSectionAsync("Styles", required: false)
+    <script>
+        // Check theme before page renders to prevent white flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
-    <header>
-        <!-- ^ navbar -->
-        <nav class="navbar navbar-expand-lg bg-white my-3">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="~/images/logo.jpg" alt="" />
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <!-- Sidebar -->
+        <div class="sidebar d-none d-lg-flex flex-column shadow-lg">
+            <!-- Header -->
+            <div class="p-4 text-center border-bottom border-secondary border-opacity-10">
+                <h4 class="fw-bold mb-0 text-white"><i class="fas fa-dumbbell me-2 text-primary"></i>@gymSettings.GymName</h4>
+                <small class="text-white-50 opacity-75">@Localizer["ManagementSystem"]</small>
+            </div>
+            
+            <!-- Content Area (Scrollable) -->
+            <div class="sidebar-content">
+                <div class="px-3 py-4">
+                    <div class="text-uppercase small text-white-50 fw-bold mb-3 ms-3 opacity-50">@Localizer["MainMenu"]</div>
+                    <nav class="nav flex-column">
+                        <a asp-controller="Home" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                            <i class="fas fa-chart-line"></i> @Localizer["Dashboard"]
+                        </a>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav m-auto mb-2 mb-lg-0 mt-3 mt-lg-0">
-                        <li class="nav-item">
-                        <li class="nav-item">
-                            <a class="nav-link active px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page"
-                               asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Member" asp-action="Index">Members</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Trainer" asp-action="Index">Trainers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Session" asp-action="Index">Sessions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Plan" asp-action="Index">Plans</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page"
-                               asp-controller="MemberShip" asp-action="Index">Memberships</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="MemberSession" asp-action="Index">
-                                Sessions
-                                Schedule
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                        {
+                            <div class="text-uppercase small text-white-50 fw-bold mt-4 mb-2 ms-3 opacity-50">@Localizer["Administration"]</div>
+                            <a asp-controller="Member" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Member" ? "active" : "")">
+                                <i class="fas fa-users"></i> @Localizer["Members"]
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
-                                <button type="submit"
-                                        class="btn btn-link nav-link px-3 py-2 mx-2 fw-bolder fs-5 text-black-alternative">
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
+                            <a asp-controller="Trainer" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Trainer" ? "active" : "")">
+                                <i class="fas fa-user-tie"></i> @Localizer["Trainers"]
+                            </a>
+
+                            <a asp-controller="Specialty" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Specialty" ? "active" : "")">
+                                <i class="fas fa-tags"></i> @Localizer["Specialties"]
+                            </a>
+                            <a asp-controller="MemberShip" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MemberShip" ? "active" : "")">
+                                <i class="fas fa-id-card"></i> @Localizer["Memberships"]
+                            </a>
+                            <a asp-controller="Plan" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Plan" ? "active" : "")">
+                                <i class="fas fa-tags"></i> @Localizer["Plans"]
+                            </a>
+                            <a asp-controller="Report" asp-action="Financial" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Report" ? "active" : "")">
+                                <i class="fas fa-chart-pie"></i> @Localizer["FinancialReports"]
+                            </a>
+                        }
+
+                        <div class="text-uppercase small text-white-50 fw-bold mt-4 mb-2 ms-3 opacity-50">@Localizer["Operations"]</div>
+
+                        <a asp-controller="Attendance" asp-action="Scanner" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Attendance" && ViewContext.RouteData.Values["action"]?.ToString() == "Scanner" ? "active" : "")">
+                            <i class="fas fa-qrcode"></i> @Localizer["QRScanner"]
+                        </a>
+
+                        <a asp-controller="MemberSession" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MemberSession" ? "active" : "")">
+                            <i class="fas fa-book-reader"></i> @Localizer["Bookings"]
+                        </a>
+
+                        <a asp-controller="Session" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Session" ? "active" : "")">
+                            <i class="fas fa-calendar-alt"></i> @Localizer["Sessions"]
+                        </a>
+
+                        <a asp-controller="Attendance" asp-action="History" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Attendance" && ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
+                            <i class="fas fa-clipboard-check"></i> @Localizer["AttendanceHistory"]
+                        </a>
+                        
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                        {
+                            <div class="text-uppercase small text-white-50 fw-bold mt-4 mb-2 ms-3 opacity-50">@Localizer["System"]</div>
+                            <a asp-controller="ScheduledTask" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ScheduledTask" ? "active" : "")">
+                                <i class="fas fa-clock"></i> @Localizer["ScheduledTasks"]
+                            </a>
+                        }
+                        
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <a asp-controller="Settings" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "active" : "")">
+                                <i class="fas fa-cog"></i> @Localizer["Settings"]
+                            </a>
+                        }
+                        
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Bottom Section (Fixed) -->
+            <div class="sidebar-bottom">
+                
+                
+                <a asp-controller="Account" asp-action="Profile" class="user-profile-card d-flex align-items-center p-3 mb-3 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-10 text-decoration-none transition-hover">
+                    <div class="user-avatar-circle rounded-circle bg-primary d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; min-width: 42px;">
+                        <i class="fas fa-user text-white fs-5"></i>
+                    </div>
+                    <div class="user-info-text overflow-hidden flex-grow-1 ms-3">
+                        <p class="mb-0 text-white small fw-bold text-truncate" style="line-height: 1.2;">@(User.FindFirst("FullName")?.Value ?? User.Identity?.Name)</p>
+                        <small class="text-white-50 x-small d-block text-truncate">@(User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value ?? Localizer["User"])</small>
+                    </div>
+                    <i class="fas fa-chevron-right text-white-50 small ms-2"></i>
+                </a>
+                
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm w-100 py-2 rounded-pill shadow-sm d-flex align-items-center justify-content-center">
+                    <i class="fas fa-sign-out-alt me-2"></i> @Localizer["Logout"]
+                </a>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <header class="main-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center flex-grow-1">
+                    <nav aria-label="breadcrumb" class="d-none d-md-block me-4">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="@Url.Action("Index", "Home")">
+                                    <i class="fas fa-home small text-primary"></i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+                        </ol>
+                    </nav>
+
+                    <!-- System Status Pulse (Cool Feature) -->
+                    <div class="d-none d-lg-flex align-items-center me-4 bg-success bg-opacity-10 px-3 py-1 rounded-pill border border-success border-opacity-25">
+                        <span class="status-pulse me-2"></span>
+                        <span class="small fw-bold text-success">@Localizer["SystemOnline"]</span>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <form class="flex-grow-1" method="get" asp-action="Index">
+                        <div class="input-group search-group">
+                            <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
+                            <input type="text" name="searchTerm" class="form-control border-0 bg-transparent" placeholder="@Localizer["GlobalSearch"]" value="@ViewData["SearchTerm"]">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 ms-4">
+                    <!-- Notifications & Theme -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="dropdown" id="notificationDropdown">
+                            <button class="header-action-btn position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="loadNotifications()">
+                                <i class="fas fa-bell"></i>
+                                <span id="notificationBadge" class="position-absolute badge rounded-circle bg-danger border border-light p-1 d-none" style="top: 8px; right: 8px; width: 10px; height: 10px;">
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-0" style="width: 320px;">
+                                <li class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 fw-bold">@Localizer["Notifications"]</h6>
+                                    <small id="btnMarkAllRead" class="text-danger fw-bold cursor-pointer">
+                                        <i class="fas fa-trash-alt me-1"></i> @Localizer["MarkAllRead"]
+                                    </small>
+                                </li>
+                                <li class="p-0" style="max-height: 300px; overflow-y: auto;">
+                                    <div id="notificationList" data-empty-text="@Localizer["NotificationsEmpty"]">
+                                        <!-- Notifications will be loaded here -->
+                                        <div class="text-center py-4 text-muted small">
+                                            <div class="spinner-border spinner-border-sm text-secondary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="p-2 text-center border-top">
+                                    <a class="small text-decoration-none fw-bold" asp-controller="Notification" asp-action="Index">@Localizer["ViewAllNotifications"]</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Language Switcher Header -->
+                    <div class="dropdown">
+                        <button class="header-action-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="@Localizer["SelectLanguage"]">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2" style="border-radius: 12px; min-width: 150px;">
+                            <li class="dropdown-header small text-uppercase">@Localizer["SelectLanguage"]</li>
+                            <li>
+                                <form asp-controller="Language" asp-action="SetLanguage" asp-route-culture="en" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" method="post">
+                                    <button type="submit" class="dropdown-item rounded d-flex align-items-center mb-1">
+                                        <span class="me-2">🇬🇧</span> English
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form asp-controller="Language" asp-action="SetLanguage" asp-route-culture="ar" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" method="post">
+                                    <button type="submit" class="dropdown-item rounded d-flex align-items-center">
+                                        <span class="me-2">🇪🇬</span> العربية
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggle" class="header-action-btn" title="@Localizer["ChangeTheme"]">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    
+
+                    <!-- User Profile Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn p-0 border-0 d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 42px; height: 42px;">
+                                @(User.FindFirst("FirstName")?.Value?.Substring(0, 1).ToUpper() ?? User.Identity?.Name?.Substring(0, 1).ToUpper())
+                            </div>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 p-2" style="border-radius: 12px; min-width: 200px;">
+                            <li class="px-3 py-2 border-bottom mb-2">
+                                <div class="fw-bold">@(User.FindFirst("FullName")?.Value ?? User.Identity?.Name)</div>
+                                <small class="text-secondary text-truncate d-block">@(User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value ?? Localizer["User"])</small>
+                            </li>
+                            <li><a class="dropdown-item rounded mb-1" asp-controller="Account" asp-action="Profile"><i class="fas fa-user-circle me-2"></i> @Localizer["Profile"]</a></li>
+                            <li><a class="dropdown-item rounded mb-1" asp-controller="Account" asp-action="Settings"><i class="fas fa-cog me-2"></i> @Localizer["Settings"]</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a asp-controller="Account" asp-action="Logout" class="dropdown-item rounded text-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i> @Localizer["Logout"]
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="d-lg-none">
+                        <button class="header-action-btn" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSidebar">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="animate-fade-in">
+                @RenderBody()
+            </div>
+
+            <!-- Floating Quick Action Button -->
+            <div class="position-fixed bottom-0 end-0 m-4 z-3 d-none d-md-block">
+                <div class="dropdown">
+                    <button class="btn btn-primary rounded-circle shadow-lg p-0 d-flex align-items-center justify-content-center" 
+                            style="width: 60px; height: 60px;" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-plus fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mb-2 p-2" style="border-radius: 12px; min-width: 200px;">
+                        <li class="dropdown-header text-uppercase small fw-bold">@Localizer["QuickActions"]</li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Member" asp-action="Create"><i class="fas fa-user-plus me-2 text-primary"></i> @Localizer["AddMember"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Trainer" asp-action="Create"><i class="fas fa-user-shield me-2 text-success"></i> @Localizer["AddTrainer"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="MemberSession" asp-action="Index"><i class="fas fa-calendar-plus me-2 text-warning"></i> @Localizer["BookSession"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Attendance" asp-action="Scanner"><i class="fas fa-qrcode me-2 text-danger"></i> @Localizer["EntranceCheckIn"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Expense" asp-action="Create"><i class="fas fa-receipt me-2 text-orange"></i> @Localizer["AddExpense"]</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Home" asp-action="Index"><i class="fas fa-tachometer-alt me-2 text-info"></i> @Localizer["Dashboard"]</a></li>
                     </ul>
                 </div>
             </div>
-        </nav>
-
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
         </main>
+    }
+    else
+    {
+        <div class="container-fluid p-0">
+            @RenderBody()
+        </div>
+    }
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <div id="global-notifications" 
+         data-success="@(TempData["SuccessMessage"] ?? ViewBag.SuccessMessage)"
+         data-error="@(TempData["ErrorMessage"] ?? ViewBag.ErrorMessage)"
+         data-warning="@(TempData["WarningMessage"] ?? ViewBag.WarningMessage)"
+         data-fail-title="@Localizer["OperationFailed"]"
+         data-confirm-text="@Localizer["Confirm"]">
     </div>
 
-    
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @Html.AntiForgeryToken()
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <partial name="_AlertBoxScript" />
+    <script src="~/js/gym.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Theme Toggle Script
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            if (!themeToggle) return;
+            const icon = themeToggle.querySelector('i');
+            
+            // Initial icon update
+            const currentTheme = html.getAttribute('data-theme');
+            updateIcon(currentTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcon(newTheme);
+            });
+
+            function updateIcon(theme) {
+                if (theme === 'dark') {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
+            }
+        })();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

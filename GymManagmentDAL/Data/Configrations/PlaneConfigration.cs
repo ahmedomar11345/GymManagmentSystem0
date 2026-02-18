@@ -13,8 +13,8 @@ namespace GymManagmentDAL.Data.Configrations
     {
         public void Configure(EntityTypeBuilder<Plane> builder)
         {
-            builder.Property(x=> x.Name).HasColumnType("VarChar").HasMaxLength(50);
-            builder.Property(x=> x.Description).HasColumnType("VarChar").HasMaxLength(100);
+            builder.Property(x=> x.Name).HasMaxLength(50);
+            builder.Property(x=> x.Description).HasMaxLength(100);
             builder.Property(x=> x.Price).HasPrecision(10,2);
 
             builder.ToTable(tb =>

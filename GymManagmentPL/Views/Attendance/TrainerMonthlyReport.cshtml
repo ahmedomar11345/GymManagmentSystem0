@@ -1,0 +1,155 @@
+@model IEnumerable<GymManagmentDAL.Entities.TrainerAttendance>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["TrainerMonthlyReport"];
+    var trainers = (IEnumerable<GymManagmentBLL.ViewModels.TrainerViewModel.TrainerViewModel>)ViewBag.Trainers;
+    var selectedId = ViewBag.SelectedTrainerId as int?;
+    var reportYear = (int?)ViewBag.Year ?? DateTime.Today.Year;
+    var reportMonth = (int?)ViewBag.Month ?? DateTime.Today.Month;
+    
+    decimal totalHours = Model?.Sum(a => (decimal)a.TotalHours) ?? 0;
+    int totalDelays = Model?.Sum(a => a.DelayMinutes) ?? 0;
+    int totalOvertime = Model?.Sum(a => a.OvertimeMinutes) ?? 0;
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fas fa-file-invoice text-primary me-2"></i>@Localizer["MonthlyPerformanceReport"]</h2>
+        <p class="text-secondary">Summary of trainer attendance and performance / ملخص حضور وأداء المدرب</p>
+    </div>
+</div>
+
+<div class="premium-card p-4 mb-4">
+    <form asp-action="TrainerMonthlyReport" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-bold text-uppercase">@Localizer["SelectTrainer"]</label>
+                <select name="trainerId" class="form-select select2" required>
+                    <option value="">-- Choose --</option>
+                    @foreach (var t in trainers)
+                    {
+                        <option value="@t.Id" selected="@(selectedId == t.Id)">@t.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-uppercase">@Localizer["Year"]</label>
+                <input type="number" name="year" class="form-control" value="@reportYear" min="2020" max="@DateTime.Today.Year" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-uppercase">@Localizer["Month"]</label>
+                <select name="month" class="form-select">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(reportMonth == i)">@System.Globalization.DateTimeFormatInfo.CurrentInfo.GetMonthName(i)</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-1"></i> @Localizer["Generate"]
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (selectedId.HasValue && selectedId > 0)
+{
+    <div class="row mb-4 g-4">
+        <div class="col-md-4">
+            <div class="stats-card p-4 text-center">
+                <div class="icon-circle bg-primary bg-opacity-10 text-primary mx-auto mb-3">
+                    <i class="fas fa-history fa-2x"></i>
+                </div>
+                <h3 class="fw-black mb-1">@totalHours.ToString("N1")</h3>
+                <p class="text-secondary small mb-0">Total Hours / إجمالي الساعات</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card p-4 text-center border-danger-subtle">
+                <div class="icon-circle bg-danger bg-opacity-10 text-danger mx-auto mb-3">
+                    <i class="fas fa-clock fa-2x"></i>
+                </div>
+                <h3 class="fw-black text-danger mb-1">@totalDelays</h3>
+                <p class="text-secondary small mb-0">Total Delay (min) / إجمالي التأخير</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card p-4 text-center border-success-subtle">
+                <div class="icon-circle bg-success bg-opacity-10 text-success mx-auto mb-3">
+                    <i class="fas fa-bolt fa-2x"></i>
+                </div>
+                <h3 class="fw-black text-success mb-1">@totalOvertime</h3>
+                <p class="text-secondary small mb-0">Total Overtime (min) / إجمالي الإضافي</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="premium-card">
+        <div class="card-header bg-transparent border-0 p-4">
+            <h5 class="fw-bold mb-0">Attendance Log: @ViewBag.TrainerName</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">@Localizer["Date"]</th>
+                        <th>@Localizer["CheckIn"]</th>
+                        <th>@Localizer["CheckOut"]</th>
+                        <th>@Localizer["Hours"]</th>
+                        <th>@Localizer["Status"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr><td colspan="5" class="text-center py-4">No data available for this criteria</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var log in Model.OrderBy(l => l.Date))
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold">@log.Date.ToString("ddd, dd MMM")</td>
+                                <td>@log.CheckInTime?.ToString("hh:mm tt")</td>
+                                <td>@log.CheckOutTime?.ToString("hh:mm tt")</td>
+                                <td>@log.TotalHours</td>
+                                <td>
+                                    @if (log.DelayMinutes > 15)
+                                    {
+                                        <span class="badge bg-danger">Late</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Punctual</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<style>
+    .stats-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    .stats-card:hover { transform: translateY(-5px); }
+    .icon-circle {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .fw-black { font-weight: 900; font-size: 2.5rem; }
+</style>

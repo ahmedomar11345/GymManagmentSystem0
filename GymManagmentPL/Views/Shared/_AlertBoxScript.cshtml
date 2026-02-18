@@ -1,12 +1,129 @@
-﻿<script>
+@inject IStringLocalizer<SharedResource> Localizer
+
+<script>
     document.addEventListener("DOMContentLoaded", function () {
-        const alertBox = document.getElementById("Alert");
-        if (alertBox) {
-            setTimeout(() => {
-                alertBox.style.transition = "opacity 0.5s ease";
-                alertBox.style.opacity = "0";
-                setTimeout(() => alertBox.remove(), 500);
-            }, 1500);
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            customClass: {
+                popup: 'premium-swal-popup'
+            },
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        const successMsg = @Html.Raw(Json.Serialize(TempData["SuccessMessage"] ?? ViewBag.SuccessMessage ?? ""));
+        const errorMsg = @Html.Raw(Json.Serialize(TempData["ErrorMessage"] ?? ViewBag.ErrorMessage ?? ""));
+        const warningMsg = @Html.Raw(Json.Serialize(TempData["WarningMessage"] ?? ViewBag.WarningMessage ?? ""));
+
+        if (successMsg && successMsg.trim() !== "") {
+            Toast.fire({
+                icon: 'success',
+                title: successMsg
+            });
+        }
+
+        if (errorMsg && errorMsg.trim() !== "") {
+            Swal.fire({
+                icon: 'error',
+                title: '@Localizer["OperationFailed"]',
+                html: `<div class="text-start small">${errorMsg}</div>`,
+                buttonsStyling: false,
+                confirmButtonText: '@Localizer["Confirm"]',
+                customClass: {
+                    popup: 'premium-swal-popup animate__animated animate__headShake',
+                    title: 'premium-swal-title',
+                    confirmButton: 'premium-swal-confirm btn btn-danger px-4'
+                }
+            });
+        }
+
+        if (warningMsg && warningMsg.trim() !== "") {
+            Toast.fire({
+                icon: 'warning',
+                title: warningMsg
+            });
+        }
+    });
+
+    // Unified Premium Confirmation Dialog
+    function showPremiumConfirm(title, text, confirmText, cancelText, icon = 'warning') {
+        return Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonText: confirmText || '@Localizer["Confirm"]',
+            cancelButtonText: cancelText || '@Localizer["Cancel"]',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'premium-swal-popup',
+                title: 'premium-swal-title',
+                confirmButton: 'premium-swal-confirm btn btn-danger px-4',
+                cancelButton: 'premium-swal-cancel btn btn-outline-secondary px-4'
+            },
+            showClass: {
+                popup: 'animate__animated animate__zoomIn animate__faster'
+            }
+        });
+    }
+
+    // Generic delete for Trainer
+    window.confirmDeleteTrainer = function(id, name) {
+        showPremiumConfirm('@Html.Raw(Localizer["DeleteConfirmTitle"])', `@Html.Raw(Localizer["DeleteConfirmMessage"]) (${name})`, '@Html.Raw(Localizer["Delete"])', '@Html.Raw(Localizer["Cancel"])')
+            .then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.getElementById('deleteForm');
+                    const input = document.getElementById('deleteTrainerId');
+                    if (form && input) {
+                        input.value = id;
+                        form.submit();
+                    }
+                }
+            });
+    };
+
+    // Simplified Global delete function for Member
+    window.confirmDeleteMember = function(id, name) {
+        showPremiumConfirm('@Html.Raw(Localizer["DeleteConfirmTitle"])', `@Html.Raw(Localizer["DeleteConfirmMessage"]) (${name})`, '@Html.Raw(Localizer["Delete"])', '@Html.Raw(Localizer["Cancel"])')
+            .then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.getElementById('deleteForm');
+                    const input = document.getElementById('deleteMemberId');
+                    if (form && input) {
+                        input.value = id;
+                        form.submit();
+                    }
+                }
+            });
+    };
+
+    // Generic Delete Listener
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.delete-btn');
+        if (btn) {
+            e.preventDefault();
+            const id = btn.dataset.id;
+            const name = btn.dataset.name;
+            const inputId = btn.dataset.input;
+            const formId = btn.dataset.form || 'deleteForm';
+
+            showPremiumConfirm('@Html.Raw(Localizer["DeleteConfirmTitle"])', `@Html.Raw(Localizer["DeleteConfirmMessage"]) (${name})`, '@Html.Raw(Localizer["Delete"])', '@Html.Raw(Localizer["Cancel"])')
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.getElementById(formId);
+                        const input = document.getElementById(inputId);
+                        if (form && input) {
+                            input.value = id;
+                            form.submit();
+                        }
+                    }
+                });
         }
     });
 </script>

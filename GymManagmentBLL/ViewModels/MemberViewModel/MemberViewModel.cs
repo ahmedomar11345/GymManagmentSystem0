@@ -19,7 +19,12 @@ namespace GymManagmentBLL.ViewModels.MemberViewModel
         public string? MembershipStartDate { get; set; } 
         public string? MembershipEndDate { get; set; }
         public string? Address { get; set; }
+        public DateTime JoinDate { get; set; }
+        public int? SessionsBooked { get; set; }
+        public string? AccessKey { get; set; }
 
-
+        // Health Record
+        public HealthRecordViewModel? HealthRecord { get; set; }
+        public IEnumerable<GymManagmentBLL.Service.Interfaces.CheckInViewModel>? CheckInHistory { get; set; }
     }
 }

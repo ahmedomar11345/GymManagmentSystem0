@@ -10,22 +10,22 @@ namespace GymManagmentBLL.ViewModels.SessionViewModel
     public class UpdateSessionViewModel
     {
         // Description
-        [Required(ErrorMessage = "Description is required")]
-        [StringLength(maximumLength: 500, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 500")]
+        [Required(ErrorMessage = "DescriptionRequired")]
+        [StringLength(maximumLength: 500, MinimumLength = 10, ErrorMessage = "DescriptionLength")]
         public string Description { get; set; } = null!;
 
         // Start Date & Time
-        [Required(ErrorMessage = "Start date is required")]
+        [Required(ErrorMessage = "StartDateRequired")]
         [Display(Name = "Start Date & Time")]
         public DateTime StartDate { get; set; }
 
         // End Date & Time
-        [Required(ErrorMessage = "End date is required")]
+        [Required(ErrorMessage = "EndDateRequired")]
         [Display(Name = "End Date & Time")]
         public DateTime EndDate { get; set; }
 
         // Trainer ID
-        [Required(ErrorMessage = "Trainer is required")]
+        [Required(ErrorMessage = "TrainerRequired")]
         [Display(Name = "Trainer")]
         public int TrainerId { get; set; }
     }

@@ -9,13 +9,11 @@ namespace GymManagmentBLL.Service.Interfaces
 {
     public interface IPlanService
     {
-        IEnumerable<PlanViewModel> GetAllPlans();
-
-        PlanViewModel? GetPlanById(int id);
-
-        UpdatePlanViewModel? GetPlanToUpdate(int planId);
-
-        bool UpdatePlan(int planId, UpdatePlanViewModel PlanToUpdate);
-        bool ToggleStatus(int planId);
+        Task<IEnumerable<PlanViewModel>> GetAllPlansAsync();
+        Task<PlanViewModel?> GetPlanByIdAsync(int id);
+        Task<UpdatePlanViewModel?> GetPlanToUpdateAsync(int planId);
+        Task<bool> UpdatePlanAsync(int planId, UpdatePlanViewModel PlanToUpdate);
+        Task<bool> ToggleStatusAsync(int planId);
+        Task<bool> CreatePlanAsync(CreatePlanViewModel model);
     }
 }

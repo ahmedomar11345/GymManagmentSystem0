@@ -1,0 +1,121 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.ExpenseViewModel.ExpenseViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["ManageExpenses"];
+}
+
+<div class="animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-0">@Localizer["ManageExpenses"]</h1>
+            <p class="text-secondary">@Localizer["ExpensesDesc"]</p>
+        </div>
+        <div>
+             <a asp-controller="Report" asp-action="Financial" class="btn btn-outline-secondary rounded-pill me-2">
+                <i class="fas fa-arrow-left me-2"></i> @Localizer["Back"]
+            </a>
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                <i class="fas fa-plus me-2"></i> @Localizer["AddExpense"]
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="mb-3">
+                <i class="fas fa-receipt fa-4x text-muted opacity-25"></i>
+            </div>
+            <h4 class="text-muted">@Localizer["NoExpensesFound"]</h4>
+            <a asp-action="Create" class="btn btn-primary mt-3 rounded-pill">
+                @Localizer["AddExpense"]
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="premium-card p-0 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4 py-3">@Localizer["ExpenseTitle"]</th>
+                            <th class="py-3">@Localizer["ExpenseCategory"]</th>
+                            <th class="py-3">@Localizer["ExpenseDate"]</th>
+                            <th class="py-3 text-end">@Localizer["ExpenseAmount"]</th>
+                            <th class="py-3 text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="px-4 fw-bold">
+                                    @item.Title
+                                    @if (!string.IsNullOrEmpty(item.Notes))
+                                    {
+                                        <i class="fas fa-info-circle text-muted ms-2" data-bs-toggle="tooltip" title="@item.Notes"></i>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3">@Localizer[$"Cat_{item.Category}"]</span>
+                                </td>
+                                <td>@item.Date.ToShortDateString()</td>
+                                <td class="text-end fw-bold text-danger">
+                                    @item.Amount.ToString("N2") <small>@Localizer["EGP"]</small>
+                                </td>
+                                <td class="text-center">
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline delete-form">
+                                        @Html.AntiForgeryToken()
+                                        <button type="button" class="btn btn-sm btn-outline-danger border-0 expense-delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Delete expense handler - using event delegation
+        document.addEventListener('click', function(e) {
+            var btn = e.target.closest('.expense-delete-btn');
+            if (btn) {
+                e.preventDefault();
+                var form = btn.closest('form');
+                
+                Swal.fire({
+                    title: '@Html.Raw(Localizer["AreYouSure"])',
+                    text: '@Html.Raw(Localizer["DeleteExpenseConfirm"])',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '@Html.Raw(Localizer["YesDelete"])',
+                    cancelButtonText: '@Html.Raw(Localizer["Cancel"])',
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: 'premium-swal-popup',
+                        title: 'premium-swal-title',
+                        confirmButton: 'premium-swal-confirm btn btn-danger px-4',
+                        cancelButton: 'premium-swal-cancel btn btn-outline-secondary px-4'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+    </script>
+}

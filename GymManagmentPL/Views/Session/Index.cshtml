@@ -1,110 +1,165 @@
-﻿@model IEnumerable<SessionViewModel>
+﻿@inject IStringLocalizer<SharedResource> Localizer
+@model PagedResult<SessionViewModel>
+
 @{
-    ViewData["Title"] = "Session";
+    ViewData["Title"] = Localizer["TrainingSessions"];
 }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div id="Alert" class="alert alert-success alert-dismissible fade show">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="row mb-4 align-items-center mt-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-0">@Localizer["TrainingSessions"]</h2>
+        <p class="text-secondary">@Localizer["SessionDesc"]</p>
     </div>
-}
-else if (TempData["ErrorMessage"] != null)
-{
-    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
-
-<div class="container">
-    <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
-        <div>
-            <h2 class="text-primary-color mb-0">Training Sessions</h2>
-            <p class="text-muted">Manage gym training sessions and classes</p>
-        </div>
-        <a asp-controller="Session" asp-action="Create" class="btn btn-fill fw-medium rounded-pill px-4 py-3">
-            <i class="bi bi-plus-lg me-2"></i>Add Session
+    <div class="col-md-6 text-md-end">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary shadow-sm me-2">
+            <i class="fas fa-arrow-left me-2"></i> @Localizer["Dashboard"]
         </a>
-    </header>
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                <i class="fas fa-plus me-2"></i> @Localizer["ScheduleNewSession"]
+            </a>
+        }
+    </div>
+</div>
 
-    @if (Model != null && Model.Any())
+
+<div class="row g-4 mb-4">
+    @if (Model.Items != null && Model.Items.Any())
     {
-        <div class="row g-4">
-            @foreach (var session in Model)
-            {
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0 session-card">
-                        <!-- If Session Ongoing  bg-success -->
-                        <!-- If Session Upcoming  bg-primary -->
-                        <!-- If Session Completed  bg-secondary -->
-                        <div class="card-header text-white py-3 @(session.Status == "Ongoing" ? "bg-success" : session.Status == "Upcoming" ? "bg-primary" : "bg-secondary")">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-calendar-event me-2"></i>@session.CategoryName
-                                </h5>
-                                <span class="badge bg-light text-dark">@session.Status</span>
-                            </div>
+        @foreach (var item in Model.Items)
+        {
+            <div class="col-xl-6">
+                <div class="premium-card searchable-card h-100 p-0 overflow-hidden d-flex flex-column flex-md-row">
+                    <div class="p-4 bg-dark text-white d-flex flex-column justify-content-center align-items-center text-center" style="min-width: 150px;">
+                        <div class="text-uppercase small fw-bold opacity-50 mb-1">
+                            @DateTime.Parse(item.StartDate.ToString()).ToString("MMM")
                         </div>
-                        <div class="card-body">
-                            <p class="text-muted mb-3">@session.Description</p>
+                        <div class="display-6 fw-bold">
+                            @DateTime.Parse(item.StartDate.ToString()).ToString("dd")
+                        </div>
+                        <div class="small fw-medium mt-1">
+                            @DateTime.Parse(item.StartDate.ToString()).ToString("hh:mm tt")
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                <i class="fas fa-tag me-1"></i> @Localizer[item.CategoryName]
+                            </span>
+                            
+                            @{
+                                var start = DateTime.Parse(item.StartDate.ToString());
+                                var end = DateTime.Parse(item.EndDate.ToString());
+                                var now = DateTime.Now;
+                            }
 
-                            <div class="session-info mb-3">
-                                <div class="info-item mb-2">
-                                    <i class="bi bi-person-circle text-primary-color me-2"></i>
-                                    <strong>Trainer:</strong> @session.TrainerName
-                                </div>
-                                <div class="info-item mb-2">
-                                    <i class="bi bi-calendar3 text-primary-color me-2"></i>
-                                    <strong>Date:</strong> @session.DateDisplay
-                                </div>
-                                <div class="info-item mb-2">
-                                    <i class="bi bi-clock text-primary-color me-2"></i>
-                                    <strong>Time:</strong> @session.TimeRange
-                                </div>
-                                <div class="info-item mb-2">
-                                    <i class="bi bi-hourglass-split text-primary-color me-2"></i>
-									<strong>Duration:</strong> @session.Duration.ToString(@"hh\:mm") hours
-                                </div>
-                                <div class="info-item">
-                                    <i class="bi bi-people text-primary-color me-2"></i>
-                                    <strong>Capacity:</strong> @session.AvailableSlot/@session.Capacity slots
-                                </div>
-                            </div>
+                            @if (start > now)
+                            {
+                                <span class="badge bg-info text-white">@Localizer["Upcoming"]</span>
+                            }
+                            else if (start <= now && end > now)
+                            {
+                                <span class="badge bg-danger animate-pulse">@Localizer["Live"]</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@Localizer["Completed"]</span>
+                            }
                         </div>
-                        <div class="card-footer bg-white border-0">
-                            <div class="d-grid gap-2">
-                                <a asp-action="Details" asp-route-id="@session.Id" class="btn btn-outline btn-sm">
-                                    <i class="bi bi-eye me-1"></i>View Details
+                        
+                        <h5 class="fw-bold mb-1">@item.Description</h5>
+                        <p class="text-secondary small mb-3">
+                            <i class="fas fa-user-ninja me-1"></i> @Localizer["TrainerColon"] <strong>@item.TrainerName</strong>
+                        </p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <div class="small">
+                                <i class="fas fa-users me-1 text-secondary"></i>
+                                <span class="fw-bold @(item.AvailableSlot <= 5 ? "text-danger" : "text-success")">
+                                    @item.AvailableSlot
+                                </span> 
+                                <span class="text-secondary">/ @item.Capacity @Localizer["SlotsLeft"]</span>
+                            </div>
+                            
+                            <div class="btn-group">
+                                <a asp-action="Members" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="@Localizer["BookedMembers"]">
+                                    <i class="fas fa-users-viewfinder me-1"></i> @Localizer["Members"]
                                 </a>
-                                <div class="d-flex gap-2">
-                                    <a asp-action="Edit" asp-route-id="@session.Id" class="btn btn-outline btn-sm flex-fill">
-                                        <i class="bi bi-pencil me-1"></i>Edit
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@session.Id" class="btn btn-outline text-danger btn-sm flex-fill">
-                                        <i class="bi bi-trash me-1"></i>Delete
-                                    </a>
-                                </div>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light border">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                {
+                                    @if(start > now)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light border">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    }
+
+                                    @if (!(start <= now && end > now)) // Not Live
+                                    {
+                                        <button type="button" class="btn btn-sm btn-light border text-danger delete-btn" 
+                                                data-id="@item.Id" data-name="@Localizer[item.CategoryName] - @item.Description" 
+                                                data-type="@Localizer["TrainingSession"]" data-input="deleteSessionId"
+                                                title="@Localizer["DeleteSession"]">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     }
     else
     {
-        <div class="text-center py-5">
-            <i class="bi bi-calendar-x display-1 text-muted"></i>
-            <h4 class="mt-3 text-muted">No Sessions Available</h4>
-            <p class="text-muted">Create your first training session to get started</p>
+        <div class="col-12 text-center py-5">
+            <div class="premium-card py-5">
+                <i class="fas fa-calendar-times fs-1 text-secondary mb-3"></i>
+                <h5 class="text-secondary">@Localizer["NoSessionsScheduled"]</h5>
+                <p class="text-muted">@Localizer["NoSessionsDesc"]</p>
+            </div>
         </div>
     }
 </div>
 
-@section Scripts {
-    <partial name="_AlertBoxScript" />
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                <a class="page-link shadow-none" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchTerm='@ViewData["SearchTerm"]'>
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link shadow-none" asp-action="Index" asp-route-pageNumber="@i" asp-route-searchTerm='@ViewData["SearchTerm"]'>@i</a>
+                </li>
+            }
+            <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                <a class="page-link shadow-none" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchTerm='@ViewData["SearchTerm"]'>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 }
+
+<!-- Hidden Delete Form -->
+<form id="deleteForm" method="post" asp-action="Delete" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteSessionId" />
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/session.css" asp-append-version="true" />
+}
+

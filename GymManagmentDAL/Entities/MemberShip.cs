@@ -10,8 +10,14 @@ namespace GymManagmentDAL.Entities
     {
         //startdate ==> created at of baseentity
         public DateTime EndDate { get; set; }
+        public bool IsFrozen { get; set; } = false;
+        public DateTime? FreezeStartDate { get; set; }
+        public DateTime? FreezeEndDate { get; set; }
+
         public string Status { get
             {
+                if (IsFrozen && FreezeStartDate <= DateTime.Now && (FreezeEndDate == null || FreezeEndDate >= DateTime.Now))
+                    return "Frozen";
                 if(EndDate > DateTime.Now)
                     return "Active";
                 else

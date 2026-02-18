@@ -1,0 +1,294 @@
+/* Plan Module - IronPulse Design System */
+
+/* Plan Cards Grid */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Individual Plan Card */
+.plan-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.plan-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Plan Header */
+.plan-header {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #ffffff;
+}
+
+.plan-header-active {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: #ffffff;
+}
+
+.plan-header-inactive {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: #ffffff;
+}
+
+.plan-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.plan-header h2,
+.plan-header h3 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* Plan Price */
+.plan-price-wrapper {
+    text-align: center;
+    margin: 1.25rem 0;
+}
+
+.plan-price-display {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.plan-currency {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Plan Features List */
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plan-features li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.plan-features li:last-child {
+    border-bottom: none;
+}
+
+.plan-features .icon-box {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.1);
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+/* Plan Actions */
+.plan-actions {
+    margin-top: auto;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--glass-border);
+    border-radius: 0 0 16px 16px;
+}
+
+/* Plan Index Page Specific */
+.plan-index-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.plan-index-card:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.plan-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.plan-description {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.plan-meta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.05);
+    border-radius: 8px;
+}
+
+.plan-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.plan-meta-item i {
+    color: #3B82F6;
+    font-size: 1.1rem;
+}
+
+.plan-meta-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.plan-meta-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.status-badge.inactive {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .plans-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .plan-price-display {
+        font-size: 2.5rem;
+    }
+
+    .plan-meta {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .plan-header {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Animation for Plan Cards */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.plan-card {
+    animation: slideInUp 0.4s ease-out forwards;
+}
+
+.plan-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.plan-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.plan-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.plan-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* Empty State */
+.plan-empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.plan-empty-state i {
+    font-size: 4rem;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+}
+
+.plan-empty-state h4 {
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.plan-empty-state p {
+    color: #94a3b8;
+}
+
+/* Toggle Button Styling */
+.toggle-plan-btn {
+    transition: all 0.3s ease;
+}
+
+.toggle-plan-btn:hover {
+    transform: scale(1.02);
+}

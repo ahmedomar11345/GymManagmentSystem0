@@ -9,11 +9,20 @@ namespace GymManagmentDAL.Entities
 {
     public class Trainer : GymUser
     {
-        // hierdate ==> createdat of baseentity
-        public Specialities Specialies { get; set; }
+        // shift times
+        public TimeSpan ShiftStart { get; set; } = new TimeSpan(9, 0, 0); // Default 9 AM
+        public TimeSpan ShiftEnd { get; set; } = new TimeSpan(17, 0, 0);  // Default 5 PM
+        public string? Photo { get; set; }
+
+        public int? SpecialtyId { get; set; }
+        public TrainerSpecialty? Specialty { get; set; }
 
         #region Trainer - Session
         public ICollection<Session> Sessions { get; set; } = null!; 
+        #endregion
+
+        #region Trainer - Attendance
+        public ICollection<TrainerAttendance> Attendances { get; set; } = new HashSet<TrainerAttendance>();
         #endregion
     }
 }

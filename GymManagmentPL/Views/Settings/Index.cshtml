@@ -1,0 +1,121 @@
+@model GymManagmentDAL.Entities.GymSettings
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Settings"];
+}
+
+<div class="animate-fade-in">
+    <div class="d-flex align-items-center mb-4">
+        <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
+            <i class="fas fa-cogs fs-4"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-0">@Localizer["Settings"]</h2>
+            <p class="text-secondary mb-0">@Localizer["ManageGymIdentityAndSystemPreferences"]</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="premium-card p-4 shadow-sm border-0">
+                <form asp-action="Update" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <h5 class="fw-bold mb-4 pb-2 border-bottom">
+                        <i class="fas fa-building me-2 text-primary"></i> @Localizer["GymIdentity"]
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="GymName" class="form-label small fw-bold text-secondary">@Localizer["GymName"]</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fas fa-dumbbell"></i></span>
+                                <input asp-for="GymName" class="form-control bg-light border-0" placeholder="e.g. IronPulse Gym" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label small fw-bold text-secondary">@Localizer["Phone"]</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fas fa-phone"></i></span>
+                                <input asp-for="Phone" class="form-control bg-light border-0" placeholder="+20 123 456 789" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label small fw-bold text-secondary">@Localizer["Email"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fas fa-envelope"></i></span>
+                            <input asp-for="Email" type="email" class="form-control bg-light border-0" placeholder="contact@gym.com" />
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Address" class="form-label small fw-bold text-secondary">@Localizer["Address"]</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fas fa-location-dot"></i></span>
+                                <input asp-for="Address" class="form-control bg-light border-0" placeholder="e.g. 123 Street Name, City" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Country" class="form-label small fw-bold text-secondary">@Localizer["Country"]</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fas fa-globe"></i></span>
+                                <input asp-for="Country" class="form-control bg-light border-0" placeholder="@Localizer["Egypt"]" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-4 pb-2 border-bottom mt-5">
+                        <i class="fas fa-sliders me-2 text-primary"></i> @Localizer["SystemPreferences"]
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Currency" class="form-label small fw-bold text-secondary">@Localizer["Currency"]</label>
+                            <select asp-for="Currency" class="form-select bg-light border-0">
+                                <option value="EGP">EGP (@Localizer["EGP"])</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FooterText" class="form-label small fw-bold text-secondary">@Localizer["FooterText"]</label>
+                            <input asp-for="FooterText" class="form-control bg-light border-0" placeholder="e.g. All rights reserved" />
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-5">
+                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+                            <i class="fas fa-save me-2"></i> @Localizer["SaveChanges"]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="premium-card p-4 h-100 bg-dark text-white shadow-lg border-0">
+                <h5 class="fw-bold mb-4">@Localizer["LivePreview"]</h5>
+                <div class="p-3 border border-secondary border-opacity-25 rounded-3 mb-4 text-center">
+                    <div class="display-6 fw-bold text-primary mb-2">@Model.GymName</div>
+                    <div class="small opacity-75">@Model.Address, @Model.Country</div>
+                    <div class="small opacity-75">@Model.Phone</div>
+                </div>
+                
+                <hr class="opacity-25">
+                
+                <div class="mt-4 small">
+                    <h6 class="fw-bold text-primary mb-3">@Localizer["NeedHelp"]?</h6>
+                    <p class="opacity-75">@Localizer["SettingsHelpText"]</p>
+                    <ul class="list-unstyled opacity-75">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> @Localizer["SettingsTip1"]</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> @Localizer["SettingsTip2"]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

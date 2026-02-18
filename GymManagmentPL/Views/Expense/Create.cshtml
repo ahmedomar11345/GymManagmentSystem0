@@ -1,0 +1,72 @@
+@model GymManagmentBLL.ViewModels.ExpenseViewModel.ExpenseViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["AddExpense"];
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-md-8 col-lg-6">
+        <div class="premium-card p-4 p-md-5">
+            <h3 class="fw-bold mb-4 text-center">@Localizer["AddExpense"]</h3>
+
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label fw-bold">@Localizer["ExpenseTitle"]</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Amount" class="form-label fw-bold">@Localizer["ExpenseAmount"]</label>
+                        <div class="input-group">
+                            <input asp-for="Amount" class="form-control" type="number" step="0.01" />
+                            <span class="input-group-text">@Localizer["EGP"]</span>
+                        </div>
+                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                         <label asp-for="Date" class="form-label fw-bold">@Localizer["ExpenseDate"]</label>
+                         <input asp-for="Date" class="form-control" type="date" />
+                         <span asp-validation-for="Date" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Category" class="form-label fw-bold">@Localizer["ExpenseCategory"]</label>
+                     <select asp-for="Category" class="form-select">
+                        <option value="">@Localizer["Select"]</option>
+                        <option value="Rent">@Localizer["Cat_Rent"]</option>
+                        <option value="Utilities">@Localizer["Cat_Utilities"]</option>
+                        <option value="Salaries">@Localizer["Cat_Salaries"]</option>
+                        <option value="Maintenance">@Localizer["Cat_Maintenance"]</option>
+                        <option value="Equipment">@Localizer["Cat_Equipment"]</option>
+                        <option value="Marketing">@Localizer["Cat_Marketing"]</option>
+                        <option value="Other">@Localizer["Cat_Other"]</option>
+                    </select>
+                    <span asp-validation-for="Category" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Notes" class="form-label fw-bold">@Localizer["ExpenseNotes"]</label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <div class="form-text">@Localizer["Optional"]</div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary rounded-pill py-2">
+                        <i class="fas fa-save me-2"></i> @Localizer["Save"]
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill py-2">
+                        @Localizer["Cancel"]
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

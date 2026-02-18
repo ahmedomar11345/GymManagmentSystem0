@@ -13,6 +13,7 @@ namespace GymManagmentDAL.Entities
 
         #region Member - HealthRecord
         public HealthRecord HealthRecord { get; set; } = null!; 
+        public ICollection<HealthProgress> HealthProgresses { get; set; } = new List<HealthProgress>();
         #endregion
 
         #region Member - MemberShip

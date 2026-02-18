@@ -1,4 +1,5 @@
 ﻿using GymManagmentBLL.ViewModels.SessionViewModel;
+using GymManagmentDAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,15 @@ namespace GymManagmentBLL.Service.Interfaces
 {
     public interface ISessionService
     {
-        IEnumerable<SessionViewModel> GetAllSession();
-
-        SessionViewModel? GetSessionById(int Sessionid);
-        bool CreateSession(CreateSessionViewModel createSession);
-        UpdateSessionViewModel? GetSessionToUpdate(int sessionId);
-        bool UpdateSession(int sessionId, UpdateSessionViewModel updateSession);
-        bool RemoveSession(int sessionId);
-
-        IEnumerable<TrainerSelectViewModel> GetTrainerForDropDown();
-        IEnumerable<CategorySelectViewModel> GetCategoryForDropDown();
-
+        Task<IEnumerable<SessionViewModel>> GetAllSessionAsync();
+        Task<PagedResult<SessionViewModel>> GetSessionsPagedAsync(int pageNumber, int pageSize, string? searchTerm = null);
+        Task<bool> CreateSessionAsync(CreateSessionViewModel createSession);
+        Task<SessionViewModel?> GetSessionByIdAsync(int sessionId);
+        Task<UpdateSessionViewModel?> GetSessionToUpdateAsync(int sessionId);
+        Task<bool> UpdateSessionAsync(int sessionId, UpdateSessionViewModel updateSession);
+        Task<bool> RemoveSessionAsync(int sessionId);
+        Task<IEnumerable<TrainerSelectViewModel>> GetTrainerForDropDownAsync();
+        Task<IEnumerable<CategorySelectViewModel>> GetCategoryForDropDownAsync();
+        Task<int> CleanupOldSessionsAsync(int daysOld);
     }
 }

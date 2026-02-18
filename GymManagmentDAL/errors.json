@@ -1,0 +1,680 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "5.0.0.0",
+        "fileVersion": "5.0.0-2.25569.105 (fad253f5)",
+        "semanticVersion": "5.0.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Members' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 30,
+                  "endLine": 37,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Trainers' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 31,
+                  "endLine": 38,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'HealthRecords' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 39,
+                  "startColumn": 36,
+                  "endLine": 39,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Planes' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 29,
+                  "endLine": 40,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Categories' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 32,
+                  "endLine": 41,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Sessions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 31,
+                  "endLine": 42,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'MemberShips' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 34,
+                  "endLine": 43,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'MemberSessions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 16,
+                  "endLine": 15,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/Context/GymDBContext.cs",
+                "region": {
+                  "startLine": 44,
+                  "startColumn": 37,
+                  "endLine": 44,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS7036",
+          "level": "error",
+          "message": "There is no argument given that corresponds to the required parameter 'operation' of 'IExecutionStrategy.Execute<TState, TResult>(TState, Func<DbContext, TState, TResult>, Func<DbContext, TState, ExecutionResult<TResult>>?)'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/UnitOfWork.cs",
+                "region": {
+                  "startLine": 83,
+                  "startColumn": 29,
+                  "endLine": 83,
+                  "endColumn": 36
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS7036",
+          "level": "error",
+          "message": "There is no argument given that corresponds to the required parameter 'operation' of 'IExecutionStrategy.ExecuteAsync<TState, TResult>(TState, Func<DbContext, TState, CancellationToken, Task<TResult>>, Func<DbContext, TState, CancellationToken, Task<ExecutionResult<TResult>>>?, CancellationToken)'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/UnitOfWork.cs",
+                "region": {
+                  "startLine": 111,
+                  "startColumn": 35,
+                  "endLine": 111,
+                  "endColumn": 47
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/SessionRepository.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 42,
+                  "endLine": 35,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/SessionRepository.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 90,
+                  "endLine": 35,
+                  "endColumn": 142
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/SessionRepository.cs",
+                "region": {
+                  "startLine": 48,
+                  "startColumn": 42,
+                  "endLine": 48,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/SessionRepository.cs",
+                "region": {
+                  "startLine": 48,
+                  "startColumn": 90,
+                  "endLine": 48,
+                  "endColumn": 142
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1869",
+          "level": "note",
+          "message": "Avoid creating a new 'JsonSerializerOptions' instance for every serialization operation. Cache and reuse instances instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Data/DataSeeding/GymDbContextSeeding.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 27,
+                  "endLine": 55,
+                  "endColumn": 14
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/MemberShipRepository.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 43,
+                  "endLine": 38,
+                  "endColumn": 88
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/MemberShipRepository.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 92,
+                  "endLine": 38,
+                  "endColumn": 138
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/MemberShipRepository.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 142,
+                  "endLine": 38,
+                  "endColumn": 185
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/MemberShipRepository.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 43,
+                  "endLine": 52,
+                  "endColumn": 88
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/MemberShipRepository.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 92,
+                  "endLine": 52,
+                  "endColumn": 138
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        },
+        {
+          "ruleId": "CA1862",
+          "level": "note",
+          "message": "Prefer the string comparison method overload of 'string.Contains(string)' that takes a 'StringComparison' enum value to perform a case-insensitive comparison, but keep in mind that this might cause subtle changes in behavior, so make sure to conduct thorough testing after applying the suggestion, or if culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Route_cource/Eng%20Mariam%20Ali/07%20MVC/Session02/Project/GymManagmentSystemSolution/GymManagmentDAL/Repositories/Classes/MemberShipRepository.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 142,
+                  "endLine": 52,
+                  "endColumn": 185
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "LeftOffendingMethod": "ToLower",
+              "RightOffendingMethod": null
+            }
+          }
+        }
+      ],
+      "rules": {
+        "CA1862": {
+          "id": "CA1862",
+          "shortDescription": "Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+          "fullDescription": "Avoid calling 'ToLower', 'ToUpper', 'ToLowerInvariant' and 'ToUpperInvariant' to perform case-insensitive string comparisons because they lead to an allocation. Instead, prefer calling the method overloads of 'Contains', 'IndexOf' and 'StartsWith' that take a 'StringComparison' enum value to perform case-insensitive comparisons. Switching to using an overload that takes a 'StringComparison' might cause subtle changes in behavior, so it's important to conduct thorough testing after applying the suggestion. Additionally, if a culturally sensitive comparison is not required, consider using 'StringComparison.OrdinalIgnoreCase'.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1862",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1869": {
+          "id": "CA1869",
+          "shortDescription": "Cache and reuse 'JsonSerializerOptions' instances",
+          "fullDescription": "Avoid creating a new 'JsonSerializerOptions' instance for every serialization operation. Cache and reuse instances instead. Single use 'JsonSerializerOptions' instances can substantially degrade the performance of your application.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1869",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS7036": {
+          "id": "CS7036",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS7036)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS8618": {
+          "id": "CS8618",
+          "shortDescription": "Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
