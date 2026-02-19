@@ -79,6 +79,15 @@ namespace GymManagmentPL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RunWalkInCleanup(int? days = null)
+        {
+            var count = await _scheduledTaskService.CleanupWalkInBookingsAsync(days);
+            TempData["SuccessMessage"] = string.Format(_localizer["WalkInCleanupSuccess"].Value, count);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RunAllTasks(bool? isArabic = null)
         {
             var expiryCount = await _scheduledTaskService.SendMembershipExpiryRemindersAsync(7, isArabic);
@@ -86,6 +95,7 @@ namespace GymManagmentPL.Controllers
             var birthdayCount = await _scheduledTaskService.SendBirthdayWishesAsync(10, isArabic);
             var inactiveCount = await _scheduledTaskService.AlertInactiveMembersAsync(14, isArabic);
             var expiredCount = await _scheduledTaskService.SendMembershipExpiredNotificationsAsync(isArabic);
+            var walkInCount = await _scheduledTaskService.CleanupWalkInBookingsAsync();
 
             TempData["SuccessMessage"] = _localizer["AllTasksExecuted"].Value;
             return RedirectToAction(nameof(Index));

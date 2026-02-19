@@ -41,12 +41,17 @@ namespace GymManagmentBLL.Service.Classes
         {
             var existing = await GetSettingsAsync();
             
-            existing.GymName = settings.GymName;
-            existing.Phone = settings.Phone;
-            existing.Address = settings.Address;
-            existing.Email = settings.Email;
+            existing.GymName    = settings.GymName;
+            existing.Phone      = settings.Phone;
+            existing.Address    = settings.Address;
+            existing.Email      = settings.Email;
             existing.FooterText = settings.FooterText;
-            existing.Currency = settings.Currency;
+            existing.Currency   = settings.Currency;
+            existing.SessionPrice = settings.SessionPrice;
+            existing.WalkInRetentionDays = settings.WalkInRetentionDays;
+            existing.Country    = settings.Country;
+            if (!string.IsNullOrEmpty(settings.LogoUrl))
+                existing.LogoUrl = settings.LogoUrl;
 
             _unitOfWork.GetRepository<GymSettings>().Update(existing);
             await _unitOfWork.SaveChangesAsync();

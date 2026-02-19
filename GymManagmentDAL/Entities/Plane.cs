@@ -12,7 +12,10 @@ namespace GymManagmentDAL.Entities
         public string Description { get; set; } = null!;
         public int DurationDays { get; set; }
         public decimal Price { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
+        public bool IsSessionBased { get; set; } = false;
+        public int? SessionCount { get; set; } 
+
 
         #region Plane - Membership
         public ICollection<MemberShip> Memberships { get; set; } = null!;

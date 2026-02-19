@@ -28,5 +28,7 @@ namespace GymManagmentDAL.Entities
         public Member Member { get; set; } = null!;
         public int PlanId { get; set; }
         public Plane Plan { get; set; } = null!;
+        public int? SessionsRemaining { get; set; }
+
     }
 }

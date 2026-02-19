@@ -130,6 +130,7 @@ builder.Services.AddScoped<IScheduledTaskService, ScheduledTaskService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IGymSettingsService, GymSettingsService>();
+builder.Services.AddScoped<IWalkInService, WalkInService>();
 
 // Hosted Services
 builder.Services.AddHostedService<GymManagmentPL.Services.MembershipRenewalWorker>();

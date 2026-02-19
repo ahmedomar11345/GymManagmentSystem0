@@ -2386,41 +2386,17 @@
   <data name="JustNow" xml:space="preserve">
     <value>Just now</value>
   </data>
-  <data name="AuditLogAction_Create" xml:space="preserve">
-    <value>Created</value>
-  </data>
-  <data name="AuditLogAction_Update" xml:space="preserve">
-    <value>Updated</value>
-  </data>
-  <data name="AuditLogAction_Delete" xml:space="preserve">
-    <value>Deleted</value>
-  </data>
   <data name="QuickAccess" xml:space="preserve">
     <value>Quick Access</value>
   </data>
   <data name="Scanner" xml:space="preserve">
     <value>Scanner</value>
   </data>
-  <data name="Expenses" xml:space="preserve">
-    <value>Expenses</value>
-  </data>
-  <data name="Print" xml:space="preserve">
-    <value>Print</value>
-  </data>
   <data name="SendByEmail" xml:space="preserve">
     <value>Send by Email</value>
   </data>
   <data name="ExpiresOn" xml:space="preserve">
     <value>Expires On</value>
-  </data>
-  <data name="ThankYouForChoosing" xml:space="preserve">
-    <value>Thank you for choosing</value>
-  </data>
-  <data name="Waitlisted" xml:space="preserve">
-    <value>Waitlisted</value>
-  </data>
-  <data name="Confirmed" xml:space="preserve">
-    <value>Confirmed</value>
   </data>
   <data name="Waitlist" xml:space="preserve">
     <value>Waitlist</value>
@@ -2478,6 +2454,129 @@
   </data>
   <data name="SaveMeasurement" xml:space="preserve">
     <value>Save Measurement</value>
+  </data>
+  <data name="OfficiallyVerified" xml:space="preserve">
+    <value>OFFICIALLY VERIFIED</value>
+  </data>
+  <data name="FromInBodyDevice" xml:space="preserve">
+    <value>Enter value from gym device (InBody)</value>
+  </data>
+  <data name="KG" xml:space="preserve">
+    <value>KG</value>
+  </data>
+  <data name="NA" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="TotalCategories" xml:space="preserve">
+    <value>Total Categories</value>
+  </data>
+  <data name="TotalActiveTrainers" xml:space="preserve">
+    <value>Total Trainers</value>
+  </data>
+  <data name="WalkIn" xml:space="preserve">
+    <value>Walk-in</value>
+  </data>
+  <data name="WalkInBooking" xml:space="preserve">
+    <value>Walk-in Booking</value>
+  </data>
+  <data name="SessionPrice" xml:space="preserve">
+    <value>Session Price</value>
+  </data>
+  <data name="WalkInSessions" xml:space="preserve">
+    <value>Walk-in Sessions</value>
+  </data>
+  <data name="GuestName" xml:space="preserve">
+    <value>Guest Name</value>
+  </data>
+  <data name="GuestPhone" xml:space="preserve">
+    <value>Guest Phone</value>
+  </data>
+  <data name="SessionCount" xml:space="preserve">
+    <value>Session Count</value>
+  </data>
+  <data name="Receipt" xml:space="preserve">
+    <value>Receipt</value>
+  </data>
+  <data name="UseSession" xml:space="preserve">
+    <value>Use Session</value>
+  </data>
+  <data name="WalkInDetails" xml:space="preserve">
+    <value>Walk-in Details</value>
+  </data>
+  <data name="SessionsRemaining" xml:space="preserve">
+    <value>Sessions Remaining</value>
+  </data>
+  <data name="IsSessionBased" xml:space="preserve">
+    <value>Session Based</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>Total Amount</value>
+  </data>
+  <data name="Depleted" xml:space="preserve">
+    <value>Depleted</value>
+  </data>
+  <data name="Renew" xml:space="preserve">
+    <value>Renew</value>
+  </data>
+  <data name="UsageHistory" xml:space="preserve">
+    <value>Usage History</value>
+  </data>
+  <data name="SessionDate" xml:space="preserve">
+    <value>Session Date</value>
+  </data>
+  <data name="WalkInSuccess" xml:space="preserve">
+    <value>Booking registered successfully!</value>
+  </data>
+  <data name="WalkInError" xml:space="preserve">
+    <value>Insufficient sessions or booking expired.</value>
+  </data>
+  <data name="SessionSuccess" xml:space="preserve">
+    <value>Session logged successfully!</value>
+  </data>
+  <data name="RangeError" xml:space="preserve">
+    <value>Value must be between {1} and {2}.</value>
+  </data>
+  <data name="PositivePrice" xml:space="preserve">
+    <value>Price must be a positive number.</value>
+  </data>
+  <data name="WalkInPriceHelper" xml:space="preserve">
+    <value>Default price for each walk-in session.</value>
+  </data>
+  <data name="ThankYouForChoosing" xml:space="preserve">
+    <value>Thank you for choosing us</value>
+  </data>
+  <data name="UseSessionConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to log attendance for this guest?</value>
+  </data>
+  <data name="ConfirmAttendance" xml:space="preserve">
+    <value>Confirm Attendance</value>
+  </data>
+  <data name="WalkInCleanupSuccess" xml:space="preserve">
+    <value>Successfully deleted {0} expired/consumed walk-in bookings.</value>
+  </data>
+  <data name="WalkInCleanup" xml:space="preserve">
+    <value>Walk-in Data Cleanup</value>
+  </data>
+  <data name="WalkInCleanupDesc" xml:space="preserve">
+    <value>Automatically remove expired or fully utilized walk-in session data based on retention settings.</value>
+  </data>
+  <data name="ConfirmWalkInCleanup" xml:space="preserve">
+    <value>Are you sure you want to run the walk-in data cleanup now? This will permanently delete old records.</value>
+  </data>
+  <data name="RunCleanupNow" xml:space="preserve">
+    <value>Run Cleanup Now</value>
+  </data>
+  <data name="WalkInRetentionDays" xml:space="preserve">
+    <value>Walk-in Retention Days</value>
+  </data>
+  <data name="WalkInRetentionHelper" xml:space="preserve">
+    <value>Number of days to keep expired or used walk-in records before automatic deletion.</value>
   </data>
 </root>
 

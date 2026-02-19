@@ -210,6 +210,8 @@ namespace GymManagmentDAL.Data.Context
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<GymSettings> GymSettings { get; set; }
         public DbSet<HealthProgress> HealthProgresses { get; set; }
+        public DbSet<WalkInBooking> WalkInBookings { get; set; }
+        public DbSet<WalkInSession> WalkInSessions { get; set; }
         #endregion
     }
 }

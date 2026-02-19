@@ -4,6 +4,7 @@ using GymManagmentDAL.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagmentDAL.Data.Migrations
 {
     [DbContext(typeof(GymDBContext))]
-    partial class GymDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260218202347_AddWaitlistAndHealthProgress")]
+    partial class AddWaitlistAndHealthProgress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,14 +306,8 @@ namespace GymManagmentDAL.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("SessionPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("WalkInRetentionDays")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -525,9 +522,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<bool>("IsFrozen")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SessionsRemaining")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -606,9 +600,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSessionBased")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -617,9 +608,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
-
-                    b.Property<int?>("SessionCount")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -892,94 +880,6 @@ namespace GymManagmentDAL.Data.Migrations
                             Name = "تدليك",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
-                });
-
-            modelBuilder.Entity("GymManagmentDAL.Entities.WalkInBooking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GuestName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GuestPhone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("PricePerSession")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("SessionCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SessionsUsed")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.ToTable("WalkInBookings");
-                });
-
-            modelBuilder.Entity("GymManagmentDAL.Entities.WalkInSession", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("AttendedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAttended")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("SessionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("WalkInBookingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SessionId");
-
-                    b.HasIndex("WalkInBookingId");
-
-                    b.ToTable("WalkInSessions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1298,32 +1198,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Navigation("Trainer");
                 });
 
-            modelBuilder.Entity("GymManagmentDAL.Entities.WalkInBooking", b =>
-                {
-                    b.HasOne("GymManagmentDAL.Entities.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId");
-
-                    b.Navigation("Member");
-                });
-
-            modelBuilder.Entity("GymManagmentDAL.Entities.WalkInSession", b =>
-                {
-                    b.HasOne("GymManagmentDAL.Entities.Session", "Session")
-                        .WithMany()
-                        .HasForeignKey("SessionId");
-
-                    b.HasOne("GymManagmentDAL.Entities.WalkInBooking", "WalkInBooking")
-                        .WithMany("WalkInSessions")
-                        .HasForeignKey("WalkInBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Session");
-
-                    b.Navigation("WalkInBooking");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1412,11 +1286,6 @@ namespace GymManagmentDAL.Data.Migrations
             modelBuilder.Entity("GymManagmentDAL.Entities.TrainerSpecialty", b =>
                 {
                     b.Navigation("Trainers");
-                });
-
-            modelBuilder.Entity("GymManagmentDAL.Entities.WalkInBooking", b =>
-                {
-                    b.Navigation("WalkInSessions");
                 });
 #pragma warning restore 612, 618
         }

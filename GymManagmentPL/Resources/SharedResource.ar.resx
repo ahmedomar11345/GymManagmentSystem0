@@ -2379,26 +2379,11 @@
   <data name="JustNow" xml:space="preserve">
     <value>الآن</value>
   </data>
-  <data name="AuditLogAction_Create" xml:space="preserve">
-    <value>إضافة جديد</value>
-  </data>
-  <data name="AuditLogAction_Update" xml:space="preserve">
-    <value>تحديث</value>
-  </data>
-  <data name="AuditLogAction_Delete" xml:space="preserve">
-    <value>حذف</value>
-  </data>
   <data name="QuickAccess" xml:space="preserve">
     <value>وصول سريع</value>
   </data>
   <data name="Scanner" xml:space="preserve">
     <value>الماسح الضوئي</value>
-  </data>
-  <data name="Expenses" xml:space="preserve">
-    <value>المصاريف</value>
-  </data>
-  <data name="Print" xml:space="preserve">
-    <value>طباعة</value>
   </data>
   <data name="SendByEmail" xml:space="preserve">
     <value>إرسال عبر الإيميل</value>
@@ -2406,14 +2391,8 @@
   <data name="ExpiresOn" xml:space="preserve">
     <value>تاريخ الانتهاء</value>
   </data>
-  <data name="ThankYouForChoosing" xml:space="preserve">
-    <value>شكراً لاختياركم</value>
-  </data>
   <data name="Waitlisted" xml:space="preserve">
     <value>قائمة الانتظار</value>
-  </data>
-  <data name="Confirmed" xml:space="preserve">
-    <value>تم التأكيد</value>
   </data>
   <data name="Waitlist" xml:space="preserve">
     <value>الانتظار</value>
@@ -2454,9 +2433,6 @@
   <data name="Progression" xml:space="preserve">
     <value>التطور</value>
   </data>
-  <data name="CurrentStatus" xml:space="preserve">
-    <value>الوضع الحالي</value>
-  </data>
   <data name="CurrentWeight" xml:space="preserve">
     <value>الوزن الحالي</value>
   </data>
@@ -2471,5 +2447,129 @@
   </data>
   <data name="SaveMeasurement" xml:space="preserve">
     <value>حفظ القياس</value>
+  </data>
+  <data name="OfficiallyVerified" xml:space="preserve">
+    <value>إيصال رسمي معتمد</value>
+  </data>
+  <data name="FromInBodyDevice" xml:space="preserve">
+    <value>أدخل القيمة من جهاز InBody</value>
+  </data>
+
+  <data name="SearchSpecialties" xml:space="preserve">
+    <value>ابحث في التخصصات...</value>
+  </data>
+  <data name="AddNewSpecialty" xml:space="preserve">
+    <value>إضافة تخصص</value>
+  </data>
+  <data name="NoSpecialtiesFound" xml:space="preserve">
+    <value>لا توجد تخصصات حتى الآن. أضف أول تخصص!</value>
+  </data>
+  <data name="TrainersCount" xml:space="preserve">
+    <value>المدربون</value>
+  </data>
+  <data name="TotalCategories" xml:space="preserve">
+    <value>إجمالي التخصصات</value>
+  </data>
+  <data name="TotalActiveTrainers" xml:space="preserve">
+    <value>إجمالي المدربين</value>
+  </data>
+  <data name="WalkIn" xml:space="preserve">
+    <value>حجز حصة</value>
+  </data>
+  <data name="WalkInBooking" xml:space="preserve">
+    <value>حجز حصة زائر</value>
+  </data>
+  <data name="SessionPrice" xml:space="preserve">
+    <value>سعر الحصة</value>
+  </data>
+  <data name="WalkInSessions" xml:space="preserve">
+    <value>حصص الزوار</value>
+  </data>
+  <data name="GuestName" xml:space="preserve">
+    <value>اسم الزائر</value>
+  </data>
+  <data name="GuestPhone" xml:space="preserve">
+    <value>رقم الهاتف</value>
+  </data>
+  <data name="SessionCount" xml:space="preserve">
+    <value>عدد الحصص</value>
+  </data>
+  <data name="Receipt" xml:space="preserve">
+    <value>إيصال</value>
+  </data>
+  <data name="UseSession" xml:space="preserve">
+    <value>تسجيل حضور</value>
+  </data>
+  <data name="WalkInDetails" xml:space="preserve">
+    <value>تفاصيل زائر الحصة</value>
+  </data>
+  <data name="SessionsRemaining" xml:space="preserve">
+    <value>الحصص المتبقية</value>
+  </data>
+  <data name="IsSessionBased" xml:space="preserve">
+    <value>نظام حصص</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="Depleted" xml:space="preserve">
+    <value>استُنفذت</value>
+  </data>
+  <data name="Renew" xml:space="preserve">
+    <value>تجديد</value>
+  </data>
+  <data name="UsageHistory" xml:space="preserve">
+    <value>سجل الاستخدام</value>
+  </data>
+  <data name="SessionDate" xml:space="preserve">
+    <value>تاريخ الحصة</value>
+  </data>
+  <data name="WalkInSuccess" xml:space="preserve">
+    <value>تم تسجيل الحجز بنجاح!</value>
+  </data>
+  <data name="WalkInError" xml:space="preserve">
+    <value>لا يوجد رصيد متبقٍ أو انتهت صلاحية الحجز.</value>
+  </data>
+  <data name="SessionSuccess" xml:space="preserve">
+    <value>تم تسجيل الحصة بنجاح!</value>
+  </data>
+  <data name="RangeError" xml:space="preserve">
+    <value>يجب أن تكون القيمة بين {1} و {2}.</value>
+  </data>
+  <data name="PositivePrice" xml:space="preserve">
+    <value>يجب أن يكون السعر رقماً موجباً.</value>
+  </data>
+  <data name="WalkInPriceHelper" xml:space="preserve">
+    <value>السعر الافتراضي لكل حصة زائر.</value>
+  </data>
+  <data name="ThankYouForChoosing" xml:space="preserve">
+    <value>شكراً لاختياركم لنا</value>
+  </data>
+  <data name="UseSessionConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد من تسجيل حضور لهذا الزائر؟</value>
+  </data>
+  <data name="ConfirmAttendance" xml:space="preserve">
+    <value>تأكيد الحضور</value>
+  </data>
+  <data name="WalkInCleanupSuccess" xml:space="preserve">
+    <value>تم حذف {0} من حجوزات الزوار المنتهية أو المستنفدة بنجاح.</value>
+  </data>
+  <data name="WalkInCleanup" xml:space="preserve">
+    <value>تنظيف بيانات حجز الزوار</value>
+  </data>
+  <data name="WalkInCleanupDesc" xml:space="preserve">
+    <value>إزالة بيانات حصص الزوار المنتهية أو المستنفدة بالكامل تلقائياً بناءً على إعدادات الاحتفاظ بالبيانات.</value>
+  </data>
+  <data name="ConfirmWalkInCleanup" xml:space="preserve">
+    <value>هل أنت متأكد من رغبتك في تشغيل عملية تنظيف بيانات الزوار الآن؟ سيؤدي ذلك لحذف السجلات القديمة نهائياً.</value>
+  </data>
+  <data name="RunCleanupNow" xml:space="preserve">
+    <value>تشغيل التنظيف الآن</value>
+  </data>
+  <data name="WalkInRetentionDays" xml:space="preserve">
+    <value>مدة الاحتفاظ ببيانات الزوار (بالأيام)</value>
+  </data>
+  <data name="WalkInRetentionHelper" xml:space="preserve">
+    <value>عدد الأيام للاحتفاظ بسجلات الزوار المنتهية أو المستخدمة قبل الحذف التلقائي.</value>
   </data>
 </root>

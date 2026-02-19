@@ -22,16 +22,26 @@ namespace GymManagmentDAL.Repositories.Classes
             _dbSet = dbContext.Set<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? condition = null)
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? condition = null, params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = _dbSet.AsNoTracking();
+            
+            if (includes != null)
+                foreach (var include in includes)
+                    query = query.Include(include);
+
             if (condition is not null) query = query.Where(condition);
             return query.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null, params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
+            if (includes != null)
+                foreach (var include in includes)
+                    query = query.Include(include);
+
             if (condition is not null) query = query.Where(condition);
             return await query.ToListAsync();
         }

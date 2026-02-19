@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace GymManagmentDAL.Entities
 {
@@ -16,5 +12,12 @@ namespace GymManagmentDAL.Entities
         public string? LogoUrl { get; set; }
         public string Currency { get; set; } = "EGP";
         public string? FooterText { get; set; }
+
+        [Range(0.0, 1000000, ErrorMessage = "سعر الحصة لا يمكن أن يكون سالباً")]
+        public decimal SessionPrice { get; set; } = 50;
+
+        [Display(Name = "Walk-in Retention Days")]
+        [Range(0, 3650, ErrorMessage = "Invalid retention days")]
+        public int WalkInRetentionDays { get; set; } = 30;
     }
 }

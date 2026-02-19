@@ -1,0 +1,240 @@
+@model GymManagmentDAL.Entities.WalkInBooking
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Receipt"];
+    var settings = ViewBag.GymSettings as GymManagmentDAL.Entities.GymSettings;
+    var gymName = settings?.GymName ?? "IronPulse Gym";
+    var currency = settings?.Currency ?? "EGP";
+    var logoUrl = settings?.LogoUrl;
+}
+
+<style>
+    @@media print {
+        /* 1. Reset Body for Thermal Paper */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 80mm !important;
+            background: white !important;
+            color: black !important;
+            font-family: 'Cairo', 'Courier New', Courier, monospace !important;
+            font-size: 11px !important;
+            line-height: 1.2 !important;
+        }
+
+        body * {
+            visibility: hidden !important;
+        }
+
+        /* 2. Target the Receipt specifically */
+        #printableReceipt, #printableReceipt * {
+            visibility: visible !important;
+        }
+
+        #printableReceipt {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 80mm !important;
+            margin: 0 !important;
+            padding: 5px !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        @@page {
+            size: 80mm auto;
+            margin: 0;
+        }
+
+        /* 3. Headers and Titles */
+        .card-header {
+            background: transparent !important;
+            border-bottom: 2px dashed #000 !important;
+            color: black !important;
+            padding: 5px 0 !important;
+            margin-bottom: 10px !important;
+        }
+
+        .card-header h5 {
+            font-size: 16px !important;
+            font-weight: bold !important;
+            margin: 2px 0 !important;
+        }
+
+        /* 4. Remove UI elements like Badges/Shades */
+        .badge {
+            border: 1px solid #000 !important;
+            background: transparent !important;
+            color: black !important;
+            font-size: 10px !important;
+            padding: 2px 8px !important;
+            border-radius: 4px !important;
+        }
+
+        .bg-light {
+            background: transparent !important;
+            border-top: 1px dashed #000 !important;
+            border-bottom: 1px dashed #000 !important;
+            padding: 5px 0 !important;
+        }
+
+        /* 5. Compact Table for thermal paper */
+        .table {
+            margin: 5px 0 !important;
+        }
+
+        .table td {
+            padding: 2px 0 !important;
+            font-size: 11px !important;
+            border: none !important;
+        }
+
+        .text-muted {
+            color: black !important;
+            opacity: 0.8 !important;
+        }
+
+        hr {
+            border-top: 1px dashed #000 !important;
+            margin: 8px 0 !important;
+            opacity: 1 !important;
+        }
+
+        /* 6. Totals Formatting */
+        .fs-5 {
+            font-size: 14px !important;
+            font-weight: 800 !important;
+        }
+
+        .text-primary {
+            color: black !important;
+        }
+
+        /* 7. Footer */
+        .card-footer {
+            border-top: 2px dashed #000 !important;
+            margin-top: 10px !important;
+            padding: 5px 0 !important;
+            font-size: 10px !important;
+        }
+
+        img {
+            max-height: 40px !important;
+            filter: grayscale(100%) !important;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+    }
+
+    /* Screen Styles (Keep it looking like a nice card) */
+    .receipt-card {
+        max-width: 500px;
+        transition: transform 0.2s;
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 mb-4 no-print">
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-3">
+            <i class="fas fa-list me-1"></i> @Localizer["WalkInSessions"]
+        </a>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-3">
+            <i class="fas fa-plus me-1"></i> @Localizer["AddNew"]
+        </a>
+        <button onclick="window.print()" class="btn btn-success rounded-pill px-3 ms-auto">
+            <i class="fas fa-print me-1"></i> @Localizer["PrintReceipt"]
+        </button>
+    </div>
+
+    <!-- Receipt Card (Target for Printing) -->
+    <div id="printableReceipt" class="card receipt-card shadow border-0 rounded-4 mx-auto">
+
+        <!-- Header -->
+        <div class="card-header text-center py-4 bg-primary text-white rounded-top-4">
+            @if (!string.IsNullOrEmpty(logoUrl))
+            {
+                <img src="@logoUrl" alt="@gymName" style="max-height:50px; max-width:140px; object-fit:contain; margin-bottom:8px; display:block; margin-inline:auto;" />
+            }
+            <h5 class="mb-0 fw-bold">@gymName</h5>
+            <div class="small opacity-75">@Localizer["WalkInBooking"]</div>
+        </div>
+
+        <div class="card-body p-4">
+
+            <!-- Status Badge -->
+            <div class="text-center mb-4">
+                <span class="badge bg-success fs-6 px-4 py-2 rounded-pill">
+                    <i class="fas fa-check-circle me-1"></i> @Localizer["Confirmed"]
+                </span>
+            </div>
+
+            <!-- Client Info -->
+            <table class="table table-borderless mb-0">
+                <tr>
+                    <td class="text-muted fw-semibold" style="width:40%">@Localizer["Name"]:</td>
+                    <td class="fw-bold">@Model.GuestName</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-semibold">@Localizer["Phone"]:</td>
+                    <td dir="ltr">@Model.GuestPhone</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-semibold">@Localizer["StartDate"]:</td>
+                    <td>@Model.CreatedAt.ToString("dd/MM/yyyy hh:mm tt")</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-semibold">@Localizer["EndDate"]:</td>
+                    <td>@Model.ExpiryDate.ToString("dd/MM/yyyy")</td>
+                </tr>
+            </table>
+
+            <hr />
+
+            <!-- Summary Table -->
+            <div class="bg-light rounded-3 p-3 mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">@Localizer["SessionCount"]</span>
+                    <span class="fw-bold">@Model.SessionCount</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">@Localizer["SessionPrice"]</span>
+                    <span class="fw-bold">@Model.PricePerSession.ToString("N2") @currency</span>
+                </div>
+                <hr class="my-2" />
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold fs-5">@Localizer["Total"]</span>
+                    <span class="fw-black fs-5 text-primary">@Model.TotalAmount.ToString("N2") @currency</span>
+                </div>
+            </div>
+
+            <!-- Remaining Sessions Progress -->
+            <div class="mb-2 no-print">
+                <div class="d-flex justify-content-between small mb-1">
+                    <span class="text-muted">@Localizer["SessionsRemaining"]</span>
+                    <span class="fw-bold text-success">@Model.SessionsRemaining / @Model.SessionCount</span>
+                </div>
+                <div class="progress" style="height:10px; border-radius:10px;">
+                    @{
+                        var pct = Model.SessionCount > 0 ? (Model.SessionsRemaining * 100 / Model.SessionCount) : 0;
+                    }
+                    <div class="progress-bar bg-success" style="width:@pct%"></div>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Notes))
+            {
+                <div class="alert alert-light border rounded-3 small mt-3">
+                    <i class="fas fa-sticky-note text-muted me-1"></i> @Model.Notes
+                </div>
+            }
+        </div>
+
+        <div class="card-footer text-center text-muted small py-3 rounded-bottom-4">
+            @Localizer["ThankYouForChoosing"] — @gymName 💪
+        </div>
+    </div>
+</div>

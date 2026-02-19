@@ -1,0 +1,209 @@
+@model GymManagmentDAL.Entities.WalkInBooking
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["WalkInDetails"];
+    var currency = ViewBag.Currency as string ?? "EGP";
+    var isExpired = Model.ExpiryDate < DateTime.Now;
+    var isEmpty = Model.SessionsRemaining <= 0;
+    var canUse = !isExpired && !isEmpty;
+    var pct = Model.SessionCount > 0 ? (Model.SessionsRemaining * 100 / Model.SessionCount) : 0;
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <!-- Header -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <i class="fas fa-arrow-right me-1"></i> @Localizer["Back"]
+                </a>
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-id-card text-primary me-2"></i>@Localizer["WalkInDetails"] #@Model.Id
+                </h5>
+                <a asp-action="Receipt" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm rounded-pill px-3 ms-auto">
+                    <i class="fas fa-print me-1"></i>@Localizer["Print"]
+                </a>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success rounded-3 alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger rounded-3 alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Info Card -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-muted small">@Localizer["Name"]</div>
+                            <div class="fw-bold fs-5">@Model.GuestName</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-muted small">@Localizer["Phone"]</div>
+                            <div class="fw-bold" dir="ltr">@Model.GuestPhone</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-muted small">@Localizer["StartDate"]</div>
+                            <div class="fw-semibold">@Model.CreatedAt.ToString("dd/MM/yyyy")</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-muted small">@Localizer["EndDate"]</div>
+                            <div class="fw-semibold @(isExpired ? "text-danger" : "text-success")">
+                                @Model.ExpiryDate.ToString("dd/MM/yyyy")
+                                @if (isExpired) { <span class="badge bg-danger ms-1">@Localizer["Expired"]</span> }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sessions Card -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3"><i class="fas fa-dumbbell text-primary me-2"></i>@Localizer["SessionCount"]</h6>
+
+                    <!-- Progress -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">@Localizer["SessionsRemaining"]</span>
+                            <span class="fw-bold @(canUse ? "text-success" : "text-danger")">
+                                @Model.SessionsRemaining / @Model.SessionCount
+                            </span>
+                        </div>
+                        <div class="progress" style="height:14px; border-radius:10px;">
+                            <div class="progress-bar @(canUse ? "bg-success" : "bg-danger")"
+                                 style="width:@pct%; border-radius:10px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="row g-2 text-center">
+                        <div class="col-4">
+                            <div class="bg-light rounded-3 p-2">
+                                <div class="fw-black fs-4 text-primary">@Model.SessionCount</div>
+                                <div class="text-muted small">@Localizer["Total"]</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light rounded-3 p-2">
+                                <div class="fw-black fs-4 text-warning">@Model.SessionsUsed</div>
+                                <div class="text-muted small">@Localizer["Logged"]</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light rounded-3 p-2">
+                                <div class="fw-black fs-4 @(canUse ? "text-success" : "text-danger")">@Model.SessionsRemaining</div>
+                                <div class="text-muted small">@Localizer["None"]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                        <span class="text-muted">@Localizer["SessionPrice"]</span>
+                        <span class="fw-bold">@Model.PricePerSession.ToString("N2") @currency</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <span class="fw-bold">@Localizer["TotalAmount"]</span>
+                        <span class="fw-black fs-5 text-primary">@Model.TotalAmount.ToString("N2") @currency</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Use Session Button -->
+            @if (canUse)
+            {
+                <form id="useSessionForm" asp-action="UseSession" asp-route-id="@Model.Id" method="post" class="d-none">
+                    @Html.AntiForgeryToken()
+                </form>
+                <button type="button" class="btn btn-success btn-lg w-100 rounded-3 fw-bold"
+                        onclick="confirmUseSession('@Model.GuestName', @Model.SessionsRemaining)">
+                    <i class="fas fa-check-circle me-2"></i>
+                    @Localizer["UseSession"] (@Model.SessionsRemaining)
+                </button>
+            }
+            else
+            {
+                <div class="alert alert-@(isExpired ? "warning" : "secondary") rounded-3 text-center">
+                    <i class="fas fa-ban me-2"></i>
+                    @(isExpired ? Localizer["Expired"].Value : Localizer["Depleted"].Value)
+                    — <a asp-action="Create" asp-route-memberId="@Model.MemberId" class="alert-link">@Localizer["Renew"]</a>
+                </div>
+            }
+
+            <!-- Sessions History -->
+            @if (Model.WalkInSessions.Any())
+            {
+                <div class="card border-0 shadow-sm rounded-4 mt-4">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4">
+                        <h6 class="fw-bold mb-0"><i class="fas fa-history text-muted me-2"></i>@Localizer["UsageHistory"]</h6>
+                    </div>
+                    <div class="card-body p-4 pt-2">
+                        @foreach (var s in Model.WalkInSessions.OrderByDescending(x => x.CreatedAt))
+                        {
+                            <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+                                <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                                    <i class="fas fa-dumbbell text-success"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold small">@Localizer["Session"]</div>
+                                    <div class="text-muted small">@s.CreatedAt.ToString("dd/MM/yyyy hh:mm tt")</div>
+                                </div>
+                                <span class="badge bg-success ms-auto">@Localizer["Attended"] ✓</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function confirmUseSession(name, remaining) {
+            Swal.fire({
+                title: '@Localizer["Confirm"]',
+                html: `
+                    <div class="mb-3">
+                        <i class="fas fa-walking text-primary fs-1 mb-3"></i>
+                        <h5 class="fw-bold mb-1">${name}</h5>
+                        <p class="text-muted small">@Localizer["UseSessionConfirmMessage"]</p>
+                    </div>
+                    <div class="alert alert-light border rounded-3 py-2 mb-0">
+                        <span class="text-muted">@Localizer["SessionsRemaining"]:</span>
+                        <span class="fw-bold text-success ms-1">${remaining}</span>
+                    </div>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '@Localizer["ConfirmAttendance"]',
+                cancelButtonText: '@Localizer["Cancel"]',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'premium-swal-popup rounded-4',
+                    confirmButton: 'btn btn-success btn-lg px-5 rounded-pill me-2',
+                    cancelButton: 'btn btn-outline-secondary btn-lg px-4 rounded-pill'
+                },
+                showClass: {
+                    popup: 'animate__animated animate__fadeInUp animate__faster'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('useSessionForm').submit();
+                }
+            });
+        }
+    </script>
+}

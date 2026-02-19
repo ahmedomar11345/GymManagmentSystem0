@@ -20,6 +20,7 @@ namespace GymManagmentDAL.Repositories.Interfaces
         
         bool HasActiveMembership(int memberId);
         Task<bool> HasActiveMembershipAsync(int memberId);
+        Task<MemberShip?> GetActiveMembershipWithPlanByMemberIdAsync(int memberId);
         Task<bool> AnyActiveWithPlanIdAsync(int planId);
         
         IEnumerable<MemberShip> GetExpiringWithin(int days);

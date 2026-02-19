@@ -56,13 +56,17 @@ namespace GymManagmentDAL.Repositories.Classes
 
         public (int TotalBooked, int Attended) GetAttendanceStats(int sessionId)
         {
-            var bookings = _dbContext.MemberSessions.Where(ms => ms.SessionId == sessionId).Select(ms => ms.IsAttended).ToList();
+            var bookings = _dbContext.MemberSessions
+                .Where(ms => ms.SessionId == sessionId && ms.Status == Entities.Enums.BookingStatus.Confirmed)
+                .Select(ms => ms.IsAttended).ToList();
             return (bookings.Count, bookings.Count(a => a));
         }
 
         public async Task<(int TotalBooked, int Attended)> GetAttendanceStatsAsync(int sessionId)
         {
-            var bookings = await _dbContext.MemberSessions.Where(ms => ms.SessionId == sessionId).Select(ms => ms.IsAttended).ToListAsync();
+            var bookings = await _dbContext.MemberSessions
+                .Where(ms => ms.SessionId == sessionId && ms.Status == Entities.Enums.BookingStatus.Confirmed)
+                .Select(ms => ms.IsAttended).ToListAsync();
             return (bookings.Count, bookings.Count(a => a));
         }
     }

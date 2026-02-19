@@ -7,417 +7,611 @@
     var hour = DateTime.Now.Hour;
     string greetingKey = hour < 12 ? "GoodMorning" : hour < 18 ? "GoodAfternoon" : "GoodEvening";
     string greeting = Localizer[greetingKey];
-    
-    // Fallback to email/username if Full Name claim isn't present yet
     var displayName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name;
+    var percentage = Model.TotalMembers > 0 ? (Model.ActiveMembers * 100 / Model.TotalMembers) : 0;
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/ironpulse-dashboard.css" asp-append-version="true" />
     <style>
         .chart-container { position: relative; height: 300px; width: 100%; }
-        .growth-positive { color: #198754; }
-        .growth-negative { color: #dc3545; }
+
+        /* ── Welcome Banner ── */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1e40af 0%, #3B82F6 55%, #60a5fa 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            color: #fff !important;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(59,130,246,.35);
+        }
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -40%; right: -10%;
+            width: 50%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .welcome-banner * { color: #fff !important; }
+
+        /* Date / Clock badges */
+        .banner-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: .35rem 1rem;
+            font-size: .78rem;
+            font-weight: 600;
+            color: #fff !important;
+            white-space: nowrap;
+        }
+        .banner-badge.clock-badge {
+            font-size: 1rem;
+            font-weight: 700;
+            padding: .45rem 1.2rem;
+            letter-spacing: .04em;
+            font-variant-numeric: tabular-nums;
+        }
+        .clock-sep {
+            animation: blink-sep 1s step-start infinite;
+        }
+        @@keyframes blink-sep {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: .25; }
+        }
+        .clock-ampm {
+            font-size: .65rem;
+            font-weight: 800;
+            opacity: .85;
+            margin-inline-start: .2rem;
+            text-transform: uppercase;
+        }
+
+        /* Banner buttons */
+        .banner-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: #fff;
+            color: #2563eb !important;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            padding: .6rem 1.6rem;
+            font-size: .9rem;
+            box-shadow: 0 4px 14px rgba(0,0,0,.15);
+            text-decoration: none;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .banner-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,.2);
+            color: #1d4ed8 !important;
+        }
+        .banner-btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: rgba(255,255,255,.15);
+            color: #fff !important;
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,.5);
+            border-radius: 50px;
+            padding: .6rem 1.6rem;
+            font-size: .9rem;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+            transition: background .2s, transform .2s;
+        }
+        .banner-btn-outline:hover {
+            background: rgba(255,255,255,.28);
+            transform: translateY(-2px);
+            color: #fff !important;
+        }
+
+        /* ── Stat Cards ── */
+        .stat-card-v2 {
+            border-radius: 16px;
+            padding: 1.5rem;
+            background: var(--card-bg, #fff);
+            border: 1px solid var(--glass-border, rgba(226,232,240,.8));
+            box-shadow: 0 2px 12px rgba(0,0,0,.04);
+            transition: transform .2s, box-shadow .2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card-v2:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,.08); }
+        .stat-card-v2 .card-accent {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            border-radius: 16px 16px 0 0;
+        }
+        .stat-card-v2 .stat-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+        }
+        .stat-card-v2 .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--text-main, #1e293b);
+        }
+        .stat-card-v2 .stat-label {
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--text-muted, #64748b);
+        }
+
+        /* ── Quick Tiles ── */
+        .quick-tile {
+            border-radius: 16px;
+            padding: 1.25rem .75rem;
+            text-align: center;
+            background: var(--card-bg, #fff);
+            border: 1px solid var(--glass-border, rgba(226,232,240,.8));
+            transition: all .25s ease;
+            text-decoration: none !important;
+            display: block;
+        }
+        .quick-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,.1);
+            border-color: rgba(59,130,246,.3);
+        }
+        .quick-tile .tile-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto .75rem;
+            font-size: 1.3rem;
+            transition: transform .25s;
+        }
+        .quick-tile:hover .tile-icon { transform: scale(1.12); }
+        .quick-tile .tile-label {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--text-main, #1e293b);
+        }
+
+        /* Dark mode overrides */
+        [data-theme="dark"] .stat-card-v2 {
+            background: var(--card-bg) !important;
+            border-color: #334155 !important;
+        }
+        [data-theme="dark"] .stat-card-v2 .stat-number { color: #f8fafc !important; }
+        [data-theme="dark"] .quick-tile {
+            background: var(--card-bg) !important;
+            border-color: #334155 !important;
+        }
+        [data-theme="dark"] .quick-tile .tile-label { color: #f1f5f9 !important; }
+        [data-theme="dark"] .quick-tile:hover { border-color: rgba(96,165,250,.4) !important; }
+        [data-theme="dark"] .financial-card { background: var(--card-bg) !important; border-color: #334155 !important; }
+        [data-theme="dark"] .progress { background-color: #334155 !important; }
     </style>
 }
 
-
-<div class="animate-fade-in">
-    <!-- Welcome Banner -->
-    <div class="welcome-banner shadow-lg">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="display-5 fw-bold mb-2">@greeting، @displayName!</h1>
-                <p class="lead opacity-75 mb-4">@Localizer["Welcome"] @Localizer["ManagementSystem"] @gymSettings.GymName. @Localizer["GymHealthy"]</p>
-                <div class="d-flex gap-3">
-                    <a asp-controller="MemberSession" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-pill">
-                        <i class="fas fa-calendar-check me-2"></i> @Localizer["ManageBookings"]
-                    </a>
-                    <a asp-controller="Member" asp-action="Create" class="btn btn-outline-light px-4 py-2 rounded-pill">
-                        <i class="fas fa-user-plus me-2"></i> @Localizer["RegisterMember"]
-                    </a>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  WELCOME BANNER                                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="welcome-banner shadow-lg mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                <div class="banner-badge">
+                    <i class="fas fa-calendar-day"></i>
+                    @DateTime.Now.ToString("dddd، dd MMMM yyyy")
+                </div>
+                <div class="banner-badge clock-badge" id="clock-wrapper">
+                    <i class="fas fa-clock"></i>
+                    <span id="live-clock-h">--</span><span class="clock-sep">:</span><span id="live-clock-m">--</span><span class="clock-sep">:</span><span id="live-clock-s">--</span>
+                    <span class="clock-ampm" id="live-clock-ampm"></span>
                 </div>
             </div>
-            <div class="col-md-4 d-none d-md-block text-end">
-                <div class="display-1 opacity-25"><i class="fas fa-dumbbell"></i></div>
+            <h1 class="display-6 fw-bold mb-2">@greeting، @displayName! 👋</h1>
+            <p class="mb-4 opacity-75">@Localizer["Welcome"] @gymSettings.GymName — @Localizer["GymHealthy"]</p>
+            <div class="d-flex flex-wrap gap-3">
+                <a asp-controller="MemberSession" asp-action="Index" class="banner-btn-primary">
+                    <i class="fas fa-calendar-check"></i>@Localizer["ManageBookings"]
+                </a>
+                <a asp-controller="Member" asp-action="Create" class="banner-btn-outline">
+                    <i class="fas fa-user-plus"></i>@Localizer["RegisterMember"]
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-end align-items-center">
+            <div style="font-size: 7rem; opacity: .12; line-height:1;">
+                <i class="fas fa-dumbbell"></i>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Quick Stats Grid -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-3">
-            <div class="premium-card searchable-card p-4 stat-box h-100">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
-                        <i class="fas fa-users fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-secondary mb-0">@Localizer["MembersAnalysis"]</h6>
-                        <div class="d-flex align-items-baseline gap-2">
-                            <h3 class="fw-bold mb-0">@Model.TotalMembers</h3>
-                            <small class="text-secondary">@Localizer["Total"]</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-3 p-2 bg-success bg-opacity-10 rounded-3 d-flex justify-content-between align-items-center">
-                    <span class="small fw-bold text-success text-uppercase">@Localizer["ActiveMembers"]</span>
-                    <span class="badge bg-success rounded-pill">@Model.ActiveMembers</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="premium-card searchable-card p-4 stat-box h-100">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-shape bg-success bg-opacity-10 text-success me-3">
-                        <i class="fas fa-user-tie fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-secondary mb-0">@Localizer["Trainers"]</h6>
-                        <h3 class="fw-bold mb-0">@Model.TotalTrainers</h3>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  QUICK STATS (4 cards)                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="row g-4 mb-4">
+    <!-- Total Members -->
+    <div class="col-6 col-lg-3">
+        <div class="stat-card-v2 h-100">
+            <div class="card-accent bg-primary"></div>
+            <div class="d-flex justify-content-between align-items-start mt-1">
+                <div>
+                    <div class="stat-label mb-2">@Localizer["MembersAnalysis"]</div>
+                    <div class="stat-number">@Model.TotalMembers</div>
+                    <div class="mt-2">
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1" style="font-size:.7rem;">
+                            <i class="fas fa-check-circle me-1"></i>@Model.ActiveMembers @Localizer["ActiveMembers"]
+                        </span>
                     </div>
                 </div>
-                <div class="mt-2 small">
-                    @Localizer["ProfessionalStaff"]
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="premium-card searchable-card p-4 stat-box h-100">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-shape bg-warning bg-opacity-10 text-warning me-3">
-                        <i class="fas fa-calendar-day fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-secondary mb-0">@Localizer["UpcomingSessions"]</h6>
-                        <h3 class="fw-bold mb-0">@Model.UpcomingSessions</h3>
-                    </div>
-                </div>
-                <div class="mt-2 small">
-                    @Localizer["ScheduledTraining"]
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="premium-card searchable-card p-4 stat-box h-100">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-shape bg-danger bg-opacity-10 text-danger me-3">
-                        <i class="fas fa-bolt fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-secondary mb-0">@Localizer["LiveNow"]</h6>
-                        <h3 class="fw-bold mb-0">@Model.OngoingSessions</h3>
-                    </div>
-                </div>
-                <div class="mt-2 small text-danger fw-bold animate-pulse">
-                    @Localizer["ActiveSessionsInProgress"]
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="fas fa-users"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Financial & Growth Stats -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="premium-card p-4 h-100 border-start border-4 border-success">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h6 class="text-secondary text-uppercase small fw-bold">@Localizer["TotalRevenue"]</h6>
-                        <h2 class="fw-bold mb-0">@Model.TotalRevenue.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
-                    </div>
-                    <div class="icon-shape bg-success bg-opacity-10 text-success">
-                        <i class="fas fa-wallet"></i>
+    <!-- Trainers -->
+    <div class="col-6 col-lg-3">
+        <div class="stat-card-v2 h-100">
+            <div class="card-accent bg-success"></div>
+            <div class="d-flex justify-content-between align-items-start mt-1">
+                <div>
+                    <div class="stat-label mb-2">@Localizer["Trainers"]</div>
+                    <div class="stat-number">@Model.TotalTrainers</div>
+                    <div class="mt-2 small text-secondary">@Localizer["ProfessionalStaff"]</div>
+                </div>
+                <div class="stat-icon bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Sessions -->
+    <div class="col-6 col-lg-3">
+        <div class="stat-card-v2 h-100">
+            <div class="card-accent bg-warning"></div>
+            <div class="d-flex justify-content-between align-items-start mt-1">
+                <div>
+                    <div class="stat-label mb-2">@Localizer["UpcomingSessions"]</div>
+                    <div class="stat-number">@Model.UpcomingSessions</div>
+                    <div class="mt-2 small text-secondary">@Localizer["ScheduledTraining"]</div>
+                </div>
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Now -->
+    <div class="col-6 col-lg-3">
+        <div class="stat-card-v2 h-100">
+            <div class="card-accent bg-danger"></div>
+            <div class="d-flex justify-content-between align-items-start mt-1">
+                <div>
+                    <div class="stat-label mb-2">@Localizer["LiveNow"]</div>
+                    <div class="stat-number">@Model.OngoingSessions</div>
+                    <div class="mt-2">
+                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-2 py-1 animate-pulse" style="font-size:.7rem;">
+                            <i class="fas fa-circle me-1" style="font-size:.5rem;"></i>@Localizer["ActiveSessionsInProgress"]
+                        </span>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <div class="d-flex align-items-center">
-                        @if (Model.MemberGrowthPercentage >= 0)
+                <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                    <i class="fas fa-bolt"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  FINANCIAL CARDS (3 cards)                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="row g-4 mb-4">
+    <!-- Total Revenue -->
+    <div class="col-md-4">
+        <div class="premium-card financial-card p-4 h-100 border-start border-4 border-success">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h6 class="text-secondary text-uppercase small fw-bold mb-1">@Localizer["TotalRevenue"]</h6>
+                    <h2 class="fw-bold mb-0">
+                        @Model.TotalRevenue.ToString("N2")
+                        <small class="fs-6 fw-normal text-secondary">@Localizer["EGP"]</small>
+                    </h2>
+                </div>
+                <div class="icon-shape bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-wallet"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                @if (Model.MemberGrowthPercentage >= 0)
+                {
+                    <span class="badge bg-success bg-opacity-10 text-success">
+                        <i class="fas fa-arrow-up me-1"></i>@Model.MemberGrowthPercentage%
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger bg-opacity-10 text-danger">
+                        <i class="fas fa-arrow-down me-1"></i>@Math.Abs(Model.MemberGrowthPercentage)%
+                    </span>
+                }
+                <span class="small text-secondary">@Localizer["vsLastMonth"]</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Revenue -->
+    <div class="col-md-4">
+        <div class="premium-card financial-card p-4 h-100 border-start border-4 border-primary">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h6 class="text-secondary text-uppercase small fw-bold mb-1">@Localizer["MonthlyRevenue"]</h6>
+                    <h2 class="fw-bold mb-0">
+                        @Model.MonthlyRevenue.ToString("N2")
+                        <small class="fs-6 fw-normal text-secondary">@Localizer["EGP"]</small>
+                    </h2>
+                </div>
+                <div class="icon-shape bg-primary bg-opacity-10 text-primary">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+            </div>
+            <div class="small text-secondary">
+                <i class="fas fa-calendar-alt me-1"></i>@Localizer["RevenueFor"] @DateTime.Now.ToString("MMMM yyyy")
+            </div>
+        </div>
+    </div>
+
+    <!-- Retention Rate -->
+    <div class="col-md-4">
+        <div class="premium-card financial-card p-4 h-100 border-start border-4 border-info">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h6 class="text-secondary text-uppercase small fw-bold mb-1">@Localizer["ActiveMembers"]</h6>
+                    <h2 class="fw-bold mb-0">@Model.ActiveMembers</h2>
+                </div>
+                <div class="icon-shape bg-info bg-opacity-10 text-info">
+                    <i class="fas fa-user-check"></i>
+                </div>
+            </div>
+            <div class="progress mb-2" style="height: 8px; border-radius: 99px;">
+                <div class="progress-bar bg-info" role="progressbar"
+                     style="width: @percentage%; border-radius: 99px;"></div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span class="small text-secondary">@Localizer["RetentionRate"]</span>
+                <span class="small fw-bold">@percentage%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  CHARTS ROW                                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="premium-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="fw-bold mb-0">@Localizer["RevenueAnalytics"]</h5>
+                    <small class="text-secondary">@Model.SelectedRangeLabel</small>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle px-3 rounded-pill"
+                            type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-calendar-alt me-1"></i>@Localizer["SelectRange"]
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius:12px;">
+                        <li><a class="dropdown-item rounded @(Model.SelectedRangeMonths == 6 && Model.SelectedStartDate == null ? "active" : "")"
+                               asp-action="Index" asp-route-months="6">@Localizer["Last6Months"]</a></li>
+                        <li><a class="dropdown-item rounded @(Model.SelectedRangeMonths == 12 ? "active" : "")"
+                               asp-action="Index" asp-route-months="12">@Localizer["LastYear"]</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item rounded @(Model.SelectedStartDate != null ? "active" : "")"
+                               href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#customRangeModal">
+                            @Localizer["CustomRange"]</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="chart-container" style="height:320px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="premium-card p-4 h-100">
+            <h5 class="fw-bold mb-4">@Localizer["MemberGrowth"]</h5>
+            <div class="chart-container" style="height:320px;">
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  EXPIRING + ACTIVITIES                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="row g-4 mb-4">
+    <!-- Expiring Soon -->
+    <div class="col-lg-7">
+        <div class="premium-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0 text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@Localizer["ExpiringSoonMembers"]
+                </h5>
+                <a asp-controller="MemberShip" asp-action="Index"
+                   class="btn btn-sm btn-outline-danger rounded-pill px-3">@Localizer["ViewAll"]</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="small text-uppercase text-secondary">
+                            <th class="border-0 px-3">@Localizer["Member"]</th>
+                            <th class="border-0">@Localizer["Plan"]</th>
+                            <th class="border-0">@Localizer["Status"]</th>
+                            <th class="border-0 text-end px-3">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ExpiringSoonMembers.Any())
                         {
-                            <span class="badge bg-success bg-opacity-10 text-success me-2">
-                                <i class="fas fa-arrow-up me-1"></i> @Model.MemberGrowthPercentage%
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger bg-opacity-10 text-danger me-2">
-                                <i class="fas fa-arrow-down me-1"></i> @Math.Abs(Model.MemberGrowthPercentage)%
-                            </span>
-                        }
-                        <span class="small text-secondary">@Localizer["vsLastMonth"]</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="premium-card p-4 h-100 border-start border-4 border-primary">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h6 class="text-secondary text-uppercase small fw-bold">@Localizer["MonthlyRevenue"]</h6>
-                        <h2 class="fw-bold mb-0">@Model.MonthlyRevenue.ToString("N2") <small class="fs-6 fw-normal">@Localizer["EGP"]</small></h2>
-                    </div>
-                    <div class="icon-shape bg-primary bg-opacity-10 text-primary">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                </div>
-                <div class="mt-3 small text-secondary">
-                    @Localizer["RevenueFor"] @DateTime.Now.ToString("MMMM yyyy")
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="premium-card p-4 h-100 border-start border-4 border-info">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h6 class="text-secondary text-uppercase small fw-bold">@Localizer["ActiveMembers"]</h6>
-                        <h2 class="fw-bold mb-0">@Model.ActiveMembers</h2>
-                    </div>
-                    <div class="icon-shape bg-info bg-opacity-10 text-info">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <div class="progress" style="height: 8px;">
-                        @{
-                            var percentage = Model.TotalMembers > 0 ? (Model.ActiveMembers * 100 / Model.TotalMembers) : 0;
-                        }
-                        <div class="progress-bar bg-info" role="progressbar" style="width: @percentage"></div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <span class="small text-secondary">@Localizer["RetentionRate"]</span>
-                        <span class="small fw-bold">@percentage%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Row -->
-    <div class="row g-4 mb-5">
-        <div class="col-lg-8">
-            <div class="premium-card p-4 h-100">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h5 class="fw-bold mb-0">@Localizer["RevenueAnalytics"]</h5>
-                        <small class="text-secondary">@Model.SelectedRangeLabel</small>
-                    </div>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle px-3 rounded-pill" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-calendar-alt me-1"></i> @Localizer["SelectRange"]
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2" style="border-radius: 12px;">
-                            <li><a class="dropdown-item rounded @(Model.SelectedRangeMonths == 6 && Model.SelectedStartDate == null ? "active" : "")" asp-action="Index" asp-route-months="6">@Localizer["Last6Months"]</a></li>
-                            <li><a class="dropdown-item rounded @(Model.SelectedRangeMonths == 12 ? "active" : "")" asp-action="Index" asp-route-months="12">@Localizer["LastYear"]</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item rounded @(Model.SelectedStartDate != null ? "active" : "")" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#customRangeModal">@Localizer["CustomRange"]</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="chart-container" style="height: 350px;">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="premium-card p-4 h-100">
-                <h5 class="fw-bold mb-4">@Localizer["MemberGrowth"]</h5>
-                <div class="chart-container" style="height: 350px;">
-                    <canvas id="growthChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4 mb-5">
-        <!-- Expiring Soon List -->
-        <div class="col-lg-7">
-            <div class="premium-card p-4 h-100">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold mb-0 text-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i>@Localizer["ExpiringSoonMembers"]
-                    </h5>
-                    <a asp-controller="MemberShip" asp-action="Index" class="btn btn-sm btn-light rounded-pill px-3">@Localizer["ViewAll"]</a>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
-                            <tr class="small text-uppercase text-secondary">
-                                <th class="border-0 px-3">@Localizer["Member"]</th>
-                                <th class="border-0">@Localizer["Plan"]</th>
-                                <th class="border-0">@Localizer["Status"]</th>
-                                <th class="border-0 text-end px-3">@Localizer["Actions"]</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.ExpiringSoonMembers.Any())
-                            {
-                                foreach (var member in Model.ExpiringSoonMembers)
-                                {
-                                    <tr>
-                                        <td class="px-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-sm bg-danger bg-opacity-10 text-danger rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
-                                                    <i class="fas fa-user small"></i>
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold small">@member.MemberName</div>
-                                                    <div class="text-secondary" style="font-size: 11px;">#@member.MemberId</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="small">@member.PlanName</td>
-                                        <td>
-                                            @if (member.DaysRemaining <= 0)
-                                            {
-                                                <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">@Localizer["ExpiringToday"]</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">@string.Format(Localizer["DaysRemainingLabel"].Value, member.DaysRemaining)</span>
-                                            }
-                                        </td>
-                                        <td class="text-end px-3">
-                                            <a asp-controller="Member" asp-action="Details" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-primary rounded-circle" title="@Localizer["Details"]">
-                                                <i class="fas fa-eye small"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
+                            foreach (var member in Model.ExpiringSoonMembers)
                             {
                                 <tr>
-                                    <td colspan="4" class="text-center py-4 text-secondary opacity-50 small italic">
-                                        <i class="fas fa-check-circle me-2"></i>@Localizer["NoExpiringMembers"]
+                                    <td class="px-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-danger bg-opacity-10 text-danger rounded-circle me-3 d-flex align-items-center justify-content-center"
+                                                 style="width:36px;height:36px;min-width:36px;">
+                                                <i class="fas fa-user small"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold small">@member.MemberName</div>
+                                                <div class="text-secondary" style="font-size:11px;">#@member.MemberId</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="small">@member.PlanName</td>
+                                    <td>
+                                        @if (member.DaysRemaining <= 0)
+                                        {
+                                            <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">@Localizer["ExpiringToday"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">
+                                                @string.Format(Localizer["DaysRemainingLabel"].Value, member.DaysRemaining)
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-end px-3">
+                                        <a asp-controller="Member" asp-action="Details" asp-route-id="@member.MemberId"
+                                           class="btn btn-sm btn-outline-primary rounded-circle" title="@Localizer["Details"]">
+                                            <i class="fas fa-eye small"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activities Timeline -->
-        <div class="col-lg-5">
-            <div class="premium-card p-4 h-100">
-                <h5 class="fw-bold mb-4">@Localizer["RecentActivities"]</h5>
-                <div class="timeline-container px-2">
-                    @foreach (var activity in Model.RecentActivities)
-                    {
-                        <div class="d-flex mb-4 position-relative">
-                            <div class="timeline-line"></div>
-                            <div class="timeline-icon bg-@(activity.Action.ToLower() == "create" ? "success" : activity.Action.ToLower() == "update" ? "primary" : "danger") shadow-sm rounded-circle d-flex align-items-center justify-content-center z-1" 
-                                 style="width: 32px; height: 32px; min-width: 32px;">
-                                <i class="fas fa-@(activity.Action.ToLower() == "create" ? "plus" : activity.Action.ToLower() == "update" ? "pen" : "trash") text-white" style="font-size: 10px;"></i>
-                            </div>
-                            <div class="ms-3 flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <h6 class="mb-1 small fw-bold">
-                                        @(activity.Action == "Create" ? Localizer["AuditLogAction_Create"] : 
-                                          activity.Action == "Update" ? Localizer["AuditLogAction_Update"] : 
-                                          Localizer["AuditLogAction_Delete"]) - @activity.EntityName
-                                    </h6>
-                                    @{
-                                        var diff = DateTime.Now - activity.Timestamp;
-                                        string timeStr = diff.TotalMinutes < 1 ? Localizer["JustNow"].Value : 
-                                                        diff.TotalHours < 1 ? $"{(int)diff.TotalMinutes}m" : 
-                                                        diff.TotalDays < 1 ? $"{(int)diff.TotalHours}h" : 
-                                                        $"{(int)diff.TotalDays}d";
-                                    }
-                                    <small class="text-secondary opacity-75" style="font-size: 10px;">@timeStr</small>
-                                </div>
-                                <div class="small text-secondary" style="font-size: 11px;">@activity.UserEmail</div>
-                            </div>
-                        </div>
-                    }
-                </div>
-                <a asp-controller="AuditLog" asp-action="Index" class="btn btn-outline-secondary w-100 mt-2 rounded-pill btn-sm">@Localizer["ViewAll"]</a>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-secondary opacity-50 small">
+                                    <i class="fas fa-check-circle fs-3 d-block mb-2"></i>
+                                    @Localizer["NoExpiringMembers"]
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Management Quick Tiles -->
-    <div class="premium-card p-4 mb-5">
-        <h5 class="fw-bold mb-4">@Localizer["QuickAccess"]</h5>
-        <div class="row g-3">
-            <div class="col-6 col-md-3 col-lg-2">
-                <a asp-controller="Member" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100 transition-all">
-                    <div class="tile-icon mb-2 text-primary bg-primary bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-users fs-4"></i>
+    <!-- Recent Activities -->
+    <div class="col-lg-5">
+        <div class="premium-card p-4 h-100">
+            <h5 class="fw-bold mb-4">@Localizer["RecentActivities"]</h5>
+            <div class="timeline-container px-2" style="max-height:340px;overflow-y:auto;">
+                @foreach (var activity in Model.RecentActivities)
+                {
+                    <div class="d-flex mb-4 position-relative">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-icon bg-@(activity.Action.ToLower() == "create" ? "success" : activity.Action.ToLower() == "update" ? "primary" : "danger") shadow-sm rounded-circle d-flex align-items-center justify-content-center z-1"
+                             style="width:32px;height:32px;min-width:32px;">
+                            <i class="fas fa-@(activity.Action.ToLower() == "create" ? "plus" : activity.Action.ToLower() == "update" ? "pen" : "trash") text-white" style="font-size:10px;"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="mb-1 small fw-bold">
+                                    @(activity.Action == "Create" ? Localizer["AuditLogAction_Create"] :
+                                      activity.Action == "Update" ? Localizer["AuditLogAction_Update"] :
+                                      Localizer["AuditLogAction_Delete"]) — @activity.EntityName
+                                </h6>
+                                @{
+                                    var diff = DateTime.Now - activity.Timestamp;
+                                    string timeStr = diff.TotalMinutes < 1 ? Localizer["JustNow"].Value :
+                                                    diff.TotalHours < 1 ? $"{(int)diff.TotalMinutes}m" :
+                                                    diff.TotalDays < 1 ? $"{(int)diff.TotalHours}h" :
+                                                    $"{(int)diff.TotalDays}d";
+                                }
+                                <small class="text-secondary opacity-75" style="font-size:10px;white-space:nowrap;">@timeStr</small>
+                            </div>
+                            <div class="small text-secondary" style="font-size:11px;">@activity.UserEmail</div>
+                        </div>
                     </div>
-                    <span class="small fw-bold text-dark">@Localizer["Members"]</span>
-                </a>
+                }
             </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a asp-controller="Trainer" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
-                    <div class="tile-icon mb-2 text-success bg-success bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-user-tie fs-4"></i>
-                    </div>
-                    <span class="small fw-bold text-dark">@Localizer["Trainers"]</span>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a asp-controller="Session" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
-                    <div class="tile-icon mb-2 text-warning bg-warning bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-dumbbell fs-4"></i>
-                    </div>
-                    <span class="small fw-bold text-dark">@Localizer["Sessions"]</span>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a asp-controller="Attendance" asp-action="Scanner" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100 border border-primary border-opacity-10">
-                    <div class="tile-icon mb-2 text-danger bg-danger bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-qrcode fs-4 animate-pulse"></i>
-                    </div>
-                    <span class="small fw-bold text-dark">@Localizer["Scanner"]</span>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a asp-controller="Expense" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
-                    <div class="tile-icon mb-2 text-info bg-info bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-money-bill-transfer fs-4"></i>
-                    </div>
-                    <span class="small fw-bold text-dark">@Localizer["Expenses"]</span>
-                </a>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <a asp-controller="Settings" asp-action="Index" class="quick-tile text-decoration-none d-block p-3 text-center rounded-4 h-100">
-                    <div class="tile-icon mb-2 text-secondary bg-secondary bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-sliders fs-4"></i>
-                    </div>
-                    <span class="small fw-bold text-dark">@Localizer["Settings"]</span>
-                </a>
-            </div>
+            <a asp-controller="AuditLog" asp-action="Index"
+               class="btn btn-outline-secondary w-100 mt-2 rounded-pill btn-sm">@Localizer["ViewAll"]</a>
         </div>
     </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  QUICK ACCESS TILES                                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="premium-card p-4 mb-4">
+    <h5 class="fw-bold mb-4">@Localizer["QuickAccess"]</h5>
+    <div class="row g-3">
+        @{
+            var tiles = new[] {
+                new { Href = Url.Action("Index","Member"), Icon = "fas fa-users", Color = "primary", Label = Localizer["Members"].Value },
+                new { Href = Url.Action("Index","Trainer"), Icon = "fas fa-user-tie", Color = "success", Label = Localizer["Trainers"].Value },
+                new { Href = Url.Action("Index","Session"), Icon = "fas fa-dumbbell", Color = "warning", Label = Localizer["Sessions"].Value },
+                new { Href = Url.Action("Scanner","Attendance"), Icon = "fas fa-qrcode", Color = "danger", Label = Localizer["Scanner"].Value },
+                new { Href = Url.Action("Index","Expense"), Icon = "fas fa-money-bill-transfer", Color = "info", Label = Localizer["Expenses"].Value },
+                new { Href = Url.Action("Index","Settings"), Icon = "fas fa-sliders", Color = "secondary", Label = Localizer["Settings"].Value },
+            };
+        }
+        @foreach (var tile in tiles)
+        {
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="@tile.Href" class="quick-tile">
+                    <div class="tile-icon bg-@tile.Color bg-opacity-10 text-@tile.Color">
+                        <i class="@tile.Icon"></i>
+                    </div>
+                    <span class="tile-label">@tile.Label</span>
+                </a>
+            </div>
+        }
+    </div>
 </div>
 
 <!-- Custom Range Modal -->
-<div class="modal fade" id="customRangeModal" tabindex="-1" aria-labelledby="customRangeModalLabel" aria-hidden="true">
+<div class="modal fade" id="customRangeModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+        <div class="modal-content border-0 shadow-lg rounded-4">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold" id="customRangeModalLabel">@Localizer["SelectDateRange"]</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold">@Localizer["SelectDateRange"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form asp-action="Index" method="get">
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label small fw-bold text-secondary">@Localizer["StartDate"]</label>
-                            <input type="month" name="startDate" class="form-control rounded-pill border-light bg-light" required 
+                            <input type="month" name="startDate" class="form-control rounded-3" required
                                    value="@(Model.SelectedStartDate?.ToString("yyyy-MM"))">
                         </div>
                         <div class="col-12">
                             <label class="form-label small fw-bold text-secondary">@Localizer["EndDate"]</label>
-                            <input type="month" name="endDate" class="form-control rounded-pill border-light bg-light" required
+                            <input type="month" name="endDate" class="form-control rounded-3" required
                                    value="@(Model.SelectedEndDate?.ToString("yyyy-MM"))">
                         </div>
                     </div>
@@ -434,46 +628,90 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Revenue Chart
-            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-            const revenueDataRaw = @Json.Serialize(Model.RevenueLast6Months)
-            const labelKey = "@(Model.SelectedStartDate != null ? Model.SelectedRangeLabel : (Model.SelectedRangeMonths == 12 ? "LastYear" : "Last6Months"))";
-            const currentLabel = "@Localizer[Model.SelectedStartDate != null ? "CustomRange" : (Model.SelectedRangeMonths == 12 ? "LastYear" : "Last6Months")]" + (labelKey.includes('-') ? " ("+labelKey+")" : "")
-            
-            // Map the dictionary keys to localized month names if needed
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // ── Theme-aware chart colors ──────────────────────────────
+            function getThemeColors() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                return {
+                    gridColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)',
+                    tickColor: isDark ? '#94a3b8' : '#64748b',
+                    tooltipBg: isDark ? '#1e293b' : '#fff',
+                    tooltipText: isDark ? '#f8fafc' : '#1e293b',
+                };
+            }
+
             const isArabic = document.documentElement.dir === 'rtl';
-            const monthNamesAr = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-            const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-            const labels = Object.keys(revenueDataRaw).map(key => {
-                // key looks like "Jan 2026"
-                const parts = key.split(' ');
-                if (parts.length === 2) {
-                    const monthIndex = monthNamesEn.indexOf(parts[0]);
-                    if (monthIndex !== -1 && isArabic) {
-                        return monthNamesAr[monthIndex] + ' ' + parts[1];
+            // ── Live Clock (Egypt UTC+2, 12-hour) ────────────────────────────
+            const hEl = document.getElementById('live-clock-h');
+            const mEl = document.getElementById('live-clock-m');
+            const sEl = document.getElementById('live-clock-s');
+            const ampmEl = document.getElementById('live-clock-ampm');
+            const isRtl = document.documentElement.dir === 'rtl';
+
+            function updateClock() {
+                // Egypt is UTC+2
+                const now = new Date();
+                const egyptOffset = 2 * 60; // minutes
+                const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+                const egypt = new Date(utc + egyptOffset * 60000);
+
+                let h = egypt.getHours();
+                const m = egypt.getMinutes();
+                const s = egypt.getSeconds();
+                const isPM = h >= 12;
+                h = h % 12 || 12;
+
+                if (hEl) hEl.textContent = String(h).padStart(2, '0');
+                if (mEl) mEl.textContent = String(m).padStart(2, '0');
+                if (sEl) sEl.textContent = String(s).padStart(2, '0');
+                if (ampmEl) ampmEl.textContent = isRtl
+                    ? (isPM ? 'م' : 'ص')
+                    : (isPM ? 'PM' : 'AM');
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+            const monthNamesAr = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+            const monthNamesEn = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+            function localizeMonths(keys) {
+                return keys.map(key => {
+                    const parts = key.split(' ');
+                    if (parts.length === 2 && isArabic) {
+                        const idx = monthNamesEn.indexOf(parts[0]);
+                        if (idx !== -1) return monthNamesAr[idx] + ' ' + parts[1];
                     }
-                }
-                return key;
-            });
+                    return key;
+                });
+            }
 
-            new Chart(revenueCtx, {
+            // ── Revenue Chart ─────────────────────────────────────────
+            const revenueDataRaw = @Json.Serialize(Model.RevenueLast6Months);
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueLabels = localizeMonths(Object.keys(revenueDataRaw));
+
+            const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 320);
+            revenueGradient.addColorStop(0, 'rgba(59,130,246,0.25)');
+            revenueGradient.addColorStop(1, 'rgba(59,130,246,0)');
+
+            const revenueChart = new Chart(revenueCtx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: revenueLabels,
                     datasets: [{
                         label: isArabic ? 'الإيرادات' : 'Revenue',
                         data: Object.values(revenueDataRaw),
-                        borderColor: '#0d6efd',
-                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        borderColor: '#3B82F6',
+                        backgroundColor: revenueGradient,
                         fill: true,
                         tension: 0.4,
                         borderWidth: 3,
                         pointBackgroundColor: '#fff',
-                        pointBorderColor: '#0d6efd',
+                        pointBorderColor: '#3B82F6',
                         pointBorderWidth: 2,
-                        pointRadius: 4
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
@@ -482,83 +720,97 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            backgroundColor: getThemeColors().tooltipBg,
+                            titleColor: getThemeColors().tooltipText,
+                            bodyColor: getThemeColors().tooltipText,
+                            borderColor: 'rgba(59,130,246,0.3)',
+                            borderWidth: 1,
+                            padding: 12,
                             callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat().format(context.parsed.y) + ' @Localizer["EGP"]';
-                                    }
-                                    return label;
-                                }
+                                label: ctx => (isArabic ? 'الإيرادات: ' : 'Revenue: ') +
+                                    new Intl.NumberFormat().format(ctx.parsed.y) + ' @Localizer["EGP"]'
                             }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { borderDash: [5, 5] },
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            }
+                            grid: { color: getThemeColors().gridColor, borderDash: [4, 4] },
+                            ticks: { color: getThemeColors().tickColor, callback: v => v.toLocaleString() }
                         },
                         x: {
-                            grid: { display: false }
+                            grid: { display: false },
+                            ticks: { color: getThemeColors().tickColor }
                         }
                     }
                 }
             });
 
-            // Growth Chart
+            // ── Growth Chart ──────────────────────────────────────────
+            const growthDataRaw = @Json.Serialize(Model.MemberRegistrationGrowth);
             const growthCtx = document.getElementById('growthChart').getContext('2d');
-            const growthDataRaw = @Json.Serialize(Model.MemberRegistrationGrowth)
-            
-            const growthLabels = Object.keys(growthDataRaw).map(key => {
-                const parts = key.split(' ');
-                if (parts.length === 2) {
-                    const monthIndex = monthNamesEn.indexOf(parts[0]);
-                    if (monthIndex !== -1 && isArabic) {
-                        return monthNamesAr[monthIndex] + ' ' + parts[1];
-                    }
-                }
-                return key;
-            });
+            const growthLabels = localizeMonths(Object.keys(growthDataRaw));
 
-            new Chart(growthCtx, {
+            const growthChart = new Chart(growthCtx, {
                 type: 'bar',
                 data: {
                     labels: growthLabels,
                     datasets: [{
                         label: isArabic ? 'الأعضاء الجدد' : 'New Members',
                         data: Object.values(growthDataRaw),
-                        backgroundColor: 'rgba(25, 135, 84, 0.8)',
-                        hoverBackgroundColor: '#198754',
-                        borderRadius: 6
+                        backgroundColor: 'rgba(16,185,129,0.75)',
+                        hoverBackgroundColor: '#10b981',
+                        borderRadius: 8,
+                        borderSkipped: false
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: getThemeColors().tooltipBg,
+                            titleColor: getThemeColors().tooltipText,
+                            bodyColor: getThemeColors().tooltipText,
+                            borderColor: 'rgba(16,185,129,0.3)',
+                            borderWidth: 1,
+                            padding: 12
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { 
-                                precision: 0,
-                                font: { size: 11 }
-                            }
+                            grid: { color: getThemeColors().gridColor },
+                            ticks: { color: getThemeColors().tickColor, precision: 0 }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { font: { size: 10 } }
+                            ticks: { color: getThemeColors().tickColor, font: { size: 10 } }
                         }
                     }
                 }
             });
+
+            // ── Re-apply theme colors when theme toggles ──────────────
+            const themeToggleBtn = document.getElementById('themeToggle');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    // Small delay to let the attribute update first
+                    setTimeout(() => {
+                        const tc = getThemeColors();
+                        [revenueChart, growthChart].forEach(chart => {
+                            chart.options.scales.y.grid.color = tc.gridColor;
+                            chart.options.scales.y.ticks.color = tc.tickColor;
+                            chart.options.scales.x.ticks.color = tc.tickColor;
+                            chart.options.plugins.tooltip.backgroundColor = tc.tooltipBg;
+                            chart.options.plugins.tooltip.titleColor = tc.tooltipText;
+                            chart.options.plugins.tooltip.bodyColor = tc.tooltipText;
+                            chart.update('none');
+                        });
+                    }, 50);
+                });
+            }
         });
     </script>
 }

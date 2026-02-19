@@ -4,118 +4,366 @@
     ViewData["Title"] = Localizer["Settings"];
 }
 
+<style>
+    /* Settings page — theme-aware */
+    .settings-section-title {
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--text-secondary, #64748b);
+        margin-bottom: 1.25rem;
+        padding-bottom: .5rem;
+        border-bottom: 2px solid var(--glass-border, #e2e8f0);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    [data-theme="dark"] .settings-section-title {
+        color: #94a3b8 !important;
+        border-color: #334155 !important;
+    }
+
+    /* Input groups */
+    .settings-input-group .input-group-text {
+        background: transparent;
+        border-color: var(--glass-border, #e2e8f0);
+        color: #94a3b8;
+        min-width: 42px;
+        justify-content: center;
+    }
+    [data-theme="dark"] .settings-input-group .input-group-text {
+        border-color: #334155 !important;
+    }
+    .settings-input-group .form-control,
+    .settings-input-group .form-select {
+        border-color: var(--glass-border, #e2e8f0);
+        background: transparent;
+    }
+    [data-theme="dark"] .settings-input-group .form-control,
+    [data-theme="dark"] .settings-input-group .form-select {
+        border-color: #334155 !important;
+    }
+
+    /* Logo upload area */
+    .logo-upload-zone {
+        border: 2px dashed #cbd5e1;
+        border-radius: 14px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color .2s, background .2s;
+        background: transparent;
+    }
+    .logo-upload-zone:hover {
+        border-color: #3b82f6;
+        background: rgba(59,130,246,.04);
+    }
+    [data-theme="dark"] .logo-upload-zone {
+        border-color: #334155;
+    }
+    [data-theme="dark"] .logo-upload-zone:hover {
+        border-color: #3b82f6;
+        background: rgba(59,130,246,.08);
+    }
+    .logo-preview-img {
+        max-height: 80px;
+        max-width: 200px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    /* Preview card */
+    .preview-card {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-radius: 16px;
+        padding: 1.75rem;
+        color: #fff;
+        position: sticky;
+        top: 1rem;
+    }
+    .preview-gym-name {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+</style>
+
 <div class="animate-fade-in">
-    <div class="d-flex align-items-center mb-4">
-        <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
-            <i class="fas fa-cogs fs-4"></i>
+    <!-- Page header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-primary bg-opacity-10 text-primary">
+                <i class="fas fa-cogs fs-5"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["Settings"]</h2>
+                <p class="text-secondary mb-0 small">@Localizer["ManageGymIdentityAndSystemPreferences"]</p>
+            </div>
         </div>
-        <div>
-            <h2 class="fw-bold mb-0">@Localizer["Settings"]</h2>
-            <p class="text-secondary mb-0">@Localizer["ManageGymIdentityAndSystemPreferences"]</p>
-        </div>
+        <button type="button" id="btnEditSettings" class="btn btn-outline-primary rounded-pill px-4 shadow-sm fw-bold">
+            <i class="fas fa-edit me-2"></i>@Localizer["Edit"]
+        </button>
     </div>
 
     <div class="row g-4">
+        <!-- ── Main form ── -->
         <div class="col-lg-8">
-            <div class="premium-card p-4 shadow-sm border-0">
-                <form asp-action="Update" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" asp-for="Id" />
-                    
-                    <h5 class="fw-bold mb-4 pb-2 border-bottom">
-                        <i class="fas fa-building me-2 text-primary"></i> @Localizer["GymIdentity"]
-                    </h5>
+            <form asp-action="Update" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="LogoUrl" />
 
-                    <div class="row g-3 mb-4">
+                <!-- Gym Identity -->
+                <div class="premium-card p-4 mb-4">
+                    <p class="settings-section-title">
+                        <i class="fas fa-building text-primary"></i>
+                        @Localizer["GymIdentity"]
+                    </p>
+
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label asp-for="GymName" class="form-label small fw-bold text-secondary">@Localizer["GymName"]</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="fas fa-dumbbell"></i></span>
-                                <input asp-for="GymName" class="form-control bg-light border-0" placeholder="e.g. IronPulse Gym" required />
+                            <label asp-for="GymName" class="form-label small fw-semibold">@Localizer["GymName"]</label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-dumbbell"></i></span>
+                                <input asp-for="GymName" class="form-control" placeholder="e.g. IronPulse Gym" required disabled />
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="Phone" class="form-label small fw-bold text-secondary">@Localizer["Phone"]</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="fas fa-phone"></i></span>
-                                <input asp-for="Phone" class="form-control bg-light border-0" placeholder="+20 123 456 789" required />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="Email" class="form-label small fw-bold text-secondary">@Localizer["Email"]</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0"><i class="fas fa-envelope"></i></span>
-                            <input asp-for="Email" type="email" class="form-control bg-light border-0" placeholder="contact@gym.com" />
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <label asp-for="Address" class="form-label small fw-bold text-secondary">@Localizer["Address"]</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="fas fa-location-dot"></i></span>
-                                <input asp-for="Address" class="form-control bg-light border-0" placeholder="e.g. 123 Street Name, City" required />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Country" class="form-label small fw-bold text-secondary">@Localizer["Country"]</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="fas fa-globe"></i></span>
-                                <input asp-for="Country" class="form-control bg-light border-0" placeholder="@Localizer["Egypt"]" required />
+                            <label asp-for="Phone" class="form-label small fw-semibold">@Localizer["Phone"]</label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input asp-for="Phone" class="form-control" placeholder="+20 123 456 789" required disabled />
                             </div>
                         </div>
                     </div>
 
-                    <h5 class="fw-bold mb-4 pb-2 border-bottom mt-5">
-                        <i class="fas fa-sliders me-2 text-primary"></i> @Localizer["SystemPreferences"]
-                    </h5>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <label asp-for="Currency" class="form-label small fw-bold text-secondary">@Localizer["Currency"]</label>
-                            <select asp-for="Currency" class="form-select bg-light border-0">
-                                <option value="EGP">EGP (@Localizer["EGP"])</option>
-                                <option value="USD">USD ($)</option>
-                                <option value="EUR">EUR (€)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="FooterText" class="form-label small fw-bold text-secondary">@Localizer["FooterText"]</label>
-                            <input asp-for="FooterText" class="form-control bg-light border-0" placeholder="e.g. All rights reserved" />
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label small fw-semibold">@Localizer["Email"]</label>
+                        <div class="input-group settings-input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="contact@gym.com" disabled />
                         </div>
                     </div>
 
-                    <div class="text-end mt-5">
-                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
-                            <i class="fas fa-save me-2"></i> @Localizer["SaveChanges"]
-                        </button>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label asp-for="Address" class="form-label small fw-semibold">@Localizer["Address"]</label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-location-dot"></i></span>
+                                <input asp-for="Address" class="form-control" placeholder="e.g. 123 Street, Cairo" required disabled />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Country" class="form-label small fw-semibold">@Localizer["Country"]</label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                <input asp-for="Country" class="form-control" placeholder="@Localizer["Egypt"]" required disabled />
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <!-- Gym Logo -->
+                <div class="premium-card p-4 mb-4">
+                    <p class="settings-section-title">
+                        <i class="fas fa-image text-warning"></i>
+                        @Localizer["GymLogo"]
+                    </p>
+
+                    <div class="row g-3 align-items-center">
+                        <!-- Current logo preview -->
+                        <div class="col-auto">
+                            <div id="logoPreviewWrap" class="@(string.IsNullOrEmpty(Model.LogoUrl) ? "d-none" : "")">
+                                <img id="logoPreview"
+                                     src="@(Model.LogoUrl ?? "")"
+                                     alt="Gym Logo"
+                                     class="logo-preview-img shadow-sm" />
+                            </div>
+                            <div id="logoPlaceholder" class="@(!string.IsNullOrEmpty(Model.LogoUrl) ? "d-none" : "") icon-shape bg-secondary bg-opacity-10 text-secondary" style="width:80px;height:80px;border-radius:12px;">
+                                <i class="fas fa-image fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="logoFile" class="logo-upload-zone d-block mb-0 disabled-zone" style="pointer-events: none; opacity: 0.6;">
+                                <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2 d-block"></i>
+                                <span class="small fw-semibold d-block">@Localizer["ClickToUploadLogo"]</span>
+                                <span class="x-small text-muted">PNG, JPG, SVG, WEBP — @Localizer["MaxSize"] 2MB</span>
+                            </label>
+                            <input type="file" id="logoFile" name="logoFile" class="d-none"
+                                   accept=".jpg,.jpeg,.png,.svg,.webp" disabled />
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.LogoUrl))
+                    {
+                        <div class="mt-3">
+                            <div class="d-flex align-items-center gap-2 small text-muted">
+                                <i class="fas fa-check-circle text-success"></i>
+                                @Localizer["CurrentLogo"]: <code class="ms-1">@Model.LogoUrl</code>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- System Preferences -->
+                <div class="premium-card p-4 mb-4">
+                    <p class="settings-section-title">
+                        <i class="fas fa-sliders text-info"></i>
+                        @Localizer["SystemPreferences"]
+                    </p>
+ 
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Currency" class="form-label small fw-semibold">@Localizer["Currency"]</label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-coins"></i></span>
+                                <select asp-for="Currency" class="form-select" disabled>
+                                    <option value="EGP">EGP — @Localizer["EGP"]</option>
+                                    <option value="USD">USD — $</option>
+                                    <option value="EUR">EUR — €</option>
+                                    <option value="SAR">SAR — ريال</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="SessionPrice" class="form-label small fw-semibold">
+                                <i class="fas fa-walking text-primary me-1"></i> @Localizer["SessionPrice"]
+                            </label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                <input asp-for="SessionPrice" type="number" step="0.01" min="0"
+                                       class="form-control" placeholder="50" disabled />
+                            </div>
+                            <div class="form-text text-muted small">@Localizer["WalkInPriceHelper"]</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="WalkInRetentionDays" class="form-label small fw-semibold">
+                                <i class="fas fa-history text-info me-1"></i> @Localizer["WalkInRetentionDays"]
+                            </label>
+                            <div class="input-group settings-input-group">
+                                <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+                                <input asp-for="WalkInRetentionDays" type="number" min="0" max="3650"
+                                       class="form-control" placeholder="30" disabled />
+                            </div>
+                            <div class="form-text text-muted small">@Localizer["WalkInRetentionHelper"]</div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label asp-for="FooterText" class="form-label small fw-semibold">@Localizer["FooterText"]</label>
+                        <div class="input-group settings-input-group">
+                            <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                            <input asp-for="FooterText" class="form-control" placeholder="e.g. All rights reserved" disabled />
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Save -->
+                <div id="saveBtnContainer" class="d-none justify-content-end gap-2">
+                    <button type="button" id="btnCancelEdit" class="btn btn-outline-secondary rounded-pill px-4">
+                        @Localizer["Cancel"]
+                    </button>
+                    <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold">
+                        <i class="fas fa-save me-2"></i>@Localizer["SaveChanges"]
+                    </button>
+                </div>
+            </form>
         </div>
 
+        <!-- ── Live Preview sidebar ── -->
         <div class="col-lg-4">
-            <div class="premium-card p-4 h-100 bg-dark text-white shadow-lg border-0">
-                <h5 class="fw-bold mb-4">@Localizer["LivePreview"]</h5>
-                <div class="p-3 border border-secondary border-opacity-25 rounded-3 mb-4 text-center">
-                    <div class="display-6 fw-bold text-primary mb-2">@Model.GymName</div>
-                    <div class="small opacity-75">@Model.Address, @Model.Country</div>
-                    <div class="small opacity-75">@Model.Phone</div>
+            <div class="preview-card">
+                <p class="settings-section-title" style="color:rgba(255,255,255,.4); border-color:rgba(255,255,255,.1);">
+                    <i class="fas fa-eye"></i> @Localizer["LivePreview"]
+                </p>
+
+                <div class="text-center mb-4">
+                    <div id="previewLogoWrap" class="@(string.IsNullOrEmpty(Model.LogoUrl) ? "d-none" : "") mb-3">
+                        <img id="previewLogoImg" src="@(Model.LogoUrl ?? "")" alt="Logo" style="max-height:64px; max-width:160px; object-fit:contain; border-radius:8px;" />
+                    </div>
+                    <div class="preview-gym-name" id="previewName">@Model.GymName</div>
+                    <div class="small opacity-60 mt-1" id="previewAddress">@Model.Address, @Model.Country</div>
+                    <div class="small opacity-60" id="previewPhone">@Model.Phone</div>
                 </div>
-                
-                <hr class="opacity-25">
-                
-                <div class="mt-4 small">
+
+                <hr style="border-color:rgba(255,255,255,.1);">
+
+                <div class="mt-3 small">
                     <h6 class="fw-bold text-primary mb-3">@Localizer["NeedHelp"]?</h6>
-                    <p class="opacity-75">@Localizer["SettingsHelpText"]</p>
-                    <ul class="list-unstyled opacity-75">
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> @Localizer["SettingsTip1"]</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> @Localizer["SettingsTip2"]</li>
+                    <p class="opacity-60">@Localizer["SettingsHelpText"]</p>
+                    <ul class="list-unstyled opacity-60">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>@Localizer["SettingsTip1"]</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>@Localizer["SettingsTip2"]</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Edit mode toggle
+        const btnEdit = document.getElementById('btnEditSettings');
+        const btnCancel = document.getElementById('btnCancelEdit');
+        const saveContainer = document.getElementById('saveBtnContainer');
+        const inputs = document.querySelectorAll('.settings-input-group input, .settings-input-group select, #logoFile');
+        const uploadZone = document.querySelector('.logo-upload-zone');
+
+        btnEdit.addEventListener('click', function() {
+            inputs.forEach(input => input.disabled = false);
+            uploadZone.style.pointerEvents = 'auto';
+            uploadZone.style.opacity = '1';
+            saveContainer.classList.replace('d-none', 'd-flex');
+            btnEdit.classList.add('d-none');
+        });
+
+        btnCancel.addEventListener('click', function() {
+            location.reload(); // Simple way to reset everything
+        });
+
+        // Live preview updates
+        document.getElementById('GymName')?.addEventListener('input', function () {
+            document.getElementById('previewName').textContent = this.value || '@Model.GymName';
+        });
+        document.getElementById('Phone')?.addEventListener('input', function () {
+            document.getElementById('previewPhone').textContent = this.value;
+        });
+        document.getElementById('Address')?.addEventListener('input', function () {
+            const country = document.getElementById('Country')?.value || '';
+            document.getElementById('previewAddress').textContent = this.value + (country ? ', ' + country : '');
+        });
+
+        // Logo file picker
+        const logoInput = document.getElementById('logoFile');
+        logoInput?.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const src = e.target.result;
+                // Main preview
+                const img = document.getElementById('logoPreview');
+                img.src = src;
+                document.getElementById('logoPreviewWrap').classList.remove('d-none');
+                document.getElementById('logoPlaceholder').classList.add('d-none');
+                // Sidebar preview
+                const previewImg = document.getElementById('previewLogoImg');
+                previewImg.src = src;
+                document.getElementById('previewLogoWrap').classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Click on upload zone triggers file input
+        uploadZone?.addEventListener('click', function () {
+            if (!logoInput.disabled) {
+                logoInput.click();
+            }
+        });
+    </script>
+}

@@ -18,6 +18,7 @@ namespace GymManagmentBLL.Service.Classes
         private readonly IEmailService _emailService;
         private readonly INotificationService _notificationService;
         private readonly IGymSettingsService _gymSettingsService;
+        private readonly IWalkInService _walkInService;
         private readonly ILogger<ScheduledTaskService> _logger;
 
         public ScheduledTaskService(
@@ -25,12 +26,14 @@ namespace GymManagmentBLL.Service.Classes
             IEmailService emailService,
             INotificationService notificationService,
             IGymSettingsService gymSettingsService,
+            IWalkInService walkInService,
             ILogger<ScheduledTaskService> logger)
         {
             _unitOfWork = unitOfWork;
             _emailService = emailService;
             _notificationService = notificationService;
             _gymSettingsService = gymSettingsService;
+            _walkInService = walkInService;
             _logger = logger;
         }
 
@@ -85,7 +88,8 @@ namespace GymManagmentBLL.Service.Classes
                             gymSettings.Email,
                             plan.Name,
                             daysBeforeExpiry,
-                            useArabic
+                            useArabic,
+                            gymSettings.LogoUrl
                         );
 
                         string subject = useArabic ? "⚠️ تنبيه: اشتراكك سينتهي قريباً" : "⚠️ Alert: Your membership is expiring soon";
@@ -165,7 +169,8 @@ namespace GymManagmentBLL.Service.Classes
                                 gymSettings.Email,
                                 sessionName,
                                 session.StartDate,
-                                useArabic
+                                useArabic,
+                                gymSettings.LogoUrl
                             );
 
                             string subject = useArabic 
@@ -226,7 +231,7 @@ namespace GymManagmentBLL.Service.Classes
                         if (existingWish) continue;
 
                         var gymSettings = await _gymSettingsService.GetSettingsAsync();
-                        string emailContent = EmailTemplates.BirthdayWish(member.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, discountPercentage, useArabic);
+                        string emailContent = EmailTemplates.BirthdayWish(member.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, discountPercentage, useArabic, gymSettings.LogoUrl);
                         string subject = useArabic 
                             ? $"🎂 عيد ميلاد سعيد يا {member.Name}! 🎉" 
                             : $"🎂 Happy Birthday, {member.Name}! 🎉";
@@ -375,7 +380,7 @@ namespace GymManagmentBLL.Service.Classes
                             : "Your access key has been refreshed for security. Please use this new QR code for your next visit.";
 
                         var gymSettings = await _gymSettingsService.GetSettingsAsync();
-                        string template = EmailTemplates.MemberQRCodeWithCID(member.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, qrContentId, useArabic, customMsg);
+                        string template = EmailTemplates.MemberQRCodeWithCID(member.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, qrContentId, useArabic, customMsg, gymSettings.LogoUrl);
                         
                         string subject = useArabic ? "أمان: رمز الدخول QR كود الجديد" : "Security: Your new QR access code";
 
@@ -456,7 +461,8 @@ namespace GymManagmentBLL.Service.Classes
                             gymSettings.Email,
                             plan.Name,
                             membership.EndDate,
-                            useArabic
+                            useArabic,
+                            gymSettings.LogoUrl
                         );
 
                         string subject = useArabic
@@ -487,6 +493,38 @@ namespace GymManagmentBLL.Service.Classes
             }
 
             return notificationsSent;
+        }
+
+        public async Task<int> CleanupWalkInBookingsAsync(int? retentionDays = null)
+        {
+            try
+            {
+                if (!retentionDays.HasValue)
+                {
+                    var settings = await _gymSettingsService.GetSettingsAsync();
+                    retentionDays = settings.WalkInRetentionDays;
+                }
+
+                int deletedCount = await _walkInService.CleanupExpiredBookingsAsync(retentionDays.Value);
+
+                if (deletedCount > 0)
+                {
+                    await _notificationService.CreateNotificationAsync(
+                        "Cleaning: Walk-in Bookings",
+                        $"Auto-Cleanup executed: {deletedCount} expired/consumed walk-in bookings removed.",
+                        "/WalkIn/Index",
+                        null,
+                        "info"
+                    );
+                }
+
+                return deletedCount;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in CleanupWalkInBookingsAsync");
+                return 0;
+            }
         }
     }
 }

@@ -48,13 +48,13 @@ namespace GymManagmentPL.Services
             using (var scope = _serviceProvider.CreateScope())
             {
                 var sessionService = scope.ServiceProvider.GetRequiredService<ISessionService>();
+                var scheduledTaskService = scope.ServiceProvider.GetRequiredService<IScheduledTaskService>();
                 
                 // Logic: Delete sessions where EndDate is older than 30 days
-                // Implementation depends on ISessionService having a cleanup method or we use repository directly.
-                // Let's check ISessionService if it has a way to remove old sessions.
-                // If not, we might need to add it.
-                
                 await sessionService.CleanupOldSessionsAsync(30);
+
+                // Auto-cleanup for Walk-in bookings based on gym settings
+                await scheduledTaskService.CleanupWalkInBookingsAsync();
             }
         }
     }

@@ -5,6 +5,20 @@
     var progressRecords = ViewBag.Progress as IEnumerable<HealthProgressViewModel> ?? new List<HealthProgressViewModel>();
 }
 
+<style>
+    /* Force high z-index for modal to overcome sidebar/header stacking issues */
+    #addMeasurementModal {
+        z-index: 2500 !important;
+    }
+    .modal-backdrop.show {
+        z-index: 2400 !important;
+    }
+    /* Fix for the backdrop sometimes remaining transparent or misplaced */
+    .modal-open .modal-backdrop {
+        opacity: 0.6 !important;
+    }
+</style>
+
 <div class="row mb-4 align-items-center mt-4">
     <div class="col-md-6">
         <nav aria-label="breadcrumb">
@@ -134,14 +148,14 @@
 </div>
 
 <!-- Add Measurement Modal -->
-<div class="modal fade" id="addMeasurementModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addMeasurementModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title fw-bold">@Localizer["AddMeasurement"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form asp-action="AddHealthProgress" method="post">
+            <form action="@Url.Action("AddHealthProgress", "Member")" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="MemberId" value="@Model.Id" />
                 <input type="hidden" name="Height" value="@Model.HealthRecord.Height" />
@@ -154,11 +168,12 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">@Localizer["BodyFat"] (%)</label>
-                            <input type="number" step="0.1" name="BodyFatPercentage" class="form-control rounded-3" placeholder="Optional" />
+                            <input type="number" step="0.1" name="BodyFatPercentage" class="form-control rounded-3" placeholder="e.g. 15.5" />
+                            <small class="text-muted" style="font-size: 10px;">@Localizer["FromInBodyDevice"]</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">@Localizer["MuscleMass"] (kg)</label>
-                            <input type="number" step="0.1" name="MuscleMass" class="form-control rounded-3" placeholder="Optional" />
+                            <input type="number" step="0.1" name="MuscleMass" class="form-control rounded-3" placeholder="e.g. 35" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">@Localizer["Date"]</label>
@@ -254,5 +269,14 @@
                 }
             });
         })();
+
+        // Robust fix for modal stacking issues
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('addMeasurementModal');
+            if (modal) {
+                // Move to body BEFORE any bootstrap interaction
+                document.body.appendChild(modal);
+            }
+        });
     </script>
 }

@@ -4,6 +4,7 @@ using GymManagmentDAL.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagmentDAL.Data.Migrations
 {
     [DbContext(typeof(GymDBContext))]
-    partial class GymDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260218230644_AddWalkInBookingAndSessionPrice")]
+    partial class AddWalkInBookingAndSessionPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,9 +312,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("WalkInRetentionDays")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("GymSettings");
@@ -525,9 +525,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<bool>("IsFrozen")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SessionsRemaining")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -606,9 +603,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSessionBased")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -617,9 +611,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
-
-                    b.Property<int?>("SessionCount")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");

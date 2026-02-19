@@ -12,7 +12,7 @@ namespace GymManagmentBLL.Service.Implementations
         private const string DangerColor = "#ef4444";
         private const string BgColor = "#f1f5f9";
 
-        private static string GetLayout(string title, string content, string? gymName, string? gymPhone = null, string? gymAddress = null, string? gymEmail = null, string accentColor = PrimaryColor, bool isArabic = true)
+        private static string GetLayout(string title, string content, string? gymName, string? gymPhone = null, string? gymAddress = null, string? gymEmail = null, string accentColor = PrimaryColor, bool isArabic = true, string? logoUrl = null)
         {
             string name = (gymName ?? "IronPulse Gym").ToUpper();
             string phone = gymPhone ?? "+20 123 456 789";
@@ -20,6 +20,13 @@ namespace GymManagmentBLL.Service.Implementations
             string direction = isArabic ? "rtl" : "ltr";
             string textAlign = isArabic ? "right" : "left";
             string slogan = isArabic ? "بناء القوة.. تحديد الشخصية" : "Building Strength.. Defining Character";
+
+            string logoHeaderHtml = !string.IsNullOrEmpty(logoUrl)
+                ? $"<img src='{logoUrl}' alt='{name}' style='max-height:54px; max-width:160px; object-fit:contain; display:block; margin-bottom:8px;' />"
+                : "";
+            string logoFooterHtml = !string.IsNullOrEmpty(logoUrl)
+                ? $"<img src='{logoUrl}' alt='{name}' style='max-height:34px; max-width:100px; object-fit:contain; display:inline-block; margin-bottom:8px; opacity:.75;' /><br/>"
+                : "";
 
             return $@"
             <div dir='{direction}' style='font-family: ""Cairo"", ""Segoe UI"", Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa; padding: 40px 10px; text-align: {textAlign};'>
@@ -30,6 +37,7 @@ namespace GymManagmentBLL.Service.Implementations
                         <table style='width: 100%; border-collapse: collapse;'>
                             <tr>
                                 <td style='text-align: {textAlign};'>
+                                    {logoHeaderHtml}
                                     <h1 style='margin: 0; color: {accentColor}; font-size: 24px; font-weight: 900;'>{name}</h1>
                                     <p style='margin: 5px 0 0 0; color: #64748b; font-size: 12px; font-weight: 600;'>{slogan}</p>
                                 </td>
@@ -50,6 +58,7 @@ namespace GymManagmentBLL.Service.Implementations
                     <!-- Footer -->
                     <div style='background-color: #fafafa; padding: 30px; text-align: center; border-top: 1px solid #f1f5f9;'>
                         <div style='margin-bottom: 20px;'>
+                            {logoFooterHtml}
                             <strong style='color: {DarkColor}; font-size: 16px;'>{name}</strong>
                         </div>
                         <div style='color: #64748b; font-size: 12px; margin-bottom: 20px;'>
@@ -65,7 +74,7 @@ namespace GymManagmentBLL.Service.Implementations
             </div>";
         }
 
-        public static string WelcomeMember(string name, string? gymName, string? gymPhone = null, string? gymAddress = null, string? gymEmail = null, bool isArabic = true)
+        public static string WelcomeMember(string name, string? gymName, string? gymPhone = null, string? gymAddress = null, string? gymEmail = null, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -103,10 +112,10 @@ namespace GymManagmentBLL.Service.Implementations
                     </div>";
             }
 
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic, logoUrl);
         }
 
-        public static string WelcomeTrainer(string name, string? gymName, string? gymPhone = null, string? gymAddress = null, string? gymEmail = null, bool isArabic = true)
+        public static string WelcomeTrainer(string name, string? gymName, string? gymPhone = null, string? gymAddress = null, string? gymEmail = null, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -144,10 +153,10 @@ namespace GymManagmentBLL.Service.Implementations
                     </div>";
             }
 
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, SuccessColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, SuccessColor, isArabic, logoUrl);
         }
 
-        public static string BookingConfirmation(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true)
+        public static string BookingConfirmation(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -203,10 +212,10 @@ namespace GymManagmentBLL.Service.Implementations
                         </table>
                     </div>";
             }
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic, logoUrl);
         }
 
-        public static string SessionAssignment(string trainerName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true)
+        public static string SessionAssignment(string trainerName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -237,11 +246,11 @@ namespace GymManagmentBLL.Service.Implementations
                         <div style='margin-top: 10px; font-size: 14px; color: #64748b;'><strong>🕒 Date:</strong> {date:MMM dd, yyyy}</div>
                     </div>";
             }
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic, logoUrl);
         }
 
         public static string MembershipReceipt(string memberName, string planName, decimal price, DateTime endDate, int durationDays,
-            string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, bool isArabic = true)
+            string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string gPhone = gymPhone ?? "+20 123 456 789";
@@ -260,6 +269,7 @@ namespace GymManagmentBLL.Service.Implementations
                         <table style='width: 100%; border-collapse: collapse;'>
                             <tr>
                                 <td style='text-align: {textAlign};'>
+                                    {(!string.IsNullOrEmpty(logoUrl) ? $"<img src='{logoUrl}' alt='{gName}' style='max-height:52px; max-width:150px; object-fit:contain; display:block; margin-bottom:8px;' />" : "")}
                                     <h1 style='margin: 0; color: {PrimaryColor}; font-size: 26px; font-weight: 900;'>{gName.ToUpper()}</h1>
                                     <p style='margin: 5px 0 0 0; color: #64748b; font-size: 13px;'>{(isArabic ? "بناء القوة.. تحديد الشخصية" : "Building Strength.. Defining Character")}</p>
                                 </td>
@@ -361,7 +371,7 @@ namespace GymManagmentBLL.Service.Implementations
             return content;
         }
 
-        public static string ExpirationAlert(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string planName, int daysRemaining, bool isArabic = true)
+        public static string ExpirationAlert(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string planName, int daysRemaining, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -394,10 +404,10 @@ namespace GymManagmentBLL.Service.Implementations
                         </div>
                     </div>";
             }
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, DangerColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, DangerColor, isArabic, logoUrl);
         }
 
-        public static string SessionCancelled(string userName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true)
+        public static string SessionCancelled(string userName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -428,10 +438,10 @@ namespace GymManagmentBLL.Service.Implementations
                         <div style='margin-top: 10px; font-size: 13px; color: {DangerColor}; font-weight: 600;'>Status: Cancelled</div>
                     </div>";
             }
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, DangerColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, DangerColor, isArabic, logoUrl);
         }
 
-        public static string MemberQRCodeWithCID(string name, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string imageContentId, bool isArabic = true, string? customMessage = null)
+        public static string MemberQRCodeWithCID(string name, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string imageContentId, bool isArabic = true, string? customMessage = null, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -468,10 +478,10 @@ namespace GymManagmentBLL.Service.Implementations
                     </div>
                 </div>";
 
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, PrimaryColor, isArabic, logoUrl);
         }
 
-        public static string BirthdayWish(string name, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, int discountPercentage, bool isArabic = true)
+        public static string BirthdayWish(string name, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, int discountPercentage, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -509,10 +519,10 @@ namespace GymManagmentBLL.Service.Implementations
                     </div>";
             }
 
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, accentColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, accentColor, isArabic, logoUrl);
         }
 
-        public static string MembershipExpired(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string planName, DateTime expiredDate, bool isArabic = true)
+        public static string MembershipExpired(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string planName, DateTime expiredDate, bool isArabic = true, string? logoUrl = null)
         {
             string gName = gymName ?? "IronPulse Gym";
             string title;
@@ -527,7 +537,7 @@ namespace GymManagmentBLL.Service.Implementations
                     <div style='text-align: center; margin: 35px 0;'>
                         <div style='display: inline-block; background-color: #fef2f2; border: 2px solid {DangerColor}30; border-radius: 20px; padding: 30px 50px;'>
                             <div style='font-size: 16px; font-weight: 700; color: #64748b; margin-bottom: 8px;'>تاريخ انتهاء الاشتراك</div>
-                            <div style='font-size: 28px; font-weight: 900; color: {DangerColor};'>{expiredDate:dd / MM / yyyy}</div>
+                            <div style='font-size: 28px; font-weight: 900; color: {DangerColor};'>{expiredDate:dd/MM/yyyy}</div>
                         </div>
                     </div>
 
@@ -552,7 +562,7 @@ namespace GymManagmentBLL.Service.Implementations
                     <div style='text-align: center; margin: 35px 0;'>
                         <div style='display: inline-block; background-color: #fef2f2; border: 2px solid {DangerColor}30; border-radius: 20px; padding: 30px 50px;'>
                             <div style='font-size: 16px; font-weight: 700; color: #64748b; margin-bottom: 8px;'>Membership Expired On</div>
-                            <div style='font-size: 28px; font-weight: 900; color: {DangerColor};'>{expiredDate:dd / MM / yyyy}</div>
+                            <div style='font-size: 28px; font-weight: 900; color: {DangerColor};'>{expiredDate:dd/MM/yyyy}</div>
                         </div>
                     </div>
 
@@ -567,7 +577,70 @@ namespace GymManagmentBLL.Service.Implementations
 
                     <p style='text-align: center; color: #64748b; font-size: 14px; margin-top: 30px;'>We look forward to seeing you again at <strong>{gName}</strong>! 💪</p>";
             }
-            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, DangerColor, isArabic);
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, DangerColor, isArabic, logoUrl);
+        }
+
+        public static string WaitlistPromotion(string memberName, string? gymName, string? gymPhone, string? gymAddress, string? gymEmail, string sessionName, DateTime date, bool isArabic = true, string? logoUrl = null)
+        {
+            string gName = gymName ?? "IronPulse Gym";
+            string title;
+            string content;
+            string accentColor = SuccessColor;
+
+            if (isArabic)
+            {
+                title = "تم تأكيد حجزك الآن! 🎉";
+                content = $@"
+                    <p style='font-size: 18px; margin-top: 0; color: {DarkColor};'>أخبار سعيدة يا {memberName}! 🌟</p>
+                    <p>لقد توفر مكان في جلسة <strong>{sessionName}</strong> التي كنت على قائمة الانتظار بها في <strong>{gName}</strong>.</p>
+                    <p><strong>يسعدنا إخبارك بأنه تم تأكيد حجزك الآن تلقائياً!</strong></p>
+                    
+                    <div style='background: white; border-radius: 20px; padding: 30px; margin: 30px 0; border: 2px solid #ecfdf5;'>
+                        <div style='text-align: center; border-bottom: 1px solid #ecfdf5; padding-bottom: 20px; margin-bottom: 20px;'>
+                            <div style='font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: bold;'>تفاصيل الجلسة المؤكدة</div>
+                            <div style='font-size: 22px; font-weight: 800; color: {SuccessColor}; margin-top: 5px;'>{sessionName}</div>
+                        </div>
+                        <table style='width: 100%; border-collapse: collapse;' dir='rtl'>
+                            <tr>
+                                <td style='padding: 10px 0; color: #64748b; font-size: 14px;'>📅 الموعد:</td>
+                                <td style='padding: 10px 0; text-align: left; font-weight: 700; font-size: 14px;'>{date:dddd، dd MMMM yyyy}</td>
+                            </tr>
+                            <tr>
+                                <td style='padding: 10px 0; color: #64748b; font-size: 14px;'>⏰ الوقت:</td>
+                                <td style='padding: 10px 0; text-align: left; font-weight: 700; font-size: 14px;'>{date:hh:mm tt}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p style='text-align: center; color: #64748b; font-size: 14px; margin-top: 20px;'>نحن بانتظارك، لا تتأخر! 💪</p>";
+            }
+            else
+            {
+                title = "Your Spot is Confirmed! 🎉";
+                content = $@"
+                    <p style='font-size: 18px; margin-top: 0; color: {DarkColor};'>Great news {memberName}! 🌟</p>
+                    <p>A spot has opened up for <strong>{sessionName}</strong> that you were waitlisted for at <strong>{gName}</strong>.</p>
+                    <p><strong>We are happy to inform you that your booking is now officially CONFIRMED!</strong></p>
+                    
+                    <div style='background: white; border-radius: 20px; padding: 30px; margin: 30px 0; border: 2px solid #ecfdf5;'>
+                        <div style='text-align: center; border-bottom: 1px solid #ecfdf5; padding-bottom: 20px; margin-bottom: 20px;'>
+                            <div style='font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: bold;'>Confirmed Session Details</div>
+                            <div style='font-size: 22px; font-weight: 800; color: {SuccessColor}; margin-top: 5px;'>{sessionName}</div>
+                        </div>
+                        <table style='width: 100%; border-collapse: collapse;' dir='ltr'>
+                            <tr>
+                                <td style='padding: 10px 0; color: #64748b; font-size: 14px;'>📅 Date:</td>
+                                <td style='padding: 10px 0; text-align: right; font-weight: 700; font-size: 14px;'>{date:dddd, MMM dd, yyyy}</td>
+                            </tr>
+                            <tr>
+                                <td style='padding: 10px 0; color: #64748b; font-size: 14px;'>⏰ Time:</td>
+                                <td style='padding: 10px 0; text-align: right; font-weight: 700; font-size: 14px;'>{date:hh:mm tt}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p style='text-align: center; color: #64748b; font-size: 14px; margin-top: 20px;'>We look forward to seeing you there! 💪</p>";
+            }
+
+            return GetLayout(title, content, gymName, gymPhone, gymAddress, gymEmail, accentColor, isArabic, logoUrl);
         }
     }
 }

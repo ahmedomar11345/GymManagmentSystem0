@@ -43,5 +43,11 @@ namespace GymManagmentBLL.Service.Interfaces
         /// </summary>
         /// <returns>Number of expired membership notifications sent</returns>
         Task<int> SendMembershipExpiredNotificationsAsync(bool? isArabic = null);
+
+        /// <summary>
+        /// Cleans up expired and consumed walk-in bookings based on gym settings.
+        /// </summary>
+        /// <returns>Number of bookings deleted</returns>
+        Task<int> CleanupWalkInBookingsAsync(int? retentionDays = null);
     }
 }

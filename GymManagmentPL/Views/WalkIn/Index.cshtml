@@ -1,0 +1,125 @@
+@model IEnumerable<GymManagmentDAL.Entities.WalkInBooking>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["WalkInSessions"];
+    var currency = ViewBag.Currency as string ?? "EGP";
+    var search = ViewBag.Search as string;
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-walking text-primary me-2"></i>@Localizer["WalkInSessions"]
+            </h4>
+            <small class="text-muted">@Localizer["ManageGymIdentityAndSystemPreferences"]</small>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 fw-semibold">
+            <i class="fas fa-plus me-2"></i>@Localizer["AddNew"]
+        </a>
+    </div>
+
+    <!-- Search -->
+    <form method="get" class="mb-4">
+        <div class="input-group" style="max-width:400px;">
+            <input type="text" name="search" value="@search" class="form-control rounded-start-pill"
+                   placeholder="@Localizer["Search"]..." />
+            <button class="btn btn-primary rounded-end-pill px-3" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+            @if (!string.IsNullOrEmpty(search))
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill ms-2">
+                    <i class="fas fa-times"></i>
+                </a>
+            }
+        </div>
+    </form>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Table -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="fas fa-walking fa-3x mb-3 opacity-25"></i>
+            <p>@Localizer["NoRecordsFound"]</p>
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                <i class="fas fa-plus me-2"></i>@Localizer["AddNew"]
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Phone"]</th>
+                            <th class="text-center">@Localizer["SessionCount"]</th>
+                            <th class="text-center">@Localizer["SessionsRemaining"]</th>
+                            <th class="text-center">@Localizer["TotalAmount"]</th>
+                            <th class="text-center">@Localizer["EndDate"]</th>
+                            <th class="text-center">@Localizer["Status"]</th>
+                            <th class="text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in Model.OrderByDescending(x => x.CreatedAt))
+                        {
+                            var isExpired = b.ExpiryDate < DateTime.Now;
+                            var isEmpty = b.SessionsRemaining <= 0;
+                            var statusClass = isExpired || isEmpty ? "danger" : "success";
+                            var statusText = isExpired ? Localizer["Expired"].Value : isEmpty ? Localizer["Depleted"].Value : Localizer["Active"].Value;
+
+                            <tr>
+                                <td class="text-muted small">@b.Id</td>
+                                <td class="fw-semibold">@b.GuestName</td>
+                                <td dir="ltr" class="text-muted">@b.GuestPhone</td>
+                                <td class="text-center">@b.SessionCount</td>
+                                <td class="text-center">
+                                    <span class="badge bg-@(b.SessionsRemaining > 0 ? "success" : "secondary") rounded-pill">
+                                        @b.SessionsRemaining
+                                    </span>
+                                </td>
+                                <td class="text-center fw-bold">@b.TotalAmount.ToString("N2") @currency</td>
+                                <td class="text-center small text-muted">@b.ExpiryDate.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    <span class="badge bg-@statusClass rounded-pill">@statusText</span>
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@b.Id"
+                                       class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        <i class="fas fa-eye me-1"></i>@Localizer["Details"]
+                                    </a>
+                                    <a asp-action="Receipt" asp-route-id="@b.Id"
+                                       class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                                        <i class="fas fa-print me-1"></i>@Localizer["Receipt"]
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

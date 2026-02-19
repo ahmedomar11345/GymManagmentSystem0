@@ -42,7 +42,9 @@ namespace GymManagmentBLL.Service.Classes
                 StartDate = ms.CreatedAt.ToString("MMM dd, yyyy"),
                 EndDate = ms.EndDate.ToString("MMM dd, yyyy"),
                 Status = ms.Status,
-                DaysRemaining = (int)(ms.EndDate - DateTime.Now).TotalDays
+                DaysRemaining = (int)(ms.EndDate - DateTime.Now).TotalDays,
+                SessionsRemaining = ms.SessionsRemaining,
+                IsSessionBased = ms.Plan?.IsSessionBased ?? false
             });
         }
 
@@ -61,7 +63,9 @@ namespace GymManagmentBLL.Service.Classes
                     StartDate = ms.CreatedAt.ToString("MMM dd, yyyy"),
                     EndDate = ms.EndDate.ToString("MMM dd, yyyy"),
                     Status = ms.Status,
-                    DaysRemaining = (int)(ms.EndDate - DateTime.Now).TotalDays
+                    DaysRemaining = (int)(ms.EndDate - DateTime.Now).TotalDays,
+                    SessionsRemaining = ms.SessionsRemaining,
+                    IsSessionBased = ms.Plan?.IsSessionBased ?? false
                 }),
                 TotalCount = pagedResult.TotalCount,
                 PageNumber = pagedResult.PageNumber,
@@ -102,7 +106,8 @@ namespace GymManagmentBLL.Service.Classes
                     MemberId = createMemberShip.MemberId,
                     PlanId = createMemberShip.PlanId,
                     CreatedAt = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(plan.DurationDays)
+                    EndDate = DateTime.Now.AddDays(plan.DurationDays),
+                    SessionsRemaining = plan.IsSessionBased ? plan.SessionCount : null
                 };
 
                 await _unitOfWork.MemberShipRepository.AddAsync(memberShip);
@@ -248,7 +253,9 @@ namespace GymManagmentBLL.Service.Classes
                 StartDate = membership.CreatedAt.ToString("MMM dd, yyyy"),
                 EndDate = membership.EndDate.ToString("MMM dd, yyyy"),
                 Status = membership.Status,
-                DaysRemaining = (int)(membership.EndDate - DateTime.Now).TotalDays
+                DaysRemaining = (int)(membership.EndDate - DateTime.Now).TotalDays,
+                SessionsRemaining = membership.SessionsRemaining,
+                IsSessionBased = membership.Plan?.IsSessionBased ?? false
             };
         }
     }

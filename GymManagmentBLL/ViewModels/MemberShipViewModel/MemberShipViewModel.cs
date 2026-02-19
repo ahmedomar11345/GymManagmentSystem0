@@ -16,6 +16,8 @@ namespace GymManagmentBLL.ViewModels.MemberShipViewModel
         public string EndDate { get; set; } = null!;
         public string Status { get; set; } = null!;
         public int DaysRemaining { get; set; }
+        public int? SessionsRemaining { get; set; }
+        public bool IsSessionBased { get; set; }
         public string? MemberPhoto { get; set; }
     }
 }

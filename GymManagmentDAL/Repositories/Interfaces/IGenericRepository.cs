@@ -10,8 +10,8 @@ namespace GymManagmentDAL.Repositories.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity, new()
     {
-        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? condition = null);
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null);
+        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? condition = null, params Expression<Func<TEntity, object>>[] includes);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null, params Expression<Func<TEntity, object>>[] includes);
         
         PagedResult<TEntity> GetPaged(
             int pageNumber, 

@@ -4,6 +4,7 @@ using GymManagmentBLL.ViewModels.MemberSessionViewModel;
 using GymManagmentDAL.Entities;
 using GymManagmentDAL.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
+using GymManagmentBLL.Service.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +18,21 @@ namespace GymManagmentBLL.Service.Classes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<MemberSessionService> _logger;
+        private readonly IEmailService _emailService;
+        private readonly IGymSettingsService _gymSettingsService;
 
-        public MemberSessionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<MemberSessionService> logger)
+        public MemberSessionService(
+            IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            ILogger<MemberSessionService> logger,
+            IEmailService emailService,
+            IGymSettingsService gymSettingsService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _emailService = emailService;
+            _gymSettingsService = gymSettingsService;
         }
 
         public async Task<IEnumerable<SessionForBookingViewModel>> GetUpcomingSessionsAsync()
@@ -72,10 +82,19 @@ namespace GymManagmentBLL.Service.Classes
                 }
 
                 // 2. Active Membership Check
-                var hasActivePlan = await _unitOfWork.MemberShipRepository.HasActiveMembershipAsync(createBooking.MemberId);
-                if (!hasActivePlan) 
+                var activeMembership = await _unitOfWork.MemberShipRepository.GetActiveMembershipWithPlanByMemberIdAsync(createBooking.MemberId);
+                if (activeMembership == null) 
                 {
                     return (false, "Member does not have an active membership plan.");
+                }
+
+                // 2b. Session Credit Check
+                if (activeMembership.Plan.IsSessionBased)
+                {
+                    if (activeMembership.SessionsRemaining <= 0)
+                    {
+                        return (false, "Insufficient session credits. Please renew your membership.");
+                    }
                 }
 
                 if (await _unitOfWork.MemberSessionRepository.IsAlreadyBookedAsync(createBooking.MemberId, createBooking.SessionId)) 
@@ -101,6 +120,14 @@ namespace GymManagmentBLL.Service.Classes
                 var success = await _unitOfWork.SaveChangesAsync() > 0;
                 if (success) 
                 {
+                    // 3. Deduct session credit if applicable (only for confirmed bookings)
+                    if (booking.Status == GymManagmentDAL.Entities.Enums.BookingStatus.Confirmed && activeMembership.Plan.IsSessionBased)
+                    {
+                        activeMembership.SessionsRemaining--;
+                        _unitOfWork.MemberShipRepository.Update(activeMembership);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+
                     return (true, booking.Status == GymManagmentDAL.Entities.Enums.BookingStatus.Waitlisted 
                         ? "Session is full. You have been added to the waitlist." 
                         : "Member enrolled successfully.");
@@ -136,6 +163,18 @@ namespace GymManagmentBLL.Service.Classes
                 
                 var success = await _unitOfWork.SaveChangesAsync() > 0;
 
+                // Refund session credit if applicable
+                if (success && wasConfirmed)
+                {
+                    var activeMembership = await _unitOfWork.MemberShipRepository.GetActiveMembershipWithPlanByMemberIdAsync(memberId);
+                    if (activeMembership != null && activeMembership.Plan.IsSessionBased)
+                    {
+                        activeMembership.SessionsRemaining++;
+                        _unitOfWork.MemberShipRepository.Update(activeMembership);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+                }
+
                 // Auto-promote from Waitlist if a confirmed spot was opened
                 if (success && wasConfirmed)
                 {
@@ -150,7 +189,35 @@ namespace GymManagmentBLL.Service.Classes
                         _unitOfWork.MemberSessionRepository.Update(nextInWaitlist);
                         await _unitOfWork.SaveChangesAsync();
                         
-                        // TODO: Send Email Notification to nextInWaitlist.Member
+                        // Send Email Notification to promoted member
+                        try 
+                        {
+                            var member = await _unitOfWork.MemberRepository.GetByIdAsync(nextInWaitlist.MemberId);
+                            if (member != null)
+                            {
+                                var gymSettings = await _gymSettingsService.GetSettingsAsync();
+                                var category = await _unitOfWork.GetRepository<Category>().GetByIdAsync(session.CategoryId);
+                                string sessionName = $"{category?.CategoryName} - {session.Description}";
+
+                                string emailBody = EmailTemplates.WaitlistPromotion(
+                                    member.Name,
+                                    gymSettings.GymName,
+                                    gymSettings.Phone,
+                                    gymSettings.Address,
+                                    gymSettings.Email,
+                                    sessionName,
+                                    session.StartDate,
+                                    true, // Assuming Arabic for now as per project theme
+                                    gymSettings.LogoUrl
+                                );
+
+                                await _emailService.SendEmailAsync(member.Email, "تأكيد الحجز من قائمة الانتظار - " + sessionName, emailBody);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Failed to send waitlist promotion email for member {MemberId}", nextInWaitlist.MemberId);
+                        }
                     }
                 }
 

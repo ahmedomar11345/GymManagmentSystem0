@@ -127,7 +127,7 @@ namespace GymManagmentBLL.Service.Classes
                         
                         bool isArabic = createMember.SendInArabic;
                         var gymSettings = await _gymSettingsService.GetSettingsAsync();
-                        string welcomeTemplate = EmailTemplates.MemberQRCodeWithCID(createMember.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, qrContentId, isArabic);
+                        string welcomeTemplate = EmailTemplates.MemberQRCodeWithCID(createMember.Name, gymSettings.GymName, gymSettings.Phone, gymSettings.Address, gymSettings.Email, qrContentId, isArabic, logoUrl: gymSettings.LogoUrl);
                         await _emailService.SendEmailWithImageAsync(
                             createMember.Email, 
                             isArabic ? "مرحباً بك! كود الدخول الخاص بك" : "Welcome! Your Access Code", 
@@ -155,7 +155,8 @@ namespace GymManagmentBLL.Service.Classes
                                 gymSettings.Phone,
                                 gymSettings.Address,
                                 gymSettings.Email,
-                                isArabic
+                                isArabic,
+                                gymSettings.LogoUrl
                             );
                             await _emailService.SendEmailAsync(createMember.Email, isArabic ? "إيصال تفعيل الاشتراك" : "Membership Activation Receipt", receiptTemplate);
                         }
@@ -412,7 +413,8 @@ namespace GymManagmentBLL.Service.Classes
                         gymSettings.Email,
                         qrContentId, 
                         true, 
-                        "لقد تم تحديث رمز الدخول الخاص بك لدواعي الأمان. يرجى استخدام الرمز الجديد من الآن فصاعداً."
+                        "لقد تم تحديث رمز الدخول الخاص بك لدواعي الأمان. يرجى استخدام الرمز الجديد من الآن فصاعداً.",
+                        gymSettings.LogoUrl
                     );
 
                     await _emailService.SendEmailWithImageAsync(
@@ -445,8 +447,26 @@ namespace GymManagmentBLL.Service.Classes
         {
             var progress = _mapper.Map<HealthProgress>(progressVm);
             if (progress.ProgressDate == default) progress.ProgressDate = DateTime.Now;
-            
+
+            // 1. Calculate BMI automatically (Weight in kg / (Height in m)^2)
+            if (progress.Height > 0)
+            {
+                var heightInMeters = progress.Height / 100;
+                progress.BMI = progress.Weight / (heightInMeters * heightInMeters);
+            }
+
+            // 2. Add historical record
             await _unitOfWork.GetRepository<HealthProgress>().AddAsync(progress);
+
+            // 3. Update Member's Current Health Record (Sync)
+            var member = await _unitOfWork.MemberRepository.GetWithDetailsAsync(progress.MemberId);
+            if (member?.HealthRecord != null)
+            {
+                member.HealthRecord.Weight = progress.Weight;
+                member.HealthRecord.UpdatedAt = DateTime.Now;
+                _unitOfWork.MemberRepository.Update(member);
+            }
+
             return await _unitOfWork.SaveChangesAsync() > 0;
         }
         #endregion

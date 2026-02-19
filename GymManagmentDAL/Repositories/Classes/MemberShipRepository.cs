@@ -72,6 +72,15 @@ namespace GymManagmentDAL.Repositories.Classes
             return await _dbContext.MemberShips.AnyAsync(ms => ms.MemberId == memberId && ms.EndDate >= now.Date);
         }
 
+        public async Task<MemberShip?> GetActiveMembershipWithPlanByMemberIdAsync(int memberId)
+        {
+            var now = DateTime.Now;
+            return await _dbContext.MemberShips
+                .Include(ms => ms.Plan)
+                .OrderByDescending(ms => ms.CreatedAt)
+                .FirstOrDefaultAsync(ms => ms.MemberId == memberId && ms.EndDate >= now.Date);
+        }
+
         public async Task<bool> AnyActiveWithPlanIdAsync(int planId)
         {
             var now = DateTime.Now;
