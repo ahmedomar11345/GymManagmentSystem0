@@ -212,6 +212,15 @@ namespace GymManagmentDAL.Data.Context
         public DbSet<HealthProgress> HealthProgresses { get; set; }
         public DbSet<WalkInBooking> WalkInBookings { get; set; }
         public DbSet<WalkInSession> WalkInSessions { get; set; }
+
+        // Store Module
+        public DbSet<StoreCategory> StoreCategories { get; set; }
+        public DbSet<StoreProduct> StoreProducts { get; set; }
+        public DbSet<StoreProductImage> StoreProductImages { get; set; }
+        public DbSet<Sale> Sales { get; set; }
+        public DbSet<SaleItem> SaleItems { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<StockAdjustment> StockAdjustments { get; set; }
         #endregion
     }
 }

@@ -1,0 +1,166 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.SaleDetailsViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["SalesHistory"];
+    string? from   = ViewBag.From;
+    string? to     = ViewBag.To;
+    string? search = ViewBag.Search;
+}
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-info bg-opacity-10 text-info">
+                <i class="fas fa-history fs-5"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["SalesHistory"]</h2>
+                <p class="text-secondary mb-0 small">@Model.Count() @Localizer["TotalSales"]</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="CreateSale" class="btn btn-success rounded-pill px-4 fw-bold">
+                <i class="fas fa-plus me-1"></i>@Localizer["NewSale"]
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick filter buttons -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+           class="btn btn-sm rounded-pill @(from == DateTime.Today.ToString("yyyy-MM-dd") && to == DateTime.Today.ToString("yyyy-MM-dd") ? "btn-primary" : "btn-outline-primary")">
+            <i class="fas fa-sun me-1"></i>@Localizer["Today"]
+        </a>
+        <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")"
+           class="btn btn-sm rounded-pill btn-outline-secondary">
+            @Localizer["Yesterday"]
+        </a>
+        <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+           class="btn btn-sm rounded-pill btn-outline-secondary">
+            @Localizer["Last7Days"]
+        </a>
+        <a asp-action="SalesHistory" asp-route-from="@(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("yyyy-MM-dd"))" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+           class="btn btn-sm rounded-pill btn-outline-secondary">
+            @Localizer["ThisMonth"]
+        </a>
+        <a asp-action="SalesHistory" class="btn btn-sm rounded-pill btn-outline-danger ms-auto">
+            <i class="fas fa-times me-1"></i>@Localizer["Reset"]
+        </a>
+    </div>
+
+    <!-- Date + search filter panel -->
+    <div class="premium-card p-3 mb-4">
+        <form method="get" asp-action="SalesHistory" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">@Localizer["DateFrom"]</label>
+                <input type="date" name="from" value="@from" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">@Localizer["DateTo"]</label>
+                <input type="date" name="to" value="@to" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">@Localizer["SearchCustomer"]</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" name="search" value="@search" class="form-control" placeholder="@Localizer["SearchCustomerPlaceholder"]" />
+                </div>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-pill flex-grow-1">
+                    <i class="fas fa-filter me-1"></i>@Localizer["Filter"]
+                </button>
+            </div>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="premium-card p-5 text-center text-secondary">
+            <i class="fas fa-receipt fa-3x mb-3 opacity-25"></i>
+            <p class="mb-0">@Localizer["NoSalesInRange"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="premium-card overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="small text-secondary fw-normal px-4 py-3">#</th>
+                            <th class="small text-secondary fw-normal">@Localizer["Date"]</th>
+                            <th class="small text-secondary fw-normal">@Localizer["Customer"]</th>
+                            <th class="small text-secondary fw-normal">@Localizer["Items"]</th>
+                            <th class="small text-secondary fw-normal">@Localizer["PaymentMethod"]</th>
+                            <th class="small text-secondary fw-normal text-end">@Localizer["Total"]</th>
+                            <th class="small text-secondary fw-normal text-end">@Localizer["Profit"]</th>
+                            <th class="small text-secondary fw-normal text-center">@Localizer["Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sale in Model)
+                        {
+                            <tr class="sale-row" style="cursor:pointer;" onclick="window.location='@Url.Action("SaleDetails", new { id = sale.Id })'">
+                                <td class="px-4 fw-semibold text-secondary">#@sale.Id</td>
+                                <td>
+                                    <div class="fw-semibold small">@sale.SaleDate.ToString("dd MMM yyyy")</div>
+                                    <div class="text-secondary" style="font-size:.72rem;">@sale.SaleDate.ToString("hh:mm tt")</div>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(sale.MemberName))
+                                    {
+                                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">
+                                            <i class="fas fa-id-card me-1"></i>@sale.MemberName
+                                        </span>
+                                    }
+                                    else if (!string.IsNullOrEmpty(sale.CustomerName))
+                                    {
+                                        <span>@sale.CustomerName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-secondary small">@Localizer["WalkIn"]</span>
+                                    }
+                                </td>
+                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill">@sale.Items.Count @Localizer["Items"]</span></td>
+                                <td>
+                                    @{
+                                        var (pmIcon, pmColor, pmLabel) = sale.PaymentMethod switch {
+                                            GymManagmentDAL.Entities.Enums.PaymentMethod.InstaPay => ("fas fa-mobile-alt", "primary", Localizer["InstaPay"].Value),
+                                            GymManagmentDAL.Entities.Enums.PaymentMethod.VodafoneCash => ("fas fa-sim-card", "danger", Localizer["VodafoneCash"].Value),
+                                            _ => ("fas fa-money-bill-wave", "success", Localizer["Cash"].Value)
+                                        };
+                                    }
+                                    <span class="badge bg-@pmColor bg-opacity-10 text-@pmColor rounded-pill">
+                                        <i class="@pmIcon me-1"></i>@pmLabel
+                                    </span>
+                                </td>
+                                <td class="text-end fw-bold text-success">@sale.NetTotal.ToString("N2")</td>
+                                <td class="text-end fw-bold text-primary">@sale.TotalProfit.ToString("N2")</td>
+                                <td class="text-center" onclick="event.stopPropagation()">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a asp-action="SaleDetails" asp-route-id="@sale.Id" class="btn btn-outline-primary btn-sm rounded-pill">
+                                            <i class="fas fa-eye me-1"></i>@Localizer["View"]
+                                        </a>
+                                        <form asp-action="VoidSale" method="post" id="void_@sale.Id">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@sale.Id" />
+                                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
+                                                onclick="confirmSubmit(document.getElementById('void_@sale.Id'), '@Localizer["VoidSale"]', '@Localizer["VoidSaleConfirm"]', 'warning')">
+                                                <i class="fas fa-ban"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

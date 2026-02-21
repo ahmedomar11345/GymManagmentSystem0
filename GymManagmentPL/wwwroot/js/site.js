@@ -67,10 +67,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 let noResultsRow = tbody.querySelector('.no-results-row');
                 if (visibleRows === 0 && searchTerm !== "") {
                     if (!noResultsRow) {
+                        const config = document.getElementById('global-notifications')?.dataset;
+                        const noResultsText = config?.noResults || 'No matching records found';
                         const colCount = table.querySelectorAll('thead th').length || 5;
                         noResultsRow = document.createElement('tr');
                         noResultsRow.className = 'no-results-row';
-                        noResultsRow.innerHTML = `<td colspan="${colCount}" class="text-center py-5 text-muted">No matching records found</td>`;
+                        noResultsRow.innerHTML = `<td colspan="${colCount}" class="text-center py-5 text-muted">${noResultsText}</td>`;
                         tbody.appendChild(noResultsRow);
                     }
                 } else if (noResultsRow) {
@@ -215,7 +217,7 @@ function createNotificationItem(n) {
                 </div>
             </a>
             <button class="btn btn-link text-danger border-0 px-3 d-flex align-items-center justify-content-center" 
-                    title="Delete" onclick="deleteNotificationOnly(${n.id}, event)">
+                    title="${document.getElementById('global-notifications')?.dataset?.delete || 'Delete'}" onclick="deleteNotificationOnly(${n.id}, event)">
                 <i class="fas fa-trash-alt fa-xs"></i>
             </button>
         </div>
@@ -253,9 +255,10 @@ async function deleteNotificationOnly(id, event, silent = false) {
             loadNotifications();
             return true;
         } else {
-            console.error('Failed to delete notification', response.status);
-            if (!silent) alert('Failed to delete notification. Please refresh.');
-            return false;
+            if (!silent) {
+                const config = document.getElementById('global-notifications')?.dataset;
+                alert(config?.failedNotification || 'Failed to delete notification. Please refresh.');
+            }
         }
     } catch (error) {
         console.error('Error deleting notification:', error);

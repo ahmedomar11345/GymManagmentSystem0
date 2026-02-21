@@ -1,0 +1,531 @@
+@model GymManagmentBLL.ViewModels.StoreViewModel.CreateSaleViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["NewSale"];
+    var products   = ViewBag.Products as List<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel> ?? new();
+    var members    = ViewBag.Members as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+}
+
+<style>
+    /* POS Table Overrides */
+    #productTable tr { transition: background 0.15s ease; }
+    #productTable tr.has-qty { background: rgba(59,130,246,0.06); }
+    [data-theme="dark"] #productTable tr.has-qty { background: rgba(59,130,246,0.12); }
+
+    .qty-group { display: flex; align-items: center; gap: 4px; justify-content: center; }
+    .qty-group .btn-qty {
+        width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--glass-border);
+        background: var(--body-bg); color: var(--text-main);
+        font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: all 0.15s ease;
+    }
+    .qty-group .btn-qty:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+    .qty-input-sm {
+        width: 56px !important; text-align: center; border-radius: 8px;
+        background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border);
+    }
+
+    /* Order summary panel */
+    .order-summary-panel  { position: sticky; top: 1rem; }
+    .order-line { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--glass-border); font-size: .87rem; }
+    .order-line:last-child { border: none; }
+    .pay-radio-card {
+        border: 2px solid var(--glass-border); border-radius: 12px; padding: 10px 14px; cursor: pointer;
+        transition: all 0.2s; display: flex; align-items: center; gap: 8px; flex: 1;
+        background: var(--card-bg); color: var(--text-main);
+    }
+    .pay-radio-card:has(input:checked) {
+        border-color: var(--primary-color); background: rgba(59,130,246,0.08);
+    }
+    [data-theme="dark"] .pay-radio-card:has(input:checked) { background: rgba(59,130,246,0.18); }
+    .pay-radio-card input { display: none; }
+    .pay-radio-card span { font-size:.85rem; font-weight:600; }
+
+    /* Product search */
+    #productSearch:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+</style>
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-success bg-opacity-10 text-success">
+                <i class="fas fa-cash-register fs-5"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["NewSale"]</h2>
+                <p class="text-secondary mb-0 small">@Localizer["NewSaleDesc"]</p>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="CreateSale" method="post" id="saleForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="PrintReceipt" id="printReceiptHidden" value="true" />
+
+        <div class="row g-4">
+            <!-- ── Left: Products ───────────────────────────────── -->
+            <div class="col-lg-8">
+
+                <!-- Quick POS Shortcuts -->
+                @{
+                    var quickItems = products.Where(p => 
+                        p.CategoryName?.ToLower().Contains("water") == true || 
+                        p.CategoryName?.ToLower().Contains("drink") == true || 
+                        p.CategoryName?.ToLower().Contains("coffee") == true ||
+                        p.CategoryName?.ToLower().Contains("snack") == true || 
+                        p.IsLowStock == false).Take(6).ToList();
+                }
+                @if (quickItems.Any())
+                {
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <h6 class="small fw-bold text-secondary text-uppercase mb-0"><i class="fas fa-bolt text-warning me-1"></i>@Localizer["QuickSale"]</h6>
+                            <small class="text-secondary opacity-75">@Localizer["OneTapSell"]</small>
+                        </div>
+                        <div class="row g-2">
+                            @foreach (var qp in quickItems)
+                            {
+                                <div class="col-4 col-md-2">
+                                    <button type="button" class="btn btn-glass w-100 p-2 text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center border-0 shadow-sm"
+                                            onclick="changeQty(@qp.Id, 1); this.classList.add('bg-primary', 'text-white'); setTimeout(()=>this.classList.remove('bg-primary', 'text-white'), 200)">
+                                        @if (!string.IsNullOrEmpty(qp.ImageUrl))
+                                        {
+                                            <img src="@qp.ImageUrl" class="rounded-pill mb-1" style="width:32px;height:32px;object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-box text-primary mb-1"></i>
+                                        }
+                                        <div class="x-small fw-bold text-truncate w-100">@(isRtl && !string.IsNullOrEmpty(qp.NameAr) ? qp.NameAr : qp.Name)</div>
+                                        <div class="small fw-black text-primary mt-1">@qp.EffectivePrice.ToString("N0")</div>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Barcode + Search -->
+                <div class="premium-card p-4 mb-4">
+                    <div class="row g-2">
+                        <!-- Barcode -->
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">
+                                <i class="fas fa-barcode me-1 text-primary"></i>@Localizer["BarcodeScanner"]
+                                <span class="badge bg-secondary ms-1">@Localizer["Optional"]</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="text" id="barcodeInput" class="form-control" placeholder="@Localizer["ScanOrTypeBarcode"]" autocomplete="off" />
+                                <button type="button" class="btn btn-outline-primary" onclick="lookupBarcode()" title="Search">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="form-text small">@Localizer["BarcodeScannerHelper"]</div>
+                        </div>
+                        <!-- Product Search -->
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">
+                                <i class="fas fa-search me-1 text-info"></i>@Localizer["SearchProducts"]
+                            </label>
+                            <input type="text" id="productSearch" class="form-control" placeholder="@Localizer["SearchProductPlaceholder"]" oninput="filterProducts(this.value)" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="mb-4">
+                    <div class="d-flex gap-2 overflow-auto pb-2 no-scrollbar" style="white-space:nowrap;">
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 active" onclick="setCategoryFilter(null, this)">@Localizer["All"]</button>
+                        @if (ViewBag.Categories is List<GymManagmentBLL.ViewModels.StoreViewModel.StoreCategoryViewModel> cats)
+                        {
+                            @foreach (var cat in cats.OrderBy(c => c.Name))
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="setCategoryFilter(@cat.Id, this)">@cat.Name</button>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <!-- Product Table -->
+                <div class="premium-card p-0 overflow-hidden">
+                    <div class="p-3 border-bottom d-flex align-items-center justify-content-between" style="border-color:var(--glass-border)!important;">
+                        <h6 class="fw-bold mb-0"><i class="fas fa-boxes text-primary me-2"></i>@Localizer["SelectProducts"]</h6>
+                        <span class="badge bg-primary bg-opacity-10 text-primary" id="productCountBadge">@products.Count @Localizer["Products"]</span>
+                    </div>
+                    <div style="max-height:580px;overflow-y:auto;">
+                        <table class="table table-hover align-middle mb-0" id="posTable">
+                            <thead class="sticky-top" style="background:var(--card-bg);z-index:10;">
+                                <tr>
+                                    <th class="small text-secondary fw-semibold ps-3">@Localizer["Product"]</th>
+                                    <th class="small text-secondary fw-semibold text-end">@Localizer["Price"]</th>
+                                    <th class="small text-secondary fw-semibold text-center">@Localizer["Stock"]</th>
+                                    <th class="small text-secondary fw-semibold text-center" style="min-width:160px;">@Localizer["Quantity"]</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTable">
+                                @for (int i = 0; i < products.Count; i++)
+                                {
+                                    var p = products[i];
+                                    var stockClass = p.IsLowStock ? "bg-warning text-dark" : "bg-success bg-opacity-10 text-success";
+                                    <tr id="row_@p.Id"
+                                        data-product-id="@p.Id"
+                                        data-price="@p.EffectivePrice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                        data-name="@p.Name.ToLower()"
+                                        data-sku="@(p.SKU?.ToLower() ?? "")"
+                                        data-category-id="@p.StoreCategoryId"
+                                        class="product-row">
+                                        <td class="ps-3">
+                                            <div class="d-flex align-items-center gap-2">
+                                                @if (!string.IsNullOrEmpty(p.ImageUrl))
+                                                {
+                                                    <img src="@p.ImageUrl" alt="" class="rounded-2" style="width:40px;height:40px;object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="rounded-2 bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                                                        <i class="fas fa-box text-secondary small"></i>
+                                                    </div>
+                                                }
+                                                <div>
+                                                    <div class="fw-semibold small">@p.Name</div>
+                                                    <div class="text-secondary" style="font-size:.72rem;">@p.CategoryName</div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="Items[@i].StoreProductId" value="@p.Id" />
+                                        </td>
+                                        <td class="text-end fw-bold small">
+                                            @if (p.IsOnSale)
+                                            {
+                                                <span class="text-danger">@p.SalePrice!.Value.ToString("N2")</span>
+                                                <br /><small class="text-decoration-line-through text-secondary">@p.Price.ToString("N2")</small>
+                                            }
+                                            else
+                                            {
+                                                <span>@p.Price.ToString("N2")</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge @stockClass small rounded-pill">@p.StockQuantity</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="qty-group">
+                                                <button type="button" class="btn-qty" onclick="changeQty(@p.Id, -1)">−</button>
+                                                <input type="number" name="Items[@i].Quantity"
+                                                       id="qty_@p.Id" min="0" max="@p.StockQuantity"
+                                                       class="form-control form-control-sm qty-input qty-input-sm"
+                                                       data-product-id="@p.Id" value="0"
+                                                       oninput="updateTotal(); highlightRow(@p.Id)" />
+                                                <button type="button" class="btn-qty" onclick="changeQty(@p.Id, 1)">+</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div id="noProductsMsg" class="text-center text-secondary py-4 d-none">
+                            <i class="fas fa-search opacity-25 fa-2x mb-2"></i>
+                            <div class="small">@Localizer["NoProductsFound"]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Right: Order Summary ──────────────────────────── -->
+            <div class="col-lg-4">
+                <div class="premium-card p-4 order-summary-panel">
+                    <h6 class="fw-bold mb-4"><i class="fas fa-receipt text-success me-2"></i>@Localizer["OrderSummary"]</h6>
+
+                    <!-- Customer -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["CustomerName"]</label>
+                        <input asp-for="CustomerName" class="form-control" placeholder="@Localizer["WalkInCustomer"]" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">@Localizer["OrSelectMember"]</label>
+                        <select asp-for="MemberId" asp-items="members" class="form-select">
+                            <option value="">-- @Localizer["WalkIn"] --</option>
+                        </select>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold mb-2">@Localizer["PaymentMethod"] *</label>
+                        <div class="d-flex gap-2">
+                            <label class="pay-radio-card">
+                                <input type="radio" name="PaymentMethod" value="0" checked />
+                                <i class="fas fa-money-bill-wave text-success"></i>
+                                <span>@Localizer["Cash"]</span>
+                            </label>
+                            <label class="pay-radio-card">
+                                <input type="radio" name="PaymentMethod" value="1" />
+                                <i class="fas fa-mobile-alt text-primary"></i>
+                                <span>@Localizer["InstaPay"]</span>
+                            </label>
+                            <label class="pay-radio-card">
+                                <input type="radio" name="PaymentMethod" value="2" />
+                                <i class="fas fa-sim-card text-danger"></i>
+                                <span>@Localizer["VodafoneCash"]</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Discount -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">@Localizer["DiscountAmount"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <input asp-for="DiscountAmount" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" oninput="updateTotal()" />
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">@Localizer["Notes"]</label>
+                        <textarea asp-for="Notes" class="form-control" rows="2" placeholder="@Localizer["SaleNotesPlaceholder"]"></textarea>
+                    </div>
+
+                    <!-- Live Order Lines -->
+                    <div id="orderLines" class="mb-3 d-none">
+                        <div class="small fw-semibold text-secondary mb-2 text-uppercase">@Localizer["Items"]</div>
+                        <div id="orderLinesList"></div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="rounded-3 p-3 mb-4 text-center" style="background:rgba(59,130,246,.08);border:1.5px solid rgba(59,130,246,.2);">
+                        <div id="subtotalLine" class="small text-secondary d-none">@Localizer["Subtotal"]: <span id="subtotalDisplay">0.00</span></div>
+                        <div id="discountLine" class="small text-danger d-none">@Localizer["Discount"]: -<span id="discountDisplay">0.00</span></div>
+                        <div class="small text-secondary mt-1">@Localizer["TotalAmount"]</div>
+                        <div class="fw-black fs-2 text-primary" id="totalDisplay">0.00</div>
+                        <div class="small text-secondary" id="itemsCountDisplay">0 @Localizer["Items"]</div>
+                    </div>
+
+                    <button type="button" class="btn btn-success rounded-pill w-100 fw-bold py-2 shadow-sm fs-5" id="submitSaleBtn" disabled
+                            onclick="openConfirmModal()">
+                        <i class="fas fa-check-circle me-2"></i>@Localizer["ConfirmSale"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Confirm Sale Modal -->
+<div class="modal fade" id="confirmSaleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold"><i class="fas fa-check-circle text-success me-2"></i>@Localizer["ConfirmSale"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-secondary small mb-3">@Localizer["ConfirmSaleModalDesc"]</p>
+                <div id="modalOrderLines" class="mb-3" style="max-height:220px;overflow-y:auto;"></div>
+                <div class="rounded-3 p-3 text-center mb-3" style="background:rgba(59,130,246,.07);border:1.5px solid rgba(59,130,246,.2);">
+                    <div id="modalDiscountLine" class="small text-danger mb-1 d-none"></div>
+                    <div class="small text-secondary">@Localizer["TotalAmount"]</div>
+                    <div class="fw-black fs-3 text-primary" id="modalTotalDisplay">0.00</div>
+                </div>
+
+                <div class="form-check form-switch d-flex align-items-center justify-content-center gap-2 mb-2 p-0">
+                    <input class="form-check-input ms-0" type="checkbox" id="autoPrintReceipt" checked>
+                    <label class="form-check-label fw-bold small text-secondary" for="autoPrintReceipt">
+                        <i class="fas fa-print me-1"></i> @Localizer["PrintReceiptAfterConfirm"]
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                <button type="button" class="btn btn-success rounded-pill px-5 fw-bold" onclick="finalizeSale()">
+                    <i class="fas fa-check me-2"></i>@Localizer["ConfirmSale"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const priceLookup = {};
+        const nameLookup  = {};
+        let currentCategoryId = null;
+
+        document.querySelectorAll('.product-row').forEach(row => {
+            const pid = row.dataset.productId;
+            priceLookup[pid] = parseFloat(row.dataset.price || 0);
+            nameLookup[pid]  = row.querySelector('.fw-semibold.small')?.textContent?.trim() ?? '';
+        });
+
+        // ── Auto-add from URL ──────────────────────────
+        window.addEventListener('load', () => {
+            const selectedPid = '@ViewBag.SelectedProductId';
+            if (selectedPid) {
+                changeQty(selectedPid, 1);
+                const row = document.getElementById('row_' + selectedPid);
+                if (row) row.scrollIntoView({ behavior:'smooth', block:'center' });
+            }
+            document.getElementById('barcodeInput').focus();
+        });
+
+        // ── Qty helpers ─────────────────────────────────
+        function changeQty(pid, delta) {
+            const inp = document.getElementById('qty_' + pid);
+            if (!inp) return;
+            const max = parseInt(inp.max) || 999;
+            const current = parseInt(inp.value) || 0;
+            if (delta > 0 && current >= max) {
+                Swal.fire({ icon: 'warning', title: '@Html.Raw(Localizer["OperationFailed"])', text: '@Html.Raw(Localizer["ProductOutOfStock"])' });
+                return;
+            }
+            inp.value = Math.max(0, Math.min(max, current + delta));
+            inp.dispatchEvent(new Event('input'));
+            highlightRow(pid);
+        }
+
+        function highlightRow(pid) {
+            const row = document.getElementById('row_' + pid);
+            if (!row) return;
+            const qty = parseInt(document.getElementById('qty_' + pid)?.value) || 0;
+            row.classList.toggle('has-qty', qty > 0);
+        }
+
+        // ── Total & order lines ──────────────────────────
+        function updateTotal() {
+            let subtotal = 0, count = 0;
+            const lines = [];
+
+            document.querySelectorAll('.qty-input').forEach(inp => {
+                const qty = parseInt(inp.value) || 0;
+                if (qty > 0) {
+                    const pid  = inp.dataset.productId;
+                    const pr   = priceLookup[pid] || 0;
+                    const name = nameLookup[pid] || '?';
+                    subtotal += qty * pr;
+                    count++;
+                    lines.push({ name, qty, pr });
+                }
+            });
+
+            const discount = parseFloat(document.getElementById('DiscountAmount')?.value || 0);
+            const total = Math.max(0, subtotal - discount);
+
+            document.getElementById('totalDisplay').textContent = total.toFixed(2);
+            document.getElementById('itemsCountDisplay').textContent = count + ' @Html.Raw(Localizer["Items"])';
+            document.getElementById('submitSaleBtn').disabled = count === 0;
+
+            if (discount > 0) {
+                document.getElementById('subtotalLine').classList.remove('d-none');
+                document.getElementById('discountLine').classList.remove('d-none');
+                document.getElementById('subtotalDisplay').textContent = subtotal.toFixed(2);
+                document.getElementById('discountDisplay').textContent = discount.toFixed(2);
+            } else {
+                document.getElementById('subtotalLine').classList.add('d-none');
+                document.getElementById('discountLine').classList.add('d-none');
+            }
+
+            const linesDiv = document.getElementById('orderLines');
+            const listDiv  = document.getElementById('orderLinesList');
+            if (count > 0) {
+                linesDiv.classList.remove('d-none');
+                listDiv.innerHTML = lines.map(l =>
+                    `<div class="order-line"><span>${l.name} × ${l.qty}</span><strong>${(l.qty * l.pr).toFixed(2)}</strong></div>`
+                ).join('');
+            } else {
+                linesDiv.classList.add('d-none');
+            }
+        }
+
+        // ── Product filtering ──────────────────────
+        function setCategoryFilter(cid, btn) {
+            currentCategoryId = cid;
+            document.querySelectorAll('.btn-outline-primary').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterProducts(document.getElementById('productSearch').value);
+        }
+
+        function filterProducts(q) {
+            q = q.toLowerCase().trim();
+            let visible = 0;
+            document.querySelectorAll('.product-row').forEach(row => {
+                const nameMatch = !q || row.dataset.name.includes(q);
+                const skuMatch  = !q || row.dataset.sku.includes(q);
+                const catMatch  = currentCategoryId === null || parseInt(row.dataset.categoryId) === currentCategoryId;
+                const show = (nameMatch || skuMatch) && catMatch;
+                row.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+            document.getElementById('noProductsMsg').classList.toggle('d-none', visible > 0);
+        }
+
+        // ── Barcode scanner ────────────────────────────
+        document.getElementById('barcodeInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); lookupBarcode(); }
+        });
+
+        async function lookupBarcode() {
+            const code = document.getElementById('barcodeInput').value.trim();
+            if (!code) return;
+            try {
+                const res = await fetch(`/Store/GetProductByBarcode?barcode=${encodeURIComponent(code)}`);
+                if (!res.ok) { 
+                    Swal.fire({ icon: 'error', title: '@Html.Raw(Localizer["OperationFailed"])', text: '@Html.Raw(Localizer["BarcodeNotFound"])' });
+                    return; 
+                }
+                const prod = await res.json();
+                changeQty(prod.id, 1);
+                const row = document.getElementById('row_' + prod.id);
+                if (row) {
+                    row.style.display = ''; // Ensure scanned product is visible
+                    row.scrollIntoView({ behavior:'smooth', block:'nearest' });
+                }
+                document.getElementById('barcodeInput').value = '';
+            } catch {}
+        }
+
+        function openConfirmModal() {
+            // Populate modal with current order lines
+            const lines = [];
+            let subtotal = 0;
+            document.querySelectorAll('.qty-input').forEach(inp => {
+                const qty = parseInt(inp.value) || 0;
+                if (qty > 0) {
+                    const pid  = inp.dataset.productId;
+                    const pr   = priceLookup[pid] || 0;
+                    const name = nameLookup[pid] || '?';
+                    subtotal += qty * pr;
+                    lines.push({ name, qty, pr });
+                }
+            });
+            const discount = parseFloat(document.getElementById('DiscountAmount')?.value || 0);
+            const total = Math.max(0, subtotal - discount);
+
+            document.getElementById('modalTotalDisplay').textContent = total.toFixed(2);
+            const discLine = document.getElementById('modalDiscountLine');
+            if (discount > 0) {
+                discLine.textContent = `@Html.Raw(Localizer["Discount"]): -${discount.toFixed(2)}  (@Html.Raw(Localizer["Subtotal"]): ${subtotal.toFixed(2)})`;
+                discLine.classList.remove('d-none');
+            } else {
+                discLine.classList.add('d-none');
+            }
+            document.getElementById('modalOrderLines').innerHTML = lines.map(l =>
+                `<div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color:var(--glass-border)!important;">
+                    <span class="small">${l.name} <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1">×${l.qty}</span></span>
+                    <strong class="small">${(l.qty * l.pr).toFixed(2)}</strong>
+                </div>`
+            ).join('');
+
+            new bootstrap.Modal(document.getElementById('confirmSaleModal')).show();
+        }
+
+        function finalizeSale() {
+            // Sync checkbox to hidden field
+            const chk = document.getElementById('autoPrintReceipt');
+            document.getElementById('printReceiptHidden').value = chk.checked;
+            document.getElementById('saleForm').submit();
+        }
+    </script>
+}

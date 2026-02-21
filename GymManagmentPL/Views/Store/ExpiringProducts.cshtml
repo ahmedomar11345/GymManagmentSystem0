@@ -1,0 +1,82 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["ExpiringProducts"];
+}
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="icon-shape bg-warning bg-opacity-10 text-warning">
+            <i class="fas fa-clock fs-5"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-0">@Localizer["ExpiringProducts"]</h2>
+            <p class="text-secondary mb-0 small">@Localizer["ExpiringProductsDesc"]</p>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="premium-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead>
+                        <tr>
+                            <th class="px-3 text-secondary fw-normal">@Localizer["Product"]</th>
+                            <th class="text-secondary fw-normal">@Localizer["Category"]</th>
+                            <th class="text-center text-secondary fw-normal">@Localizer["Stock"]</th>
+                            <th class="text-center text-secondary fw-normal">@Localizer["ExpiryDate"]</th>
+                            <th class="text-center text-secondary fw-normal">@Localizer["DaysLeft"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model)
+                        {
+                            var daysLeft = (p.ExpiryDate!.Value - DateTime.Today).Days;
+                            var urgency = daysLeft <= 7 ? "danger" : daysLeft <= 14 ? "warning" : "info";
+                            <tr>
+                                <td class="px-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (!string.IsNullOrEmpty(p.ImageUrl))
+                                        {
+                                            <img src="@p.ImageUrl" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:8px;" />
+                                        }
+                                        else
+                                        {
+                                            <div style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;" class="d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-box text-secondary"></i>
+                                            </div>
+                                        }
+                                        <span class="fw-semibold">@p.Name</span>
+                                    </div>
+                                </td>
+                                <td>@p.CategoryName</td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill">@p.StockQuantity</span>
+                                </td>
+                                <td class="text-center">@p.ExpiryDate.Value.ToString("dd MMM yyyy")</td>
+                                <td class="text-center">
+                                    <span class="badge bg-@urgency bg-opacity-15 text-@urgency rounded-pill px-3 fw-bold">
+                                        @daysLeft @Localizer["Days"]
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="premium-card p-5 text-center">
+            <i class="fas fa-check-circle text-success fs-1 mb-3 d-block"></i>
+            <h5 class="fw-bold">@Localizer["NoExpiringProducts"]</h5>
+            <p class="text-secondary mb-0">@Localizer["NoExpiringProductsDesc"]</p>
+        </div>
+    }
+</div>

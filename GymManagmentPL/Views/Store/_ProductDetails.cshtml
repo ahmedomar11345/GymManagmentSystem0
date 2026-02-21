@@ -1,0 +1,190 @@
+@model GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+    var settings = await (ViewContext.HttpContext.RequestServices.GetService<GymManagmentBLL.Service.Interfaces.IGymSettingsService>()!).GetSettingsAsync();
+    var currency = settings?.Currency ?? "EGP";
+}
+
+<style>
+    .quick-view-container {
+        --qv-card-bg: #ffffff;
+        --qv-text-main: #1a1e23;
+        --qv-text-muted: #64748b;
+        --qv-border: #e2e8f0;
+        --qv-info-bg: #f8fafc;
+    }
+
+    [data-theme='dark'] .quick-view-container {
+        --qv-card-bg: #1e293b;
+        --qv-text-main: #f1f5f9;
+        --qv-text-muted: #94a3b8;
+        --qv-border: rgba(255,255,255,0.1);
+        --qv-info-bg: rgba(255,255,255,0.03);
+    }
+
+    .qv-info-card {
+        background: var(--qv-card-bg);
+        border: 1px solid var(--qv-border);
+        transition: all 0.3s ease;
+    }
+
+    [data-theme='dark'] .qv-info-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    }
+
+    .qv-image-box {
+        background: var(--qv-info-bg);
+        border-radius: 24px;
+        border: 1px solid var(--qv-border);
+    }
+</style>
+
+<div class="quick-view-container row g-0">
+    <!-- Image Section -->
+    <div class="col-md-6 order-md-2 p-3">
+        <div class="qv-image-box p-0 overflow-hidden h-100" style="min-height: 450px;">
+            @{
+                var hasGallery = Model.GalleryImages != null && Model.GalleryImages.Any();
+                var hasMainImage = !string.IsNullOrEmpty(Model.ImageUrl);
+            }
+
+            @if (hasGallery || hasMainImage)
+            {
+                <div id="productGallery" class="carousel slide h-100" data-bs-ride="carousel">
+                    @if (hasGallery && Model.GalleryImages.Count > 0)
+                    {
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#productGallery" data-bs-slide-to="0" class="active"></button>
+                            @for (int i = 0; i < Model.GalleryImages.Count; i++)
+                            {
+                                <button type="button" data-bs-target="#productGallery" data-bs-slide-to="@(i + 1)"></button>
+                            }
+                        </div>
+                    }
+
+                    <div class="carousel-inner h-100">
+                        <!-- Main Image -->
+                        <div class="carousel-item active h-100">
+                            @if (hasMainImage)
+                            {
+                                <img src="@Model.ImageUrl" class="d-block w-100 h-100" style="object-fit: contain; padding: 5px;" alt="@Model.Name">
+                            }
+                            else if (hasGallery)
+                            {
+                                <img src="@Model.GalleryImages.First().ImageUrl" class="d-block w-100 h-100" style="object-fit: contain; padding: 5px;" alt="@Model.Name">
+                            }
+                        </div>
+
+                        <!-- Gallery Images -->
+                        @if (hasGallery)
+                        {
+                            @foreach (var img in Model.GalleryImages)
+                            {
+                                if (img.ImageUrl == Model.ImageUrl) continue;
+                                <div class="carousel-item h-100">
+                                    <img src="@img.ImageUrl" class="d-block w-100 h-100" style="object-fit: contain; padding: 5px;" alt="@Model.Name">
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    @if (hasGallery && Model.GalleryImages.Count > 0)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productGallery" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productGallery" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center p-5 opacity-25 d-flex flex-column align-items-center justify-content-center h-100">
+                    <i class="fas fa-box fa-5x mb-3" style="color: var(--qv-text-muted);"></i>
+                    <p class="mb-0 fw-bold" style="color: var(--qv-text-main);">@Localizer["NoImage"]</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Data Section -->
+    <div class="col-md-6 order-md-1 p-4 d-flex flex-column">
+        <div class="mb-auto">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <h2 class="fw-black mb-0 mb-2" style="font-size: 1.85rem; color: var(--qv-text-main);">
+                    @(isRtl && !string.IsNullOrEmpty(Model.NameAr) ? Model.NameAr : Model.Name)
+                </h2>
+                <div class="badge @(Model.IsAvailable ? "bg-success" : "bg-danger") bg-opacity-10 @(Model.IsAvailable ? "text-success" : "text-danger") rounded-pill px-3 py-2 fw-bold shadow-sm">
+                    <i class="fas @(Model.IsAvailable ? "fa-check-circle" : "fa-times-circle") me-1"></i>
+                    @(Model.IsAvailable ? Localizer["Available"] : Localizer["OutofStock"])
+                </div>
+            </div>
+            
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-bold">
+                    <i class="fas fa-tag me-2 opacity-75"></i>@(isRtl && !string.IsNullOrEmpty(Model.CategoryNameAr) ? Model.CategoryNameAr : Model.CategoryName)
+                </span>
+                @if (!string.IsNullOrEmpty(Model.SKU))
+                {
+                    <span class="badge rounded-pill px-3 py-2 fw-bold shadow-none" style="background: var(--qv-info-bg); border: 1px solid var(--qv-border); color: var(--qv-text-muted);">
+                        SKU: <span class="ms-1 fw-bold" style="color: var(--qv-text-main);">@Model.SKU</span>
+                    </span>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="mb-4">
+                    <h6 class="text-uppercase x-small fw-black mb-2 opacity-50" style="color: var(--qv-text-muted); letter-spacing: 0.5px;">@Localizer["Description"]</h6>
+                    <p style="color: var(--qv-text-main); line-height: 1.6; opacity: 0.85;">@Model.Description</p>
+                </div>
+            }
+
+            <div class="row g-3 mb-4">
+                <div class="col-6">
+                    <div class="qv-info-card p-3 rounded-4 border-start border-primary border-4 shadow-sm h-100 d-flex flex-column justify-content-center">
+                        <span class="x-small fw-black text-uppercase mb-1 opacity-50" style="color: var(--qv-text-muted);">@Localizer["Price"]</span>
+                        <div class="h3 fw-black mb-0 text-primary">@currency @Model.EffectivePrice.ToString("N0")</div>
+                        @if (Model.IsOnSale)
+                        {
+                            <div class="small text-decoration-line-through opacity-40" style="color: var(--qv-text-muted);">@Model.Price.ToString("N0")</div>
+                        }
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="qv-info-card p-3 rounded-4 border-start border-success border-4 shadow-sm h-100 d-flex flex-column justify-content-center">
+                        <span class="x-small fw-black text-uppercase mb-1 opacity-50" style="color: var(--qv-text-muted);">@Localizer["Stock"]</span>
+                        <div class="h3 fw-black mb-0 @(Model.IsLowStock ? "text-warning" : "text-success")">@Model.StockQuantity</div>
+                        <div class="x-small opacity-60" style="color: var(--qv-text-muted);">@Localizer["UnitsInHand"]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-auto">
+            <div class="row g-2">
+                @if (Model.ExpiryDate.HasValue)
+                {
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-pill mb-2" style="background: var(--qv-info-bg); border: 1px solid var(--qv-border);">
+                            <i class="fas fa-calendar-alt text-primary opacity-75"></i>
+                            <span class="small fw-bold" style="color: var(--qv-text-muted);">@Localizer["Expires"]: <span style="color: var(--qv-text-main);" class="ms-1">@Model.ExpiryDate.Value.ToString("dd MMM yyyy")</span></span>
+                        </div>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.SupplierName))
+                {
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-pill" style="background: var(--qv-info-bg); border: 1px solid var(--qv-border);">
+                            <i class="fas fa-truck-moving text-primary opacity-75"></i>
+                            <span class="small fw-bold text-truncate" style="color: var(--qv-text-muted);">@Localizer["Supplier"]: <span style="color: var(--qv-text-main);" class="ms-1">@Model.SupplierName</span></span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

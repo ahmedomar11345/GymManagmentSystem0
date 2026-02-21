@@ -1,0 +1,391 @@
+@model GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["AddProduct"];
+    var categoryList = ViewBag.CategoryList as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+}
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-primary bg-opacity-10 text-primary">
+                <i class="fas fa-plus-circle fs-5"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["AddProduct"]</h2>
+                <p class="text-secondary mb-0 small">@Localizer["AddProductDesc"]</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <form asp-action="CreateProduct" method="post" enctype="multipart/form-data" id="createProductForm">
+                @Html.AntiForgeryToken()
+
+                <!-- Basic Info -->
+                <div class="premium-card p-4 mb-4">
+                    <p class="fw-bold small text-secondary text-uppercase mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>@Localizer["BasicInfo"]</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label small fw-semibold">@Localizer["ProductName"] *</label>
+                            <input asp-for="Name" class="form-control" placeholder="@Localizer["ProductNamePlaceholder"]" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NameAr" class="form-label small fw-semibold">@Localizer["ProductNameAr"]</label>
+                            <input asp-for="NameAr" class="form-control" placeholder="@Localizer["ProductNameArPlaceholder"]" dir="rtl" />
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Description" class="form-label small fw-semibold">@Localizer["Description"]</label>
+                            <textarea asp-for="Description" class="form-control" rows="2" placeholder="@Localizer["ProductDescriptionPlaceholder"]"></textarea>
+                        </div>
+                        <!-- Category Selection & Presets -->
+                        <div class="col-12">
+                            <div class="premium-card p-4 mb-4">
+                                <label class="form-label small fw-bold text-secondary text-uppercase mb-3"><i class="fas fa-tags me-1"></i>@Localizer["CategoryPresets"]</label>
+                                <div class="d-flex flex-wrap gap-2 mb-4">
+                                    @foreach (var cat in ViewBag.Categories)
+                                    {
+                                        <button type="button" class="btn btn-glass btn-sm rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2"
+                                                onclick="selectCategory(@cat.Id, '@cat.Icon')">
+                                            <i class="@cat.Icon"></i>
+                                            <span>@(isRtl && !string.IsNullOrEmpty(cat.NameAr) ? cat.NameAr : cat.Name)</span>
+                                        </button>
+                                    }
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="StoreCategoryId" class="form-label small fw-semibold">@Localizer["Category"] <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0" id="selectedCatIcon"><i class="fas fa-box"></i></span>
+                                            <select asp-for="StoreCategoryId" id="categorySelect" class="form-select border-start-0" required
+                                                    onchange="updateCatIcon(this)">
+                                                <option value="">@Localizer["SelectCategory"]</option>
+                                                @foreach (var cat in ViewBag.Categories)
+                                                {
+                                                    <option value="@cat.Id" data-icon="@cat.Icon">
+                                                        @(isRtl && !string.IsNullOrEmpty(cat.NameAr) ? cat.NameAr : cat.Name)
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="StoreCategoryId" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="SKU" class="form-label small fw-semibold">@Localizer["SKU"]</label>
+                                        <div class="input-group">
+                                            <input asp-for="SKU" id="skuInput" class="form-control bg-light" placeholder="@Localizer["SKUPlaceholder"]" readonly />
+                                            <button type="button" class="btn btn-outline-secondary" onclick="generateSKU()" title="@Localizer["GenerateSKU"]">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="SKU" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Barcode" class="form-label small fw-semibold">
+                                @Localizer["Barcode"] <span class="badge bg-secondary ms-1 small">@Localizer["Optional"]</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                                <input asp-for="Barcode" class="form-control" placeholder="6901234567890" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing & Stock -->
+                <div class="premium-card p-4 mb-4">
+                    <p class="fw-bold small text-secondary text-uppercase mb-3"><i class="fas fa-tag me-2 text-success"></i>@Localizer["PricingAndStock"]</p>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="CostPrice" class="form-label small fw-semibold">@Localizer["CostPrice"] *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
+                                <input asp-for="CostPrice" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" required id="costPriceInput" oninput="updateMarginPreview()" />
+                            </div>
+                            <div id="marginPreview" class="mt-2 d-none">
+                                <div class="d-flex align-items-center gap-2 p-2 rounded-2" style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.15);">
+                                    <i class="fas fa-chart-line text-primary small"></i>
+                                    <span class="small fw-semibold">@Localizer["ExpectedProfitPerUnit"]: <span id="profitPerUnitDisplay" class="text-primary">0.00</span></span>
+                                    <span class="badge rounded-pill" id="marginBadge">0.0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Price" class="form-label small fw-semibold">@Localizer["SalePrice"] *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                <input asp-for="Price" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" required id="priceInput" oninput="updateMarginPreview()" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="SalePrice" class="form-label small fw-semibold">
+                                @Localizer["SalePrice"] <span class="badge bg-danger ms-1 small">@Localizer["Optional"]</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                <input asp-for="SalePrice" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" id="salePriceInput" oninput="updateMarginPreview()" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="SupplierId" class="form-label small fw-semibold">@Localizer["Supplier"]</label>
+                            <select asp-for="SupplierId" asp-items="ViewBag.SupplierList" class="form-select">
+                                <option value="">-- @Localizer["SelectSupplier"] --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ExpiryDate" class="form-label small fw-semibold">
+                                @Localizer["ExpiryDate"] <span class="badge bg-warning text-dark ms-1 small">@Localizer["Optional"]</span>
+                            </label>
+                            <input asp-for="ExpiryDate" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="StockQuantity" class="form-label small fw-semibold">@Localizer["StockQuantity"] *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-boxes"></i></span>
+                                <input asp-for="StockQuantity" type="number" min="0" class="form-control" placeholder="0" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LowStockThreshold" class="form-label small fw-semibold">@Localizer["LowStockThreshold"]</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-exclamation-triangle"></i></span>
+                                <input asp-for="LowStockThreshold" type="number" min="0" class="form-control" placeholder="5" />
+                            </div>
+                            <div class="form-text small">@Localizer["LowStockThresholdHelper"]</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsAvailable" class="form-check-input" type="checkbox" checked />
+                                <label asp-for="IsAvailable" class="form-check-label fw-semibold">@Localizer["IsAvailable"]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">@Localizer["Cancel"]</a>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">
+                        <i class="fas fa-save me-2"></i>@Localizer["SaveProduct"]
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Image Upload Sidebar -->
+        <div class="col-lg-4">
+            <div class="premium-card p-4 sticky-top" style="top:1rem;">
+                <p class="fw-bold small text-secondary text-uppercase mb-3"><i class="fas fa-image me-2 text-warning"></i>@Localizer["ProductImage"]</p>
+                <div id="imgPreviewWrap" class="text-center mb-3 d-none">
+                    <img id="imgPreview" src="" alt="" class="rounded-3 shadow w-100" style="max-height:200px;object-fit:cover;" />
+                </div>
+                <div id="imgPlaceholder" class="d-flex align-items-center justify-content-center bg-secondary bg-opacity-10 rounded-3 mb-3" style="height:150px;">
+                    <div class="text-center text-secondary">
+                        <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                        <div class="small">@Localizer["ClickToUploadImage"]</div>
+                    </div>
+                </div>
+                <!-- Image Source Toggle -->
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">@Localizer["ImageSource"]</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="imgSource" id="srcDevice" checked onchange="toggleImgSource('device')">
+                        <label class="btn btn-outline-primary btn-sm rounded-start-pill" for="srcDevice">
+                            <i class="fas fa-desktop me-1"></i> @Localizer["FromDevice"]
+                        </label>
+                        <input type="radio" class="btn-check" name="imgSource" id="srcUrl" onchange="toggleImgSource('url')">
+                        <label class="btn btn-outline-primary btn-sm rounded-end-pill" for="srcUrl">
+                            <i class="fas fa-link me-1"></i> @Localizer["FromUrl"]
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Device Upload -->
+                <div id="divDeviceUpload">
+                    <label for="ImageFile" class="btn btn-outline-secondary w-100 rounded-pill mb-2">
+                        <i class="fas fa-upload me-2"></i>@Localizer["UploadImage"]
+                    </label>
+                    <input type="file" id="ImageFile" name="ImageFile" form="createProductForm" class="d-none" accept=".jpg,.jpeg,.png,.webp,.gif"
+                           onchange="previewImg(this)" />
+                </div>
+
+                <!-- URL Input -->
+                <div id="divUrlInput" class="d-none">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="fas fa-link"></i></span>
+                        <input type="url" id="ImageUrl" name="ImageUrl" form="createProductForm" class="form-control" 
+                               placeholder="https://example.com/image.jpg" oninput="validateAndPreviewUrl(this)" />
+                    </div>
+                    <div id="urlError" class="text-danger small d-none mb-2">
+                        <i class="fas fa-exclamation-triangle me-1"></i> @Localizer["UrlInvalid"]
+                    </div>
+                    <div class="small text-muted opacity-75 mb-2" style="font-size: .7rem;">
+                        <i class="fas fa-shield-alt me-1"></i> @Localizer["AllowedDomainsTip"]
+                    </div>
+                </div>
+
+                <!-- Additional Gallery Images -->
+                <div class="mt-4 pt-3 border-top">
+                    <p class="fw-bold small text-secondary text-uppercase mb-3"><i class="fas fa-images me-2 text-primary"></i>@Localizer["GalleryImages"]</p>
+                    <div class="mb-3">
+                        <label for="AdditionalImages" class="btn btn-glass btn-sm w-100 rounded-pill">
+                            <i class="fas fa-plus-circle me-2"></i>@Localizer["AddMoreImages"]
+                        </label>
+                        <input type="file" id="AdditionalImages" name="AdditionalImages" form="createProductForm" class="d-none" accept=".jpg,.jpeg,.png,.webp,.gif" multiple />
+                        <div class="form-text x-small text-muted mt-2">@Localizer["MultipleImagesNote"]</div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info small mt-3 mb-0">
+                    <i class="fas fa-info-circle me-1"></i> @Localizer["ImageUploadNote"]
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function selectCategory(id, icon) {
+            const select = document.getElementById('categorySelect');
+            select.value = id;
+            updateCatIcon(select);
+            
+            // Smart Defaults based on category name
+            const catName = select.options[select.selectedIndex].text.toLowerCase();
+            const thresholdInp = document.querySelector('input[name="LowStockThreshold"]');
+            if (thresholdInp) {
+                if (catName.includes('water') || catName.includes('drink')) thresholdInp.value = 10;
+                else if (catName.includes('supp')) thresholdInp.value = 3;
+                else thresholdInp.value = 5;
+            }
+
+            // Auto-generate SKU when category changes
+            generateSKU();
+        }
+
+        function updateCatIcon(select) {
+            const icon = select.options[select.selectedIndex]?.dataset.icon || 'fas fa-box';
+            document.getElementById('selectedCatIcon').innerHTML = `<i class="${icon}"></i>`;
+        }
+
+        function generateSKU() {
+            const catSelect = document.getElementById('categorySelect');
+            let catPrefix = 'PR';
+            if (catSelect.selectedIndex > 0) {
+                const text = catSelect.options[catSelect.selectedIndex].text.trim();
+                // Get first two letters, or just first if one word
+                catPrefix = text.substring(0, 2).replace(/\s/g, '').toUpperCase();
+            }
+            const random = Math.floor(1000 + Math.random() * 9000);
+            const timestamp = new Date().getTime().toString().slice(-3); // Add time part for more uniqueness
+            const sku = `${catPrefix}-${random}${timestamp}`;
+            document.getElementById('skuInput').value = sku;
+        }
+
+        // Auto-generate on load if empty
+        window.addEventListener('load', () => {
+            const skuInp = document.getElementById('skuInput');
+            if (skuInp && !skuInp.value) {
+                generateSKU();
+            }
+        });
+
+        function previewImg(input) {
+            if (!input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('imgPreview').src = e.target.result;
+                document.getElementById('imgPreviewWrap').classList.remove('d-none');
+                document.getElementById('imgPlaceholder').classList.add('d-none');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function updateMarginPreview() {
+            const cost  = parseFloat(document.getElementById('costPriceInput')?.value || 0);
+            const sale  = parseFloat(document.getElementById('salePriceInput')?.value || 0);
+            const price = parseFloat(document.getElementById('priceInput')?.value || 0);
+            const effectivePrice = sale > 0 ? sale : price;
+            if (cost <= 0 || effectivePrice <= 0) {
+                document.getElementById('marginPreview').classList.add('d-none');
+                return;
+            }
+            const profit = effectivePrice - cost;
+            const margin = (profit / effectivePrice) * 100;
+            document.getElementById('marginPreview').classList.remove('d-none');
+            document.getElementById('profitPerUnitDisplay').textContent = profit.toFixed(2);
+            const badge = document.getElementById('marginBadge');
+            badge.textContent = margin.toFixed(1) + '%';
+            badge.className = 'badge rounded-pill ' + (margin >= 30 ? 'bg-success' : margin >= 10 ? 'bg-warning text-dark' : 'bg-danger');
+        }
+
+        // ── Image Source Management ─────────────────────
+        function toggleImgSource(src) {
+            const divDevice = document.getElementById('divDeviceUpload');
+            const divUrl = document.getElementById('divUrlInput');
+            const fileInp = document.getElementById('ImageFile');
+            const urlInp = document.getElementById('ImageUrl');
+            
+            if (src === 'device') {
+                divDevice.classList.remove('d-none');
+                divUrl.classList.add('d-none');
+                urlInp.value = '';
+                urlInp.dispatchEvent(new Event('input'));
+            } else {
+                divDevice.classList.add('d-none');
+                divUrl.classList.remove('d-none');
+                fileInp.value = '';
+                resetPreview();
+            }
+        }
+
+        function resetPreview() {
+            document.getElementById('imgPreview').src = '';
+            document.getElementById('imgPreviewWrap').classList.add('d-none');
+            document.getElementById('imgPlaceholder').classList.remove('d-none');
+        }
+
+        const whiteList = ['unsplash.com', 'images.unsplash.com', 'imgur.com', 'i.imgur.com', 'cloudinary.com', 'res.cloudinary.com', 'googleusercontent.com', 'google.com', 'images.pexels.com', 'pixabay.com'];
+
+        function validateAndPreviewUrl(input) {
+            const url = input.value.trim();
+            const errorDiv = document.getElementById('urlError');
+            
+            if (!url) {
+                errorDiv.classList.add('d-none');
+                resetPreview();
+                return;
+            }
+
+            try {
+                const parsedUrl = new URL(url);
+                const domain = parsedUrl.hostname.toLowerCase();
+                const isAllowed = whiteList.some(d => domain === d || domain.endsWith('.' + d));
+
+                if (isAllowed) {
+                    errorDiv.classList.add('d-none');
+                    document.getElementById('imgPreview').src = url;
+                    document.getElementById('imgPreviewWrap').classList.remove('d-none');
+                    document.getElementById('imgPlaceholder').classList.add('d-none');
+                } else {
+                    errorDiv.classList.remove('d-none');
+                    resetPreview();
+                }
+            } catch (e) {
+                errorDiv.classList.remove('d-none');
+                resetPreview();
+            }
+        }
+    </script>
+}

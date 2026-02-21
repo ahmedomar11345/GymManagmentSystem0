@@ -1,0 +1,312 @@
+@model GymManagmentBLL.ViewModels.StoreViewModel.StoreReportViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@inject GymManagmentBLL.Service.Interfaces.IGymSettingsService GymService
+@{
+    ViewData["Title"] = Localizer["FinancialReports"];
+    var settings = await GymService.GetSettingsAsync();
+    var currency = settings?.Currency ?? "EGP";
+    var from = Model.FromDate.ToString("yyyy-MM-dd");
+    var to = Model.ToDate.ToString("yyyy-MM-dd");
+    var margin = Model.TotalRevenue > 0 ? (Model.TotalProfit / Model.TotalRevenue) * 100 : 0;
+}
+
+<style>
+    /* Premium Look & Print Optimizations */
+    .report-stat-card {
+        border: none;
+        border-radius: 16px;
+        padding: 1.5rem;
+        background: var(--card-bg);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+        height: 100%;
+    }
+    .report-stat-card:hover { transform: translateY(-5px); }
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+    }
+
+    .period-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 2px solid transparent;
+    }
+    .period-btn.active {
+        background: var(--primary-color) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    }
+
+    /* Print Styles */
+    @@media print {
+        @@page { size: A4; margin: 1cm; }
+        body { background: white !important; color: #1a1a1a !important; }
+        .no-print, .btn-back, .period-selector, .main-header, .sidebar, .sidebar-bottom { display: none !important; }
+        .main-content { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+        .premium-card, .report-stat-card { 
+            border: 1px solid #dee2e6 !important; 
+            box-shadow: none !important; 
+            background: white !important;
+            break-inside: avoid;
+        }
+        .text-primary, .text-success, .text-info { color: #1a1a1a !important; font-weight: bold !important; }
+        .table { width: 100% !important; border-collapse: collapse !important; }
+        .table th { background-color: #f8f9fa !important; color: #333 !important; border: 1px solid #dee2e6 !important; }
+        .table td { border: 1px solid #dee2e6 !important; }
+        .print-only-header { display: block !important; margin-bottom: 2rem; border-bottom: 2px solid #333; padding-bottom: 1rem; }
+        .row > * { width: 100% !important; }
+        .col-lg-2 { width: 33.33% !important; float: left; margin-bottom: 10px; }
+        .col-lg-7, .col-lg-5 { width: 100% !important; }
+    }
+    .print-only-header { display: none; }
+</style>
+
+<div class="animate-fade-in">
+    <div class="d-flex align-items-center justify-content-between mb-4 no-print">
+        <div class="d-flex align-items-center gap-3">
+            <a asp-action="Index" class="btn btn-icon btn-light rounded-circle shadow-sm">
+                <i class="fas fa-chevron-left text-primary"></i>
+            </a>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["FinancialReports"]</h2>
+                <div class="badge bg-primary bg-opacity-10 text-primary px-3 rounded-pill mt-1">
+                    <i class="far fa-calendar-alt me-1"></i> @from @Localizer["To"].Value.ToLower() @to
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="fas fa-print me-2"></i> @Localizer["PrintReport"]
+            </button>
+        </div>
+    </div>
+
+    <!-- Period Selection & Filters -->
+    <div class="premium-card p-4 mb-4 no-print border-0 shadow-sm">
+        <div class="row g-4 align-items-end">
+            <div class="col-xl-7 col-lg-12">
+                <label class="form-label small fw-bold text-secondary text-uppercase mb-3 d-block">
+                    <i class="fas fa-history me-2"></i>@Localizer["ReportPeriod"]
+                </label>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-action="FinancialReports" asp-route-from="@DateTime.Today.ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       class="btn btn-light period-btn @(from == DateTime.Today.ToString("yyyy-MM-dd") && to == DateTime.Today.ToString("yyyy-MM-dd") ? "active" : "")">
+                        @Localizer["Today"]
+                    </a>
+                    <a asp-action="FinancialReports" asp-route-from="@(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("yyyy-MM-dd"))" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       class="btn btn-light period-btn @(from == new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("yyyy-MM-dd") ? "active" : "")">
+                        @Localizer["Monthly"]
+                    </a>
+                    <a asp-action="FinancialReports" asp-route-from="@(new DateTime(DateTime.Today.Year, 1, 1).ToString("yyyy-MM-dd"))" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       class="btn btn-light period-btn @(from == new DateTime(DateTime.Today.Year, 1, 1).ToString("yyyy-MM-dd") ? "active" : "")">
+                        @Localizer["Yearly"]
+                    </a>
+                    <div class="vr mx-1"></div>
+                    <a asp-action="FinancialReports" asp-route-from="@DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       class="btn btn-light period-btn">@Localizer["Last7Days"]</a>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-12">
+                <form method="get" asp-action="FinancialReports" class="row g-2">
+                    <div class="col-5">
+                        <label class="form-label x-small fw-bold">@Localizer["From"]</label>
+                        <input type="date" name="from" value="@from" class="form-control rounded-pill border-0 bg-light shadow-none px-3" />
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label x-small fw-bold">@Localizer["To"]</label>
+                        <input type="date" name="to" value="@to" class="form-control rounded-pill border-0 bg-light shadow-none px-3" />
+                    </div>
+                    <div class="col-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary rounded-circle w-100 p-0 shadow-sm" style="height:38px;">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Only Header -->
+    <div class="print-only-header d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1">@settings?.GymName</h2>
+            <h4 class="text-secondary mb-0">@Localizer["FinancialReports"]</h4>
+        </div>
+        <div class="text-end">
+            <div class="fw-bold">@Localizer["Date"]: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+            <div class="text-secondary">@Localizer["ReportPeriod"]: @from @Localizer["To"].Value.ToLower() @to</div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="report-stat-card border-start border-success border-4 shadow-sm">
+                <div class="stat-icon bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="h4 fw-black mb-1">@currency @Model.TotalRevenue.ToString("N0")</div>
+                <div class="small text-secondary fw-bold text-uppercase">@Localizer["TotalRevenue"]</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="report-stat-card border-start border-primary border-4 shadow-sm">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="h4 fw-black mb-1">@currency @Model.TotalProfit.ToString("N0")</div>
+                <div class="small text-secondary fw-bold text-uppercase">@Localizer["NetProfit"]</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="report-stat-card border-start border-info border-4 shadow-sm">
+                <div class="stat-icon bg-info bg-opacity-10 text-info">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="h4 fw-black mb-1">@Model.SalesCount</div>
+                <div class="small text-secondary fw-bold text-uppercase">@Localizer["SalesCount"]</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="report-stat-card border-start border-warning border-4 shadow-sm">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="h4 fw-black mb-1">@margin.ToString("N1")%</div>
+                <div class="small text-secondary fw-bold text-uppercase">@Localizer["ProfitMargin"]</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="report-stat-card border-start border-danger border-4 shadow-sm">
+                <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                    <i class="fas fa-tag"></i>
+                </div>
+                <div class="h4 fw-black mb-1">@currency @Model.TotalDiscounts.ToString("N0")</div>
+                <div class="small text-secondary fw-bold text-uppercase">@Localizer["TotalDiscounts"]</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="report-stat-card border-start border-secondary border-4 shadow-sm">
+                <div class="stat-icon bg-secondary bg-opacity-10 text-secondary">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="h4 fw-black mb-1">@currency @Model.AvgOrderValue.ToString("N0")</div>
+                <div class="small text-secondary fw-bold text-uppercase">@Localizer["AvgOrderValue"]</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Top Products -->
+        <div class="col-lg-7">
+            <div class="premium-card border-0 shadow-sm overflow-hidden">
+                <div class="p-4 bg-light bg-opacity-50 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="fas fa-star text-warning me-2"></i>@Localizer["TopSellingProducts"]
+                    </h5>
+                    <i class="fas fa-ellipsis-v text-secondary opacity-50"></i>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 text-secondary x-small fw-black text-uppercase">@Localizer["Product"]</th>
+                                <th class="text-center x-small fw-black text-uppercase">@Localizer["QtySold"]</th>
+                                <th class="text-end x-small fw-black text-uppercase">@Localizer["TotalRevenue"]</th>
+                                <th class="text-end x-small fw-black text-uppercase px-4">@Localizer["NetProfit"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.TopProducts)
+                            {
+                                <tr>
+                                    <td class="px-4 py-3">
+                                        <div class="fw-bold text-dark">@(p.ProductName == "?" ? Localizer["DeletedProduct"].Value : p.ProductName)</div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary bg-opacity-10 text-dark rounded-pill">@p.TotalQuantity</span>
+                                    </td>
+                                    <td class="text-end fw-semibold">@currency @p.TotalRevenue.ToString("N2")</td>
+                                    <td class="text-end px-4">
+                                        <span class="fw-black text-primary">@currency @p.TotalProfit.ToString("N2")</span>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!Model.TopProducts.Any())
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center py-5 text-secondary">
+                                        <i class="fas fa-folder-open fa-2x mb-3 d-block opacity-20"></i>
+                                        @Localizer["NoDataAvailable"]
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Breakdown -->
+        <div class="col-lg-5">
+            <div class="premium-card border-0 shadow-sm overflow-hidden h-100">
+                <div class="p-4 bg-light bg-opacity-50">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="fas fa-chart-line text-info me-2"></i>@Localizer["DailyBreakdown"]
+                    </h5>
+                </div>
+                <div class="p-0">
+                    @if (Model.DailyBreakdown.Any())
+                    {
+                        <div class="table-responsive" style="max-height: 500px;">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light sticky-top">
+                                    <tr>
+                                        <th class="px-4 py-3 text-secondary x-small fw-black text-uppercase">@Localizer["Date"]</th>
+                                        <th class="text-center x-small fw-black text-uppercase">#</th>
+                                        <th class="text-end x-small fw-black text-uppercase px-4">@Localizer["NetProfit"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var d in Model.DailyBreakdown.OrderByDescending(x => x.Date))
+                                    {
+                                        <tr>
+                                            <td class="px-4 py-3">
+                                                <div class="fw-bold">@d.Date.ToString("dd MMM, yyyy")</div>
+                                                <div class="x-small text-secondary">@d.Date.ToString("dddd")</div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge bg-info bg-opacity-10 text-info">@d.OrderCount</span>
+                                            </td>
+                                            <td class="text-end px-4">
+                                                <div class="fw-black @(d.Profit >= 0 ? "text-success" : "text-danger")">
+                                                    @currency @d.Profit.ToString("N2")
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-5 text-center text-secondary">
+                            <i class="fas fa-calendar-times fa-2x mb-3 d-block opacity-20"></i>
+                            @Localizer["NoDataAvailable"]
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

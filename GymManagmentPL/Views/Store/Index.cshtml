@@ -1,0 +1,468 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Store"];
+    var categories = ViewBag.Categories as IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreCategoryViewModel> ?? Enumerable.Empty<GymManagmentBLL.ViewModels.StoreViewModel.StoreCategoryViewModel>();
+    var stats = ViewBag.Stats as GymManagmentBLL.ViewModels.StoreViewModel.StoreDashboardStatsViewModel;
+    int? selectedCat = ViewBag.CategoryId;
+    string? search = ViewBag.Search;
+    var settings = await (ViewContext.HttpContext.RequestServices.GetService<GymManagmentBLL.Service.Interfaces.IGymSettingsService>()!).GetSettingsAsync();
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+}
+
+@section Styles {
+    <style>
+        .btn-glass {
+            background: rgba(var(--bs-primary-rgb), 0.05);
+            color: var(--bs-body-color) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(var(--bs-primary-rgb), 0.1) !important;
+            transition: all 0.2s ease;
+        }
+        .btn-glass:hover {
+            background: rgba(var(--bs-primary-rgb), 0.12);
+            transform: translateY(-2px);
+        }
+        
+        [data-theme='dark'] .btn-glass {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f8f9fa !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme='dark'] .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        [data-theme='dark'] .bg-gradient-light {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.07) 100%) !important;
+        }
+        [data-theme='dark'] .text-secondary {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+        [data-theme='dark'] .premium-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        [data-theme='dark'] .dropdown-menu {
+            background-color: #1a1e23;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+        }
+        [data-theme='dark'] .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        [data-theme='dark'] .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+        [data-theme='dark'] .form-control, 
+        [data-theme='dark'] .form-select,
+        [data-theme='dark'] .input-group-text {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        [data-theme='dark'] .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        [data-theme='dark'] .form-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        [data-theme='dark'] .modal-content {
+            background-color: #1a1e23;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme='dark'] .card, [data-theme='dark'] .premium-card {
+            background-color: #1e293b !important;
+            color: #f8f9fa !important;
+        }
+        [data-theme='dark'] .text-dark {
+            color: #f8f9fa !important;
+        }
+        [data-theme='dark'] .bg-white {
+            background-color: #1e293b !important;
+        }
+        [data-theme='dark'] .bg-light {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+        [data-theme='dark'] .btn-light {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: transparent;
+            color: #fff;
+        }
+        [data-theme='dark'] .btn-light:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+    </style>
+}
+
+<div class="animate-fade-in">
+    <!-- Header Section -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-5">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-primary bg-opacity-10 text-primary shadow-sm" style="width: 54px; height: 54px;">
+                <i class="fas fa-store fs-4"></i>
+            </div>
+            <div>
+                <h1 class="h3 fw-bolder mb-0">@Localizer["Store"]</h1>
+                <p class="text-secondary mb-0 opacity-75">@Localizer["StoreDesc"]</p>
+            </div>
+        </div>
+        
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <a asp-action="FinancialReports" class="btn btn-glass border-0 rounded-pill px-3 shadow-sm">
+                <i class="fas fa-chart-line me-1 text-warning"></i> @Localizer["FinancialReports"]
+            </a>
+
+            <div class="dropdown">
+                <button class="btn btn-glass border-0 rounded-pill px-3 dropdown-toggle shadow-sm" data-bs-toggle="dropdown">
+                    <i class="fas fa-layer-group me-1 text-primary"></i> @Localizer["Manage"]
+                </button>
+                <ul class="dropdown-menu border-0 shadow-lg mt-2">
+                    <li><a asp-action="SalesHistory" class="dropdown-item py-2"><i class="fas fa-file-invoice-dollar me-2 text-success"></i>@Localizer["SalesHistory"]</a></li>
+                    <li><hr class="dropdown-divider opacity-50" /></li>
+                    <li><a asp-action="Categories" class="dropdown-item py-2"><i class="fas fa-tags me-2 text-warning"></i>@Localizer["Categories"]</a></li>
+                    <li><a asp-action="Suppliers" class="dropdown-item py-2"><i class="fas fa-truck-loading me-2 text-primary"></i>@Localizer["Suppliers"]</a></li>
+                    <li><hr class="dropdown-divider opacity-50" /></li>
+                    <li><a asp-action="StockAdjustments" class="dropdown-item py-2"><i class="fas fa-boxes-stacked me-2 text-info"></i>@Localizer["StockAdjustments"]</a></li>
+                    <li><a asp-action="ExpiringProducts" class="dropdown-item py-2"><i class="fas fa-clock me-2 text-danger"></i>@Localizer["ExpiringProducts"]</a></li>
+                </ul>
+            </div>
+            
+            <div class="vr mx-1 d-none d-md-block opacity-25" style="height: 20px;"></div>
+            
+            <a asp-action="CreateSale" class="btn btn-success rounded-pill px-3 fw-bold shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> @Localizer["NewSale"]
+            </a>
+            <a asp-action="CreateProduct" class="btn btn-primary rounded-pill px-3 fw-bold shadow-sm">
+                <i class="fas fa-box me-1"></i> @Localizer["AddProduct"]
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    @if (stats != null)
+    {
+        <div class="premium-card border-0 shadow-sm p-4 mb-5 overflow-hidden position-relative bg-white bg-opacity-50">
+            <div class="d-flex flex-nowrap align-items-center justify-content-between text-center overflow-auto no-scrollbar py-2" style="-ms-overflow-style: none; scrollbar-width: none;">
+                <style>
+                    .no-scrollbar::-webkit-scrollbar { display: none; }
+                    .stats-block { min-width: 120px; flex: 1; }
+                    .opacity-hover { transition: all 0.2s ease; }
+                    .opacity-hover:hover { opacity: 0.7; transform: translateY(-2px); }
+                </style>
+                <!-- Today Revenue -->
+                <div class="stats-block px-2">
+                    <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                       class="text-decoration-none d-flex flex-column align-items-center transition-all opacity-hover">
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["TodayRevenue"]</span>
+                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@settings.Currency @stats.TodayRevenue.ToString("N0")</div>
+                    </a>
+                </div>
+
+                <div class="vr bg-secondary opacity-50" style="height: 45px; width: 1.5px;"></div>
+
+                <!-- Month Revenue -->
+                <div class="stats-block px-2">
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["MonthRevenue"]</span>
+                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@settings.Currency @stats.MonthRevenue.ToString("N0")</div>
+                    </div>
+                </div>
+
+                <div class="vr bg-secondary opacity-50" style="height: 45px; width: 1.5px;"></div>
+
+                <!-- Month Profit -->
+                <div class="stats-block px-2">
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="badge bg-info bg-opacity-10 text-info rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["MonthProfit"]</span>
+                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@settings.Currency @stats.MonthProfit.ToString("N0")</div>
+                    </div>
+                </div>
+
+                <div class="vr bg-secondary opacity-50" style="height: 45px; width: 1.5px;"></div>
+
+                <!-- Sales Today -->
+                <div class="stats-block px-2">
+                    <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                       class="text-decoration-none d-flex flex-column align-items-center transition-all opacity-hover">
+                        <span class="badge bg-warning bg-opacity-10 text-warning-emphasis rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["SalesToday"]</span>
+                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@stats.TotalSalesToday</div>
+                    </a>
+                </div>
+
+                <div class="vr bg-secondary opacity-50" style="height: 45px; width: 1.5px;"></div>
+
+                <!-- Low Stock Alert -->
+                <div class="stats-block px-2">
+                    <a asp-action="LowStockProducts" class="text-decoration-none text-center transition-all d-flex flex-column align-items-center">
+                        <span class="badge @(stats.LowStockCount > 0 ? "bg-danger" : "bg-light") bg-opacity-10 @(stats.LowStockCount > 0 ? "text-danger" : "text-secondary") rounded-pill mb-2 px-3 py-1 x-small fw-bold">
+                            <i class="fas fa-exclamation-triangle me-1"></i> @Localizer["LowStock"]
+                        </span>
+                        <div class="h4 fw-bold mb-0 @(stats.LowStockCount > 0 ? "text-danger" : "text-dark")">@stats.LowStockCount</div>
+                    </a>
+                </div>
+
+                <div class="vr bg-secondary opacity-50" style="height: 45px; width: 1.5px;"></div>
+
+                <!-- Expiring Alert -->
+                <div class="stats-block px-2">
+                    <a asp-action="ExpiringProducts" class="text-decoration-none text-center transition-all d-flex flex-column align-items-center">
+                        <span class="badge @(stats.ExpiringCount > 0 ? "bg-warning" : "bg-light") bg-opacity-15 @(stats.ExpiringCount > 0 ? "text-warning-emphasis" : "text-secondary") rounded-pill mb-2 px-3 py-1 x-small fw-bold text-nowrap">
+                            <i class="fas fa-hourglass-half me-1"></i> @Localizer["Expiring"]
+                        </span>
+                        <div class="h4 fw-bold mb-0 @(stats.ExpiringCount > 0 ? "text-warning-emphasis" : "text-dark")">@stats.ExpiringCount</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Filter & Categories Section -->
+    <div class="row g-3 mb-4">
+        <!-- Unified Search Bar -->
+        <div class="col-12 col-xl-7">
+            <div class="premium-card p-2 shadow-sm border-0 bg-white">
+                <form method="get" asp-action="Index" class="row g-2 align-items-center">
+                    <div class="col-md-7">
+                        <div class="input-group input-group-merge border-0">
+                            <span class="input-group-text bg-transparent border-0 pe-0">
+                                <i class="fas fa-search text-secondary opacity-50"></i>
+                            </span>
+                            <input type="text" name="search" value="@search" class="form-control border-0 shadow-none ps-2" 
+                                   placeholder="@Localizer["SearchProductPlaceholder"]" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="categoryId" class="form-select border-0 shadow-none fw-semibold text-secondary small" onchange="this.form.submit()">
+                            <option value="">@Localizer["AllCategories"]</option>
+                            @foreach (var cat in categories)
+                            {
+                                <option value="@cat.Id" selected="@(selectedCat == cat.Id)">
+                                    @(isRtl && !string.IsNullOrEmpty(cat.NameAr) ? cat.NameAr : cat.Name)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-semibold shadow-sm">
+                            <i class="fas fa-search me-1"></i> @Localizer["Search"]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Tabs -->
+        <div class="col-12 col-xl-5 d-flex align-items-center justify-content-xl-end gap-2 overflow-auto pb-2 pb-xl-0 no-scrollbar">
+            <a asp-action="Index" class="btn @(selectedCat == null ? "btn-primary shadow-sm" : "btn-glass text-secondary") btn-sm rounded-pill px-3 py-2 fw-semibold transition-all d-flex align-items-center gap-2">
+                <i class="fas fa-th-large opacity-75"></i>
+                <span>@Localizer["All"]</span>
+            </a>
+            @foreach (var cat in categories.Where(c => selectedCat == null || c.Id != selectedCat))
+            {
+                <a asp-action="Index" asp-route-categoryId="@cat.Id"
+                   class="btn btn-glass text-secondary btn-sm rounded-pill px-3 py-2 fw-semibold transition-all d-flex align-items-center gap-2">
+                    <i class="@cat.Icon opacity-75"></i> 
+                    <span>@(isRtl && !string.IsNullOrEmpty(cat.NameAr) ? cat.NameAr : cat.Name)</span>
+                    <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary x-small">@cat.ProductCount</span>
+                </a>
+            }
+            @if (selectedCat != null)
+            {
+                var currentCat = categories.FirstOrDefault(c => c.Id == selectedCat);
+                if (currentCat != null)
+                {
+                    <a asp-action="Index" asp-route-categoryId="@currentCat.Id"
+                       class="btn btn-primary shadow-sm btn-sm rounded-pill px-3 py-2 fw-semibold transition-all d-flex align-items-center gap-2 order-first">
+                        <i class="@currentCat.Icon opacity-75"></i> 
+                        <span>@(isRtl && !string.IsNullOrEmpty(currentCat.NameAr) ? currentCat.NameAr : currentCat.Name)</span>
+                        <span class="badge rounded-pill bg-white bg-opacity-25 text-white x-small">@currentCat.ProductCount</span>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    @if (!Model.Any())
+    {
+        <div class="premium-card p-5 text-center text-secondary border-0 shadow-sm bg-white">
+            <i class="fas fa-search fa-3x mb-3 opacity-25"></i>
+            <h5 class="fw-bold mb-2">@Localizer["NoProductsFound"]</h5>
+            <p class="small mb-0">@Localizer["TryDifferentSearch"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var p in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-xl-3">
+                    <div class="premium-card product-card h-100 p-0 overflow-hidden shadow-sm border-0 transition-all hover-up">
+                        <div class="position-relative product-img-container" style="cursor: pointer;" onclick="openQuickView(@p.Id)">
+                            @if (!string.IsNullOrEmpty(p.ImageUrl))
+                            {
+                                <img src="@p.ImageUrl" class="card-img-top" alt="@p.Name" style="height:200px;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="card-img-top bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height:200px;">
+                                    <i class="fas fa-box fa-3x text-secondary opacity-25"></i>
+                                </div>
+                            }
+                            <div class="quick-view-overlay d-flex align-items-center justify-content-center">
+                                <span class="btn btn-light btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                                    <i class="fas fa-eye me-1"></i> @Localizer["QuickView"]
+                                </span>
+                            </div>
+                            @if (p.IsOnSale)
+                            {
+                                <div class="position-absolute top-0 end-0 p-2">
+                                    <span class="badge bg-danger rounded-pill shadow-sm px-3">@Localizer["Sale"]</span>
+                                </div>
+                            }
+                            <div class="position-absolute top-0 start-0 p-2 d-flex flex-column gap-1">
+                                <span class="badge bg-primary bg-opacity-90 text-white rounded-pill shadow-sm small border-0 d-flex align-items-center gap-1">
+                                   <i class="fas fa-chart-pie x-small text-white opacity-75"></i> @(isRtl && !string.IsNullOrEmpty(p.CategoryNameAr) ? p.CategoryNameAr : p.CategoryName)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="fw-bold mb-0 text-dark opacity-90 text-truncate" title="@p.Name">@p.Name</h6>
+                                <div class="dropdown">
+                                    <button class="btn btn-link link-secondary p-0" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg small rounded-3">
+                                        <li><a class="dropdown-item" asp-action="EditProduct" asp-route-id="@p.Id"><i class="fas fa-edit me-2 text-primary"></i>@Localizer["Edit"]</a></li>
+                                        <li><a class="dropdown-item" asp-action="StockAdjustments" asp-route-productId="@p.Id"><i class="fas fa-boxes me-2 text-info"></i>@Localizer["Inventory"]</a></li>
+                                        <li><hr class="dropdown-divider opacity-50"></li>
+                                        <li>
+                                            <form asp-action="DeleteProduct" method="post" id="del_@p.Id">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@p.Id" />
+                                                <button type="button" class="dropdown-item text-danger" onclick="confirmSubmit(document.getElementById('del_@p.Id'), '@Localizer["DeleteConfirmTitle"]', '@Localizer["DeleteConfirmMessage"] (@p.Name)', 'warning')">
+                                                    <i class="fas fa-trash me-2"></i>@Localizer["Delete"]
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <div class="h5 fw-bold mb-0 text-primary">@settings.Currency @p.EffectivePrice.ToString("N0")</div>
+                                @if (p.IsOnSale)
+                                {
+                                    <div class="small text-secondary text-decoration-line-through">@p.Price.ToString("N0")</div>
+                                }
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between pt-2">
+                                <span class="badge @(p.IsLowStock ? "bg-warning" : "bg-success") rounded-pill px-3 shadow-sm">
+                                    <i class="fas @(p.IsLowStock ? "fa-exclamation-triangle" : "fa-check-circle") me-1"></i> 
+                                    <span class="fw-bold fs-6">@p.StockQuantity</span> @Localizer["InStock"]
+                                </span>
+                                
+                                <div class="d-flex gap-1">
+                                    <button onclick="openQuickView(@p.Id)" class="btn btn-icon btn-light btn-sm rounded-circle shadow-none" title="@Localizer["Details"]">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a asp-action="CreateSale" asp-route-productId="@p.Id" class="btn btn-primary btn-sm rounded-pill px-3 shadow-none fw-bold">
+                                        <i class="fas fa-plus me-1"></i> @Localizer["Sell"]
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Product Details Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 pb-0 position-absolute end-0" style="z-index: 10;">
+                <button type="button" class="btn-close rounded-circle p-2 shadow-sm" data-bs-dismiss="modal" aria-label="Close" style="background-color: rgba(255,255,255,0.8);"></button>
+            </div>
+            <div class="modal-body p-0" id="quickViewBody">
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openQuickView(id) {
+            const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+            const body = document.getElementById('quickViewBody');
+            
+            // Set loading state
+            body.innerHTML = `
+                <div class="text-center p-5 my-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+            
+            modal.show();
+            
+            fetch(`/Store/ProductDetails/${id}`)
+                .then(response => response.text())
+                .then(html => {
+                    body.innerHTML = html;
+                })
+                .catch(err => {
+                    body.innerHTML = `
+                        <div class="text-center p-5 my-5">
+                            <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
+                            <h5 class="fw-bold">Error loading details</h5>
+                        </div>
+                    `;
+                });
+        }
+    </script>
+}
+
+<style>
+    .product-img-container .quick-view-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.1);
+        opacity: 0;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
+    }
+    .product-img-container:hover .quick-view-overlay {
+        opacity: 1;
+    }
+    .hover-up {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hover-up:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.1) !important;
+    }
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+</style>

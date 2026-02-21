@@ -1,39 +1,63 @@
 :root {
     --primary-color: #3B82F6;
+    --primary-hover: #2563EB;
     --secondary-color: #64748B;
     --bg-dark: #0f172a;
     --card-bg: #ffffff;
     --glass-border: rgba(226, 232, 240, 0.8);
-    /* Slate-200 */
     --sidebar-width: 280px;
     --success-glow: rgba(16, 185, 129, 0.4);
     --text-main: #1e293b;
-    /* Slate-800 */
     --text-muted: #64748B;
-    /* Slate-500 */
     --text-light: #94A3B8;
-    /* Slate-400 */
     --body-bg: #f8fafc;
-    /* Slate-50 */
     --header-bg: rgba(255, 255, 255, 0.8);
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --premium-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --premium-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+    /* Sidebar Variables - Light Mode */
+    --sidebar-bg: #ffffff;
+    --sidebar-text: #1e293b;
+    --sidebar-text-muted: #94a3b8;
+    --sidebar-border: rgba(226, 232, 240, 0.8);
+    --sidebar-active-bg: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+    --sidebar-hover-bg: rgba(59, 130, 246, 0.05);
+    --sidebar-item-hover: #3B82F6;
+
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --table-header-bg: #f8fafc;
+    --input-bg: #ffffff;
 }
 
 [data-theme="dark"] {
     --primary-color: #3B82F6;
+    --primary-hover: #60A5FA;
     --secondary-color: #94A3B8;
     --bg-dark: #0f172a;
     --card-bg: #1e293b;
-    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.08);
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --body-bg: #0f172a;
     --header-bg: #1e293b;
     --card-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+
+    /* Sidebar Variables - Dark Mode */
     --sidebar-bg: #0f172a;
+    --sidebar-text: #f8fafc;
+    --sidebar-text-muted: #64748b;
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+    --sidebar-active-bg: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+    --sidebar-item-hover: #ffffff;
+
+    --sidebar-bottom-bg: rgba(0, 0, 0, 0.3);
     --table-header: #334155;
     --text-secondary-dm: #94A3B8;
+
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --table-header-bg: #1e293b;
+    --input-bg: #1e293b;
 }
 
 body {
@@ -50,9 +74,10 @@ body {
     border-radius: 16px;
     border: 1px solid var(--glass-border);
     box-shadow: var(--card-shadow);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* स्पेसिफिक ट्रांजिशन ताकि ब्राउजर को सब कुछ ट्रैक न करना पड़े */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
     color: var(--text-main);
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px);  -- हटाया गया भारी होने के कारण -- */
 }
 
 /* Accent Card (Used for special sections like Membership Plan) */
@@ -66,7 +91,7 @@ body {
     border-left: 5px solid var(--primary-color) !important;
 }
 
-.premium-card:hover {
+.premium-card:not(.modal-content):hover {
     transform: translateY(-4px);
     box-shadow: var(--premium-shadow);
     border-color: rgba(59, 130, 246, 0.2);
@@ -87,8 +112,7 @@ body {
 }
 
 .table thead th {
-    background: #f8fafc;
-    /* Slate-50 */
+    background: var(--table-header-bg);
     color: var(--text-muted);
     font-weight: 600;
     text-transform: uppercase;
@@ -105,7 +129,7 @@ body {
 }
 
 .table-hover tbody tr:hover {
-    background-color: #f8fafc !important;
+    background-color: var(--sidebar-hover-bg) !important;
 }
 
 /* Dashboard Stat Cards */
@@ -126,7 +150,17 @@ body {
 }
 
 /* Form Styling */
-.form-control:focus {
+.form-control,
+.form-select {
+    background-color: var(--input-bg);
+    color: var(--text-main);
+    border-color: var(--glass-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--input-bg);
+    color: var(--text-main);
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
     border-color: var(--primary-color);
 }
@@ -135,12 +169,10 @@ body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -155,7 +187,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--body-bg);
+    opacity: 0.8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -164,8 +197,7 @@ body {
 
 /* Global Search Bar Styling */
 .search-group {
-    background: #f1f5f9;
-    /* Slate-100 */
+    background: var(--input-bg);
     border-radius: var(--radius-md) !important;
     overflow: hidden;
     border: 1px solid var(--glass-border);
@@ -173,10 +205,31 @@ body {
 }
 
 .search-group:focus-within {
-    background: #ffffff;
+    background: var(--input-bg);
     border-color: var(--primary-color);
     box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1) !important;
     transform: translateY(-1px);
+}
+
+/* Modal Styling */
+.modal {
+    z-index: 1060 !important;
+}
+
+.modal-backdrop {
+    z-index: 1050 !important;
+}
+
+.modal-content.premium-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border) !important;
+    backdrop-filter: none;
+    /* Removed heavy filter causing lag */
+}
+
+.modal-backdrop.show {
+    opacity: 0.6;
+    background-color: var(--bg-dark);
 }
 
 /* Status Pulse Animation */
@@ -1074,4 +1127,165 @@ body {
 /* form-text (helper text) */
 [data-theme="dark"] .form-text {
     color: #64748b !important;
+}
+
+/* ═══════════════════════════════════════════════
+   STORE MODULE — Dark / Light Mode Overrides
+   ═══════════════════════════════════════════════ */
+
+/* ── Product cards on Index ── */
+.store-product-card {
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.store-product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .12) !important;
+}
+
+[data-theme="dark"] .store-product-card:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .5) !important;
+}
+
+/* ── POS table dark mode ── */
+[data-theme="dark"] #posTable thead tr {
+    background: #1e293b !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] #productTable tr.has-qty {
+    background: rgba(59, 130, 246, .12) !important;
+}
+
+/* ── Qty buttons ── */
+[data-theme="dark"] .btn-qty {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .btn-qty:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* ── Payment radio cards ── */
+[data-theme="dark"] .pay-radio-card {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .pay-radio-card:has(input:checked) {
+    border-color: var(--primary-color);
+    background: rgba(59, 130, 246, .18);
+}
+
+/* ── Order summary panel ── */
+[data-theme="dark"] .order-line {
+    border-color: #334155;
+}
+
+/* ── Receipt card screen ── */
+[data-theme="dark"] .receipt-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .receipt-footer {
+    color: #64748b;
+}
+
+[data-theme="dark"] .receipt-items th {
+    color: #64748b;
+}
+
+[data-theme="dark"] .receipt-items td {
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+/* ── Filter bar & search ── */
+[data-theme="dark"] #productSearch,
+[data-theme="dark"] #barcodeInput {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] #productSearch::placeholder,
+[data-theme="dark"] #barcodeInput::placeholder {
+    color: #475569;
+}
+
+/* ── Store stats strip ── */
+[data-theme="dark"] .store-stat-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+/* ── Category card ── */
+[data-theme="dark"] .category-icon-shape {
+    background: rgba(59, 130, 246, .15) !important;
+}
+
+/* ── Sales history table ── */
+[data-theme="dark"] .table tfoot,
+[data-theme="dark"] .table tfoot td {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+/* ── Light mode table hover (was hardcoded white) ── */
+.table-hover tbody tr:hover {
+    background-color: rgba(59, 130, 246, .04) !important;
+}
+
+/* ── Sticky table head dark ── */
+[data-theme="dark"] thead.sticky-top th {
+    background: #1e293b !important;
+    border-bottom-color: #334155 !important;
+}
+
+/* Premium Back Button Style */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    text-decoration: none !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.btn-back i {
+    transition: transform 0.3s ease;
+}
+
+.btn-back:hover {
+    background: var(--primary-color);
+    color: white !important;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+.btn-back:hover i {
+    transform: translateX(-5px);
+}
+
+[dir="rtl"] .btn-back:hover i {
+    transform: translateX(5px);
 }

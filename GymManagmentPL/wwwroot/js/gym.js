@@ -86,13 +86,17 @@ document.addEventListener('DOMContentLoaded', function () {
 function confirmAction(id, title, text, icon, confirmText, formId, inputId) {
     if (!window.Swal) return;
 
+    const config = document.getElementById('global-notifications')?.dataset;
+    const defaultConfirm = config?.confirmText || 'Confirm';
+    const defaultCancel = config?.cancelText || 'Cancel';
+
     Swal.fire({
         title: title,
         text: text,
         icon: icon || 'question',
         showCancelButton: true,
-        confirmButtonText: confirmText || 'Confirm',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: confirmText || defaultConfirm,
+        cancelButtonText: defaultCancel,
         buttonsStyling: false,
         customClass: {
             popup: 'premium-swal-popup',
@@ -126,13 +130,17 @@ function confirmSubmit(form, title, text, icon = 'warning') {
         return;
     }
 
+    const config = document.getElementById('global-notifications')?.dataset;
+    const defaultConfirm = config?.yesProceed || 'Yes, Proceed';
+    const defaultCancel = config?.cancelText || 'Cancel';
+
     Swal.fire({
         title: title,
         text: text,
         icon: icon,
         showCancelButton: true,
-        confirmButtonText: 'Yes, Proceed',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: defaultConfirm,
+        cancelButtonText: defaultCancel,
         buttonsStyling: false,
         customClass: {
             popup: 'premium-swal-popup',

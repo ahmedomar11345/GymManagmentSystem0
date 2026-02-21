@@ -1,0 +1,210 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreSupplierViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Suppliers"];
+}
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-primary bg-opacity-10 text-primary">
+                <i class="fas fa-truck-loading fs-5"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["Suppliers"]</h2>
+                <p class="text-secondary mb-0 small">@Localizer["ManageSuppliersDesc"]</p>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#createSupplierModal">
+            <i class="fas fa-plus me-1"></i>@Localizer["AddSupplier"]
+        </button>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var supplier in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="premium-card p-4 h-100 position-relative border-top border-3 border-primary">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-shape bg-primary bg-opacity-10 text-primary rounded-3" style="width:48px;height:48px;">
+                            <i class="fas fa-warehouse fs-4"></i>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-link text-secondary p-0" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                <li>
+                                    <button class="dropdown-item py-2" type="button" 
+                                            onclick="prepareEditModal(this)"
+                                            data-id="@supplier.Id"
+                                            data-name="@supplier.Name"
+                                            data-contact="@supplier.ContactPerson"
+                                            data-phone="@supplier.PhoneNumber"
+                                            data-email="@supplier.Email"
+                                            data-address="@supplier.Address">
+                                        <i class="fas fa-edit me-2 text-warning"></i>@Localizer["Edit"]
+                                    </button>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-action="DeleteSupplier" asp-route-id="@supplier.Id" method="post" id="delSup_@supplier.Id">
+                                        @Html.AntiForgeryToken()
+                                        <button type="button" class="dropdown-item py-2 text-danger"
+                                                onclick="confirmSubmit(document.getElementById('delSup_@supplier.Id'), '@Localizer["DeleteConfirmTitle"]', '@Localizer["DeleteConfirmMessage"] (@supplier.Name)', 'warning')">
+                                            <i class="fas fa-trash-alt me-2"></i>@Localizer["Delete"]
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-1">@supplier.Name</h5>
+                    <p class="text-secondary small mb-3"><i class="fas fa-user-tie me-1"></i>@supplier.ContactPerson</p>
+
+                    <div class="mb-3">
+                        <div class="small text-secondary mb-1"><i class="fas fa-phone me-2"></i>@supplier.PhoneNumber</div>
+                        @if (!string.IsNullOrEmpty(supplier.Email))
+                        {
+                            <div class="small text-secondary mb-1 text-truncate"><i class="fas fa-envelope me-2"></i>@supplier.Email</div>
+                        }
+                        @if (!string.IsNullOrEmpty(supplier.Address))
+                        {
+                            <div class="small text-secondary mb-1 text-truncate"><i class="fas fa-map-marker-alt me-2"></i>@supplier.Address</div>
+                        }
+                    </div>
+
+                    <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between" style="border-color:var(--glass-border)!important;">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">@supplier.ProductCount @Localizer["Products"]</span>
+                        <a href="/Store/Index?search=@supplier.Name" class="btn btn-link btn-sm text-primary p-0 text-decoration-none fw-bold">
+                            @Localizer["ViewProducts"] <i class="fas fa-chevron-right ms-1 small"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="premium-card p-5 text-center text-secondary">
+            <i class="fas fa-truck-loading fa-3x mb-3 opacity-25"></i>
+            <h5 class="fw-bold">@Localizer["NoSuppliersFound"]</h5>
+            <p class="mb-0">@Localizer["StartByAddingSupplier"]</p>
+        </div>
+    }
+</div>
+
+@section Modals {
+    <!-- Create Supplier Modal -->
+    <div class="modal fade" id="createSupplierModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content premium-card border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle text-primary me-2"></i>@Localizer["AddSupplier"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form asp-action="CreateSupplier" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">@Localizer["SupplierName"] *</label>
+                            <input name="Name" class="form-control form-control-lg" required placeholder="مثال: شركة النصر للمكملات" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">@Localizer["ContactPerson"] *</label>
+                            <input name="ContactPerson" class="form-control form-control-lg" required placeholder="مثال: أ/ محمد جابر" />
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-secondary">@Localizer["PhoneNumber"] *</label>
+                                <input name="PhoneNumber" class="form-control form-control-lg" required placeholder="01xxxxxxxxx" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-secondary">@Localizer["Email"] <span class="fw-normal opacity-50">(@Localizer["Optional"])</span></label>
+                                <input name="Email" type="email" class="form-control form-control-lg" placeholder="example@mail.com" />
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label small fw-semibold text-secondary">@Localizer["Address"]</label>
+                            <textarea name="Address" class="form-control" rows="2" placeholder="العنوان بالتفصيل..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pb-4 pt-0 gap-2 justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-5" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold">@Localizer["Save"]</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Supplier Modal -->
+    <div class="modal fade" id="editSupplierModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content premium-card border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-edit text-warning me-2"></i>@Localizer["EditSupplier"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form asp-action="UpdateSupplier" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id" id="edit_id" />
+                    <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">@Localizer["SupplierName"] *</label>
+                            <input name="Name" id="edit_name" class="form-control form-control-lg" required placeholder="اسم الشركة الموردة" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">@Localizer["ContactPerson"] *</label>
+                            <input name="ContactPerson" id="edit_contact" class="form-control form-control-lg" required placeholder="اسم الشخص للتواصل" />
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-secondary">@Localizer["PhoneNumber"] *</label>
+                                <input name="PhoneNumber" id="edit_phone" class="form-control form-control-lg" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-secondary">@Localizer["Email"] <span class="fw-normal opacity-50">(@Localizer["Optional"])</span></label>
+                                <input name="Email" id="edit_email" type="email" class="form-control form-control-lg" />
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label small fw-semibold text-secondary">@Localizer["Address"]</label>
+                            <textarea name="Address" id="edit_address" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pb-4 pt-0 gap-2 justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-5" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                        <button type="submit" class="btn btn-warning text-dark rounded-pill px-5 fw-bold">@Localizer["Update"]</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        let editModal = null;
+        function prepareEditModal(btn) {
+            const data = btn.dataset;
+            document.getElementById('edit_id').value = data.id;
+            document.getElementById('edit_name').value = data.name;
+            document.getElementById('edit_contact').value = data.contact;
+            document.getElementById('edit_phone').value = data.phone;
+            document.getElementById('edit_email').value = data.email || '';
+            document.getElementById('edit_address').value = data.address || '';
+            
+            if (!editModal) {
+                editModal = new bootstrap.Modal(document.getElementById('editSupplierModal'));
+            }
+            editModal.show();
+        }
+    </script>
+}

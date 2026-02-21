@@ -131,6 +131,7 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IGymSettingsService, GymSettingsService>();
 builder.Services.AddScoped<IWalkInService, WalkInService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
 
 // Hosted Services
 builder.Services.AddHostedService<GymManagmentPL.Services.MembershipRenewalWorker>();

@@ -4,6 +4,7 @@ using GymManagmentDAL.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagmentDAL.Data.Migrations
 {
     [DbContext(typeof(GymDBContext))]
-    partial class GymDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260219185656_AddStockAdjustment")]
+    partial class AddStockAdjustment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -942,40 +945,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.ToTable("StoreProducts");
                 });
 
-            modelBuilder.Entity("GymManagmentDAL.Entities.StoreProductImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("StoreProductId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StoreProductId");
-
-                    b.ToTable("StoreProductImages");
-                });
-
             modelBuilder.Entity("GymManagmentDAL.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
@@ -1635,17 +1604,6 @@ namespace GymManagmentDAL.Data.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("GymManagmentDAL.Entities.StoreProductImage", b =>
-                {
-                    b.HasOne("GymManagmentDAL.Entities.StoreProduct", "StoreProduct")
-                        .WithMany("Images")
-                        .HasForeignKey("StoreProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StoreProduct");
-                });
-
             modelBuilder.Entity("GymManagmentDAL.Entities.Trainer", b =>
                 {
                     b.HasOne("GymManagmentDAL.Entities.TrainerSpecialty", "Specialty")
@@ -1818,8 +1776,6 @@ namespace GymManagmentDAL.Data.Migrations
 
             modelBuilder.Entity("GymManagmentDAL.Entities.StoreProduct", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("SaleItems");
                 });
 

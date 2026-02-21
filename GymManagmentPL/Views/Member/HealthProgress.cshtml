@@ -158,13 +158,13 @@
             <form action="@Url.Action("AddHealthProgress", "Member")" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="MemberId" value="@Model.Id" />
-                <input type="hidden" name="Height" value="@Model.HealthRecord.Height" />
+                <input type="hidden" name="Height" value="@(Model.HealthRecord?.Height ?? 0)" />
                 
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">@Localizer["Weight"] (@Localizer["KG"])</label>
-                            <input type="number" step="0.1" name="Weight" class="form-control rounded-3" value="@Model.HealthRecord.Weight" required />
+                            <input type="number" step="0.1" name="Weight" class="form-control rounded-3" value="@(Model.HealthRecord?.Weight ?? 0)" required />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase">@Localizer["BodyFat"] (%)</label>

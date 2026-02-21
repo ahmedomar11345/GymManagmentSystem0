@@ -59,15 +59,15 @@
         <!-- Sidebar -->
         <div class="sidebar d-none d-lg-flex flex-column shadow-lg">
             <!-- Header -->
-            <div class="p-4 text-center border-bottom border-secondary border-opacity-10">
-                <h4 class="fw-bold mb-0 text-white"><i class="fas fa-dumbbell me-2 text-primary"></i>@gymSettings.GymName</h4>
-                <small class="text-white-50 opacity-75">@Localizer["ManagementSystem"]</small>
+            <div class="sidebar-logo text-center">
+                <h4 class="fw-bold mb-0" style="color: var(--sidebar-text);"><i class="fas fa-dumbbell me-2 text-primary"></i>@gymSettings.GymName</h4>
+                <small style="color: var(--sidebar-text-muted); opacity: 0.8;">@Localizer["ManagementSystem"]</small>
             </div>
             
             <!-- Content Area (Scrollable) -->
             <div class="sidebar-content">
                 <div class="px-3 py-4">
-                    <div class="text-uppercase small text-white-50 fw-bold mb-3 ms-3 opacity-50">@Localizer["MainMenu"]</div>
+                    <div class="nav-section-title">@Localizer["MainMenu"]</div>
                     <nav class="nav flex-column">
                         <a asp-controller="Home" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
                             <i class="fas fa-chart-line"></i> @Localizer["Dashboard"]
@@ -75,7 +75,7 @@
 
                         @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
                         {
-                            <div class="text-uppercase small text-white-50 fw-bold mt-4 mb-2 ms-3 opacity-50">@Localizer["Administration"]</div>
+                            <div class="nav-section-title">@Localizer["Administration"]</div>
                             <a asp-controller="Member" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Member" ? "active" : "")">
                                 <i class="fas fa-users"></i> @Localizer["Members"]
                             </a>
@@ -97,7 +97,7 @@
                             </a>
                         }
 
-                        <div class="text-uppercase small text-white-50 fw-bold mt-4 mb-2 ms-3 opacity-50">@Localizer["Operations"]</div>
+                        <div class="nav-section-title">@Localizer["Operations"]</div>
 
                         <a asp-controller="Attendance" asp-action="Scanner" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Attendance" && ViewContext.RouteData.Values["action"]?.ToString() == "Scanner" ? "active" : "")">
                             <i class="fas fa-qrcode"></i> @Localizer["QRScanner"]
@@ -115,13 +115,17 @@
                             <i class="fas fa-walking"></i> @Localizer["WalkIn"]
                         </a>
 
+                        <a asp-controller="Store" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Store" ? "active" : "")">
+                            <i class="fas fa-shopping-cart"></i> @Localizer["Store"]
+                        </a>
+
                         <a asp-controller="Attendance" asp-action="History" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Attendance" && ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
                             <i class="fas fa-clipboard-check"></i> @Localizer["AttendanceHistory"]
                         </a>
                         
                         @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
                         {
-                            <div class="text-uppercase small text-white-50 fw-bold mt-4 mb-2 ms-3 opacity-50">@Localizer["System"]</div>
+                            <div class="nav-section-title">@Localizer["System"]</div>
                             <a asp-controller="ScheduledTask" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ScheduledTask" ? "active" : "")">
                                 <i class="fas fa-clock"></i> @Localizer["ScheduledTasks"]
                             </a>
@@ -142,19 +146,21 @@
             <div class="sidebar-bottom">
                 
                 
-                <a asp-controller="Account" asp-action="Profile" class="user-profile-card d-flex align-items-center p-3 mb-3 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-10 text-decoration-none transition-hover">
-                    <div class="user-avatar-circle rounded-circle bg-primary d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; min-width: 42px;">
+                <a asp-controller="Account" asp-action="Profile" class="user-profile-card d-flex align-items-center p-3 mb-3 rounded-4 border text-decoration-none transition-hover" 
+                   style="background: var(--sidebar-hover-bg); border-color: var(--sidebar-border) !important;">
+                    <div class="user-avatar-circle rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
+                         style="width: 42px; height: 42px; min-width: 42px; background: var(--sidebar-active-bg);">
                         <i class="fas fa-user text-white fs-5"></i>
                     </div>
                     <div class="user-info-text overflow-hidden flex-grow-1 ms-3">
-                        <p class="mb-0 text-white small fw-bold text-truncate" style="line-height: 1.2;">@(User.FindFirst("FullName")?.Value ?? User.Identity?.Name)</p>
-                        <small class="text-white-50 x-small d-block text-truncate">@(User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value ?? Localizer["User"])</small>
+                        <p class="mb-0 small fw-bold text-truncate" style="line-height: 1.2; color: var(--sidebar-text);">@(User.FindFirst("FullName")?.Value ?? User.Identity?.Name)</p>
+                        <small class="x-small d-block text-truncate" style="color: var(--sidebar-text-muted);">@(User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value ?? Localizer["User"])</small>
                     </div>
-                    <i class="fas fa-chevron-right text-white-50 small ms-2"></i>
+                    <i class="fas fa-chevron-right small ms-2" style="color: var(--sidebar-text-muted);"></i>
                 </a>
                 
-                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm w-100 py-2 rounded-pill shadow-sm d-flex align-items-center justify-content-center">
-                    <i class="fas fa-sign-out-alt me-2"></i> @Localizer["Logout"]
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-logout w-100">
+                    <i class="fas fa-sign-out-alt"></i> @Localizer["Logout"]
                 </a>
             </div>
         </div>
@@ -283,9 +289,7 @@
                 </div>
             </header>
             
-            <div class="animate-fade-in">
-                @RenderBody()
-            </div>
+            @RenderBody()
 
             <!-- Floating Quick Action Button -->
             <div class="position-fixed bottom-0 end-0 m-4 z-3 d-none d-md-block">
@@ -302,6 +306,12 @@
                         <li><a class="dropdown-item rounded py-2" asp-controller="WalkIn" asp-action="Create"><i class="fas fa-walking me-2 text-info"></i> @Localizer["WalkInBooking"]</a></li>
                         <li><a class="dropdown-item rounded py-2" asp-controller="Attendance" asp-action="Scanner"><i class="fas fa-qrcode me-2 text-danger"></i> @Localizer["EntranceCheckIn"]</a></li>
                         <li><a class="dropdown-item rounded py-2" asp-controller="Expense" asp-action="Create"><i class="fas fa-receipt me-2 text-orange"></i> @Localizer["AddExpense"]</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="dropdown-header text-uppercase small fw-bold">@Localizer["Store"]</li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Store" asp-action="CreateSale"><i class="fas fa-cart-plus me-2 text-success"></i> @Localizer["NewSale"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Store" asp-action="SalesHistory"><i class="fas fa-file-invoice-dollar me-2 text-info"></i> @Localizer["SalesHistory"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Store" asp-action="CreateProduct"><i class="fas fa-box-open me-2 text-primary"></i> @Localizer["AddProduct"]</a></li>
+                        <li><a class="dropdown-item rounded py-2" asp-controller="Store" asp-action="LowStockProducts"><i class="fas fa-exclamation-triangle me-2 text-warning"></i> @Localizer["LowStockProducts"]</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item rounded py-2" asp-controller="Home" asp-action="Index"><i class="fas fa-tachometer-alt me-2 text-info"></i> @Localizer["Dashboard"]</a></li>
                     </ul>
@@ -325,7 +335,14 @@
          data-error="@(TempData["ErrorMessage"] ?? ViewBag.ErrorMessage)"
          data-warning="@(TempData["WarningMessage"] ?? ViewBag.WarningMessage)"
          data-fail-title="@Localizer["OperationFailed"]"
-         data-confirm-text="@Localizer["Confirm"]">
+         data-confirm-text="@Localizer["Confirm"]"
+         data-cancel-text="@Localizer["Cancel"]"
+         data-success-title="@Localizer["Success"]"
+         data-yes-proceed="@Localizer["YesProceed"]"
+         data-no-results="@Localizer["NoMatchingRecords"]"
+         data-failed-notification="@Localizer["FailedDeleteNotification"]"
+         data-items="@Localizer["Items"]"
+         data-delete="@Localizer["Delete"]">
     </div>
 
     @Html.AntiForgeryToken()
@@ -365,6 +382,7 @@
             }
         })();
     </script>
+    @await RenderSectionAsync("Modals", required: false)
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,123 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["LowStockProducts"];
+}
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="icon-shape bg-danger bg-opacity-10 text-danger">
+            <i class="fas fa-exclamation-triangle fs-5"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-0">@Localizer["LowStockProducts"]</h2>
+            <p class="text-secondary mb-0 small">@Localizer["LowStockProductsDesc"]</p>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="premium-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead>
+                        <tr>
+                            <th class="px-3 text-secondary fw-normal">@Localizer["Product"]</th>
+                            <th class="text-secondary fw-normal">@Localizer["Category"]</th>
+                            <th class="text-center text-secondary fw-normal">@Localizer["Stock"]</th>
+                            <th class="text-center text-secondary fw-normal">@Localizer["Threshold"]</th>
+                            <th class="text-center text-secondary fw-normal">@Localizer["Status"]</th>
+                            <th class="text-end px-3 text-secondary fw-normal">@Localizer["QuickAdd"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model)
+                        {
+                            <tr>
+                                <td class="px-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (!string.IsNullOrEmpty(p.ImageUrl))
+                                        {
+                                            <img src="@p.ImageUrl" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:8px;" />
+                                        }
+                                        else
+                                        {
+                                            <div style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;" class="d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-box text-secondary"></i>
+                                            </div>
+                                        }
+                                        <span class="fw-semibold">@p.Name</span>
+                                    </div>
+                                </td>
+                                <td>@p.CategoryName</td>
+                                <td class="text-center">
+                                    <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill fw-bold">@p.StockQuantity</span>
+                                </td>
+                                <td class="text-center text-secondary">@p.LowStockThreshold</td>
+                                <td class="text-center">
+                                    @if (p.StockQuantity == 0)
+                                    {
+                                        <span class="badge bg-danger rounded-pill px-3">@Localizer["OutOfStock"]</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning bg-opacity-15 text-warning-emphasis rounded-pill px-3">@Localizer["LowStock"]</span>
+                                    }
+                                </td>
+                                <td class="text-end px-3">
+                                    <form asp-action="QuickStockAdd" method="post" class="d-flex align-items-center justify-content-end gap-1" onsubmit="confirmQuickAdd(event, this)">
+                                        <input type="hidden" name="productId" value="@p.Id" />
+                                        <input type="number" name="amount" value="10" min="1" class="form-control form-control-sm text-center" style="width: 60px; border-radius: 20px;" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success rounded-circle p-0" style="width: 32px; height: 32px;" title="@Localizer["IncreaseStock"]">
+                                            <i class="fas fa-plus small"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="premium-card p-5 text-center">
+            <i class="fas fa-check-circle text-success fs-1 mb-3 d-block"></i>
+            <h5 class="fw-bold">@Localizer["AllStockHealthy"]</h5>
+            <p class="text-secondary mb-0">@Localizer["AllStockHealthyDesc"]</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function confirmQuickAdd(event, form) {
+            event.preventDefault();
+            const amount = form.querySelector('input[name="amount"]').value;
+            const title = '@Html.Raw(Localizer["AddStockConfirmTitle"].Value)';
+            let msg = '@Html.Raw(Localizer["AddStockConfirmMsg"].Value)';
+            msg = msg.replace('{0}', amount);
+
+            Swal.fire({
+                title: title,
+                text: msg,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981', // success color
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '@Html.Raw(Localizer["Confirm"].Value)',
+                cancelButtonText: '@Html.Raw(Localizer["Cancel"].Value)',
+                borderRadius: '15px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,169 @@
+@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreCategoryViewModel>
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Categories"];
+}
+
+<div class="animate-fade-in">
+    <a asp-action="Index" class="btn-back">
+        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+    </a>
+
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-shape bg-warning bg-opacity-10 text-warning">
+                <i class="fas fa-tags fs-5"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">@Localizer["Categories"]</h2>
+                <p class="text-secondary mb-0 small">@Localizer["CategoriesDesc"]</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Add Category Form -->
+        <div class="col-lg-4">
+            <div class="premium-card p-4">
+                <h5 class="fw-bold mb-4"><i class="fas fa-plus-circle text-primary me-2"></i>@Localizer["AddCategory"]</h5>
+                <form asp-action="CreateCategory" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["Name"] <span class="text-danger">*</span></label>
+                        <input type="text" name="Name" class="form-control" required maxlength="100" placeholder="e.g. Supplements" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["NameAr"]</label>
+                        <input type="text" name="NameAr" class="form-control" maxlength="100" placeholder="e.g. مكملات" dir="rtl" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["Description"]</label>
+                        <input type="text" name="Description" class="form-control" maxlength="300" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">
+                            @Localizer["Icon"] <a href="https://fontawesome.com/icons" target="_blank" class="small text-primary ms-1">FontAwesome</a>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="iconPreview"><i class="fas fa-box"></i></span>
+                            <input type="text" name="Icon" id="iconInput" class="form-control" value="fas fa-box"
+                                   placeholder="e.g. fas fa-pills" oninput="document.getElementById('iconPreview').innerHTML='<i class=\'' + this.value + '\'></i>'" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold">
+                        <i class="fas fa-plus me-2"></i>@Localizer["AddCategory"]
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Existing Categories -->
+        <div class="col-lg-8">
+            @if (!Model.Any())
+            {
+                <div class="premium-card p-5 text-center text-secondary">
+                    <i class="fas fa-tags fa-3x mb-3 opacity-25"></i>
+                    <p>@Localizer["NoCategoriesYet"]</p>
+                </div>
+            }
+            else
+            {
+                <div class="row g-3">
+                    @foreach (var cat in Model)
+                    {
+                        <div class="col-md-6">
+                            <div class="premium-card p-3">
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    <div class="icon-shape bg-primary bg-opacity-10 text-primary" style="width:42px;height:42px;border-radius:10px;font-size:.9rem;">
+                                        <i class="@cat.Icon"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold">@cat.Name</div>
+                                        @if (!string.IsNullOrEmpty(cat.NameAr)) {
+                                            <div class="small text-secondary" dir="rtl">@cat.NameAr</div>
+                                        }
+                                    </div>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">@cat.ProductCount @Localizer["Products"]</span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(cat.Description)) {
+                                    <p class="small text-secondary mb-2">@cat.Description</p>
+                                }
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-primary btn-sm rounded-pill flex-grow-1"
+                                            onclick="openEditModal(@cat.Id, '@cat.Name.Replace("'","\\'")', '@(cat.NameAr ?? "")', '@(cat.Description ?? "")', '@cat.Icon')">
+                                        <i class="fas fa-edit me-1"></i>@Localizer["Edit"]
+                                    </button>
+                                    <form asp-action="DeleteCategory" method="post" id="delCat_@cat.Id">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@cat.Id" />
+                                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
+                                            onclick="confirmSubmit(document.getElementById('delCat_@cat.Id'), '@Localizer["DeleteConfirmTitle"]', '@Localizer["DeleteConfirmMessage"] (@cat.Name)', 'warning')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCatModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">@Localizer["EditCategory"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="UpdateCategory" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <input type="hidden" name="Id" id="editCatId" />
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["Name"]</label>
+                        <input type="text" name="Name" id="editCatName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["NameAr"]</label>
+                        <input type="text" name="NameAr" id="editCatNameAr" class="form-control" dir="rtl" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["Description"]</label>
+                        <input type="text" name="Description" id="editCatDesc" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">@Localizer["Icon"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="editIconPreview"><i class="fas fa-box"></i></span>
+                            <input type="text" name="Icon" id="editCatIcon" class="form-control"
+                                   oninput="document.getElementById('editIconPreview').innerHTML='<i class=\'' + this.value + '\'></i>'" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">@Localizer["SaveChanges"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openEditModal(id, name, nameAr, desc, icon) {
+            document.getElementById('editCatId').value = id;
+            document.getElementById('editCatName').value = name;
+            document.getElementById('editCatNameAr').value = nameAr;
+            document.getElementById('editCatDesc').value = desc;
+            document.getElementById('editCatIcon').value = icon;
+            document.getElementById('editIconPreview').innerHTML = `<i class="${icon}"></i>`;
+            new bootstrap.Modal(document.getElementById('editCatModal')).show();
+        }
+    </script>
+}
