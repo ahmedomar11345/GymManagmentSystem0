@@ -8,6 +8,9 @@ namespace GymManagmentDAL.Entities
 {
     public class StoreProduct : BaseEntity
     {
+        [Timestamp]
+        public byte[] RowVersion { get; set; } = null!;
+
         [Required]
         [MaxLength(200)]
         public string Name { get; set; } = null!;
@@ -58,7 +61,10 @@ namespace GymManagmentDAL.Entities
         public int StoreCategoryId { get; set; }
         public StoreCategory Category { get; set; } = null!;
 
+        public ProductFlavor Flavor { get; set; } = ProductFlavor.None;
+
         public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+        public ICollection<StoreProductVariant> Variants { get; set; } = new List<StoreProductVariant>();
         public ICollection<StoreProductImage> Images { get; set; } = new List<StoreProductImage>();
     }
 }

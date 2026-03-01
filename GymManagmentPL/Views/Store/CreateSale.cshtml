@@ -5,6 +5,8 @@
     var products   = ViewBag.Products as List<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel> ?? new();
     var members    = ViewBag.Members as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
     var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+    var settings = await (ViewContext.HttpContext.RequestServices.GetService<GymManagmentBLL.Service.Interfaces.IGymSettingsService>()!).GetSettingsAsync();
+    var currency = settings?.Currency ?? "EGP";
 }
 
 <style>
@@ -48,7 +50,7 @@
 
 <div class="animate-fade-in">
     <a asp-action="Index" class="btn-back">
-        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+        <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i> @Localizer["BackToStore"]
     </a>
 
     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -171,14 +173,17 @@
                                 @for (int i = 0; i < products.Count; i++)
                                 {
                                     var p = products[i];
-                                    var stockClass = p.IsLowStock ? "bg-warning text-dark" : "bg-success bg-opacity-10 text-success";
+                                    var hasVariants = p.Variants != null && p.Variants.Any();
+                                    var stockClass = p.IsLowStock && !hasVariants ? "bg-warning text-dark" : "bg-success bg-opacity-10 text-success";
+                                    
                                     <tr id="row_@p.Id"
                                         data-product-id="@p.Id"
                                         data-price="@p.EffectivePrice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
-                                        data-name="@p.Name.ToLower()"
+                                        data-name="@((isRtl && !string.IsNullOrEmpty(p.NameAr) ? p.NameAr : p.Name) + " " + p.Name + " " + (p.SKU ?? ""))"
                                         data-sku="@(p.SKU?.ToLower() ?? "")"
                                         data-category-id="@p.StoreCategoryId"
-                                        class="product-row">
+                                        class="product-row cursor-pointer"
+                                        onclick="if(!event.target.closest('input') && !event.target.closest('button') && !event.target.closest('select')) changeQty(@p.Id, 1)">
                                         <td class="ps-3">
                                             <div class="d-flex align-items-center gap-2">
                                                 @if (!string.IsNullOrEmpty(p.ImageUrl))
@@ -192,25 +197,39 @@
                                                     </div>
                                                 }
                                                 <div>
-                                                    <div class="fw-semibold small">@p.Name</div>
-                                                    <div class="text-secondary" style="font-size:.72rem;">@p.CategoryName</div>
+                                                    <div class="fw-semibold small product-name-display">@(isRtl && !string.IsNullOrEmpty(p.NameAr) ? p.NameAr : p.Name)</div>
+                                                    @if (hasVariants)
+                                                    {
+                                                        <select name="Items[@i].StoreProductVariantId" class="form-select form-select-sm mt-1 py-0 shadow-none variant-selector" 
+                                                                style="font-size: 0.7rem; height: 22px; width: auto; min-width: 100px;"
+                                                                onchange="updateVariantInfo(@p.Id, this)">
+                                                            <option value="" data-price="@p.EffectivePrice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)" data-stock="@p.StockQuantity">@Localizer["MainProduct"] (@p.StockQuantity)</option>
+                                                            @foreach (var v in p.Variants!)
+                                                            {
+                                                                <option value="@v.Id" data-price="@v.FinalPrice(p.EffectivePrice).ToString("F2", System.Globalization.CultureInfo.InvariantCulture)" data-stock="@v.StockQuantity">@v.VariantName (@v.StockQuantity)</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    <div class="text-secondary" style="font-size:.72rem;">@(isRtl && !string.IsNullOrEmpty(p.CategoryNameAr) ? p.CategoryNameAr : p.CategoryName)</div>
                                                 </div>
                                             </div>
                                             <input type="hidden" name="Items[@i].StoreProductId" value="@p.Id" />
                                         </td>
                                         <td class="text-end fw-bold small">
-                                            @if (p.IsOnSale)
-                                            {
-                                                <span class="text-danger">@p.SalePrice!.Value.ToString("N2")</span>
-                                                <br /><small class="text-decoration-line-through text-secondary">@p.Price.ToString("N2")</small>
-                                            }
-                                            else
-                                            {
-                                                <span>@p.Price.ToString("N2")</span>
-                                            }
+                                            <div id="price_@p.Id">
+                                                @if (p.IsOnSale)
+                                                {
+                                                    <span class="text-danger">@p.SalePrice!.Value.ToString("N2")</span>
+                                                    <br /><small class="text-decoration-line-through text-secondary">@p.Price.ToString("N2")</small>
+                                                }
+                                                else
+                                                {
+                                                    <span>@p.Price.ToString("N2")</span>
+                                                }
+                                            </div>
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge @stockClass small rounded-pill">@p.StockQuantity</span>
+                                            <span class="badge @stockClass small rounded-pill" id="stock_@p.Id">@p.StockQuantity</span>
                                         </td>
                                         <td class="text-center">
                                             <div class="qty-group">
@@ -274,9 +293,37 @@
                         </div>
                     </div>
 
+                    <!-- Coupon -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">@Localizer["CouponCode"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
+                            <input asp-for="CouponCode" class="form-control" placeholder="@Localizer["EnterCoupon"]" id="couponInput" />
+                            <button type="button" class="btn btn-outline-primary" id="applyCouponBtn" onclick="validateCoupon()">@Localizer["Apply"]</button>
+                        </div>
+                        <div id="couponMessage" class="small mt-1 d-none"></div>
+                    </div>
+
+                    <!-- Loyalty Points -->
+                    <div id="loyaltySection" class="mb-4 d-none">
+                        <div class="premium-card p-3 border-primary bg-primary bg-opacity-10">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-bold text-primary"><i class="fas fa-star me-1"></i>@Localizer["LoyaltyPoints"]</span>
+                                <span class="badge bg-primary rounded-pill" id="memberPointsBadge">0 pts</span>
+                            </div>
+                            <div class="form-check form-switch p-0 d-flex align-items-center gap-2">
+                                <input class="form-check-input ms-0" type="checkbox" asp-for="RedeemPoints" id="redeemPointsToggle" onchange="updateTotal()">
+                                <label class="form-check-label small fw-semibold cursor-pointer" for="redeemPointsToggle">
+                                    @Localizer["Redeem"] <span id="redeemableValueDisplay">0.00</span> @(currency)
+                                </label>
+                            </div>
+                            <div class="x-small text-secondary mt-1">10 points = 1 EGP</div>
+                        </div>
+                    </div>
+
                     <!-- Discount -->
                     <div class="mb-4">
-                        <label class="form-label small fw-semibold">@Localizer["DiscountAmount"]</label>
+                        <label class="form-label small fw-semibold">@Localizer["AdditionalDiscount"]</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-tag"></i></span>
                             <input asp-for="DiscountAmount" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" oninput="updateTotal()" />
@@ -298,6 +345,8 @@
                     <!-- Total -->
                     <div class="rounded-3 p-3 mb-4 text-center" style="background:rgba(59,130,246,.08);border:1.5px solid rgba(59,130,246,.2);">
                         <div id="subtotalLine" class="small text-secondary d-none">@Localizer["Subtotal"]: <span id="subtotalDisplay">0.00</span></div>
+                        <div id="couponLine" class="small text-success d-none">@Localizer["Coupon"]: -<span id="couponDisplay">0.00</span></div>
+                        <div id="pointsLine" class="small text-info d-none">Points Adjustment: -<span id="pointsDisplay">0.00</span></div>
                         <div id="discountLine" class="small text-danger d-none">@Localizer["Discount"]: -<span id="discountDisplay">0.00</span></div>
                         <div class="small text-secondary mt-1">@Localizer["TotalAmount"]</div>
                         <div class="fw-black fs-2 text-primary" id="totalDisplay">0.00</div>
@@ -308,6 +357,16 @@
                             onclick="openConfirmModal()">
                         <i class="fas fa-check-circle me-2"></i>@Localizer["ConfirmSale"]
                     </button>
+
+                    <!-- POS Shortcuts Hint -->
+                    <div class="mt-4 p-2 rounded bg-light-transparent border border-dashed text-center">
+                        <div class="x-small text-muted mb-1 text-uppercase fw-bold"><i class="fas fa-keyboard me-1"></i> @Localizer["Shortcuts"]</div>
+                        <div class="d-flex justify-content-center gap-3 x-small">
+                            <span><kbd class="bg-secondary">F8</kbd> @Localizer["Pay"]</span>
+                            <span><kbd class="bg-secondary">F4</kbd> @Localizer["Scan"]</span>
+                            <span><kbd class="bg-secondary">F2</kbd> @Localizer["Search"]</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -353,6 +412,8 @@
         const priceLookup = {};
         const nameLookup  = {};
         let currentCategoryId = null;
+        let activeCoupon = null;
+        let memberPoints = 0;
 
         document.querySelectorAll('.product-row').forEach(row => {
             const pid = row.dataset.productId;
@@ -369,7 +430,72 @@
                 if (row) row.scrollIntoView({ behavior:'smooth', block:'center' });
             }
             document.getElementById('barcodeInput').focus();
+
+            // Member change listener
+            document.getElementById('MemberId').addEventListener('change', function() {
+                const mid = this.value;
+                if (!mid) {
+                    document.getElementById('loyaltySection').classList.add('d-none');
+                    document.getElementById('redeemPointsToggle').checked = false;
+                    memberPoints = 0;
+                    updateTotal();
+                    return;
+                }
+                fetchMemberPoints(mid);
+            });
         });
+
+        async function fetchMemberPoints(mid) {
+            try {
+                const res = await fetch(`/Store/GetMemberPoints?memberId=${mid}`);
+                const data = await res.json();
+                memberPoints = data.points;
+                document.getElementById('memberPointsBadge').textContent = memberPoints + ' pts';
+                document.getElementById('loyaltySection').classList.remove('d-none');
+                updateTotal();
+            } catch {}
+        }
+
+        async function validateCoupon() {
+            const code = document.getElementById('couponInput').value.trim();
+            const total = parseFloat(document.getElementById('totalDisplay').textContent);
+            const msg = document.getElementById('couponMessage');
+            const btn = document.getElementById('applyCouponBtn');
+
+            if (!code) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const res = await fetch(`/Store/ValidateCoupon?code=${encodeURIComponent(code)}&total=${total}`);
+                const data = await res.json();
+                
+                msg.classList.remove('d-none', 'text-success', 'text-danger');
+                if (data.valid) {
+                    activeCoupon = data;
+                    msg.textContent = '@Html.Raw(Localizer["CouponApplied"])';
+                    msg.classList.add('text-success');
+                    btn.classList.replace('btn-outline-primary', 'btn-success');
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                } else {
+                    activeCoupon = null;
+                    msg.textContent = '@Html.Raw(Localizer["InvalidCoupon"])';
+                    msg.classList.add('text-danger');
+                    btn.classList.replace('btn-outline-primary', 'btn-danger');
+                    btn.innerHTML = '<i class="fas fa-times"></i>';
+                    setTimeout(() => {
+                        btn.classList.replace('btn-danger', 'btn-outline-primary');
+                        btn.innerHTML = '@Html.Raw(Localizer["Apply"])';
+                        btn.disabled = false;
+                    }, 2000);
+                }
+                updateTotal();
+            } catch {
+                btn.disabled = false;
+                btn.innerHTML = '@Html.Raw(Localizer["Apply"])';
+            }
+        }
 
         // ── Qty helpers ─────────────────────────────────
         function changeQty(pid, delta) {
@@ -393,6 +519,32 @@
             row.classList.toggle('has-qty', qty > 0);
         }
 
+        function updateVariantInfo(pid, select) {
+            const option = select.options[select.selectedIndex];
+            const price = parseFloat(option.dataset.price || 0);
+            const stock = parseInt(option.dataset.stock || 0);
+            const variantText = option.value ? ' - ' + option.text.split('(')[0].trim() : '';
+            
+            // Update state
+            priceLookup[pid] = price;
+            const originalName = document.querySelector(`#row_${pid} .product-name-display`).textContent.trim();
+            nameLookup[pid] = originalName + variantText;
+            
+            // Update UI
+            const input = document.getElementById('qty_' + pid);
+            input.max = stock;
+            if (parseInt(input.value) > stock) input.value = stock;
+            
+            document.getElementById('price_' + pid).textContent = price.toFixed(2);
+            const stockBadge = document.getElementById('stock_' + pid);
+            stockBadge.textContent = stock;
+            
+            // Handle stock class
+            stockBadge.className = 'badge small rounded-pill ' + (stock <= 5 ? 'bg-warning text-dark' : 'bg-success bg-opacity-10 text-success');
+
+            updateTotal();
+        }
+
         // ── Total & order lines ──────────────────────────
         function updateTotal() {
             let subtotal = 0, count = 0;
@@ -410,23 +562,39 @@
                 }
             });
 
-            const discount = parseFloat(document.getElementById('DiscountAmount')?.value || 0);
-            const total = Math.max(0, subtotal - discount);
+            const manualDiscount = parseFloat(document.getElementById('DiscountAmount')?.value || 0);
+            
+            // Calculate Coupon Discount
+            let couponDiscount = 0;
+            if (activeCoupon) {
+                if (activeCoupon.discountType === 0) { // Percentage
+                    couponDiscount = subtotal * (activeCoupon.value / 100);
+                } else { // Fixed
+                    couponDiscount = activeCoupon.value;
+                }
+            }
+
+            // Calculate Points Discount
+            let pointsDiscount = 0;
+            if (document.getElementById('redeemPointsToggle').checked) {
+                const maxVal = memberPoints / 10;
+                pointsDiscount = Math.min(maxVal, subtotal - couponDiscount - manualDiscount);
+            }
+            document.getElementById('redeemableValueDisplay').textContent = (memberPoints / 10).toFixed(2);
+
+            const total = Math.max(0, subtotal - manualDiscount - couponDiscount - pointsDiscount);
 
             document.getElementById('totalDisplay').textContent = total.toFixed(2);
             document.getElementById('itemsCountDisplay').textContent = count + ' @Html.Raw(Localizer["Items"])';
             document.getElementById('submitSaleBtn').disabled = count === 0;
 
-            if (discount > 0) {
-                document.getElementById('subtotalLine').classList.remove('d-none');
-                document.getElementById('discountLine').classList.remove('d-none');
-                document.getElementById('subtotalDisplay').textContent = subtotal.toFixed(2);
-                document.getElementById('discountDisplay').textContent = discount.toFixed(2);
-            } else {
-                document.getElementById('subtotalLine').classList.add('d-none');
-                document.getElementById('discountLine').classList.add('d-none');
-            }
+            // Visibility of lines
+            toggleLine('subtotalLine', 'subtotalDisplay', subtotal, subtotal > 0 && (manualDiscount > 0 || couponDiscount > 0 || pointsDiscount > 0));
+            toggleLine('couponLine', 'couponDisplay', couponDiscount, couponDiscount > 0);
+            toggleLine('pointsLine', 'pointsDisplay', pointsDiscount, pointsDiscount > 0);
+            toggleLine('discountLine', 'discountDisplay', manualDiscount, manualDiscount > 0);
 
+            // Update mini order lines list
             const linesDiv = document.getElementById('orderLines');
             const listDiv  = document.getElementById('orderLinesList');
             if (count > 0) {
@@ -436,6 +604,17 @@
                 ).join('');
             } else {
                 linesDiv.classList.add('d-none');
+            }
+        }
+
+        function toggleLine(id, displayId, val, show) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (show) {
+                el.classList.remove('d-none');
+                document.getElementById(displayId).textContent = val.toFixed(2);
+            } else {
+                el.classList.add('d-none');
             }
         }
 
@@ -451,8 +630,10 @@
             q = q.toLowerCase().trim();
             let visible = 0;
             document.querySelectorAll('.product-row').forEach(row => {
-                const nameMatch = !q || row.dataset.name.includes(q);
-                const skuMatch  = !q || row.dataset.sku.includes(q);
+                const name = row.dataset.name.toLowerCase();
+                const sku  = row.dataset.sku.toLowerCase();
+                const nameMatch = !q || name.includes(q);
+                const skuMatch  = !q || sku.includes(q);
                 const catMatch  = currentCategoryId === null || parseInt(row.dataset.categoryId) === currentCategoryId;
                 const show = (nameMatch || skuMatch) && catMatch;
                 row.style.display = show ? '' : 'none';
@@ -500,17 +681,36 @@
                     lines.push({ name, qty, pr });
                 }
             });
-            const discount = parseFloat(document.getElementById('DiscountAmount')?.value || 0);
-            const total = Math.max(0, subtotal - discount);
+
+            const manualDiscount = parseFloat(document.getElementById('DiscountAmount')?.value || 0);
+            
+            // Coupon
+            let couponDiscount = 0;
+            if (activeCoupon) {
+                couponDiscount = (activeCoupon.discountType === 0) ? (subtotal * (activeCoupon.value / 100)) : activeCoupon.value;
+            }
+
+            // Points
+            let pointsDiscount = 0;
+            if (document.getElementById('redeemPointsToggle').checked) {
+                const maxVal = memberPoints / 10;
+                pointsDiscount = Math.min(maxVal, subtotal - couponDiscount - manualDiscount);
+            }
+
+            const total = Math.max(0, subtotal - manualDiscount - couponDiscount - pointsDiscount);
 
             document.getElementById('modalTotalDisplay').textContent = total.toFixed(2);
+            
             const discLine = document.getElementById('modalDiscountLine');
-            if (discount > 0) {
-                discLine.textContent = `@Html.Raw(Localizer["Discount"]): -${discount.toFixed(2)}  (@Html.Raw(Localizer["Subtotal"]): ${subtotal.toFixed(2)})`;
+            const totalDiscount = manualDiscount + couponDiscount + pointsDiscount;
+            
+            if (totalDiscount > 0) {
+                discLine.textContent = `@Html.Raw(Localizer["TotalDiscount"]): -${totalDiscount.toFixed(2)}  (@Html.Raw(Localizer["Subtotal"]): ${subtotal.toFixed(2)})`;
                 discLine.classList.remove('d-none');
             } else {
                 discLine.classList.add('d-none');
             }
+
             document.getElementById('modalOrderLines').innerHTML = lines.map(l =>
                 `<div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color:var(--glass-border)!important;">
                     <span class="small">${l.name} <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1">×${l.qty}</span></span>
@@ -521,10 +721,46 @@
             new bootstrap.Modal(document.getElementById('confirmSaleModal')).show();
         }
 
+        // ── POS Keyboard Shortcuts ──────────────────────
+        document.addEventListener('keydown', function (e) {
+            // F8: Confirm Sale
+            if (e.key === 'F8') {
+                e.preventDefault();
+                const btn = document.getElementById('submitSaleBtn');
+                if (!btn.disabled) openConfirmModal();
+            }
+            // F4: Focus Barcode
+            if (e.key === 'F4') {
+                e.preventDefault();
+                document.getElementById('barcodeInput').focus();
+            }
+            // F2: Focus Product Search
+            if (e.key === 'F2') {
+                e.preventDefault();
+                document.getElementById('productSearch').focus();
+            }
+        });
+
+        // ── Handle Enter in Confirm Modal ────────────────
+        document.getElementById('confirmSaleModal').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                finalizeSale();
+            }
+        });
+
         function finalizeSale() {
             // Sync checkbox to hidden field
             const chk = document.getElementById('autoPrintReceipt');
             document.getElementById('printReceiptHidden').value = chk.checked;
+            
+            // Show loading state
+            const btn = event?.target?.closest('button') || document.querySelector('#confirmSaleModal .btn-success');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> @Html.Raw(Localizer["Processing"])';
+            }
+
             document.getElementById('saleForm').submit();
         }
     </script>

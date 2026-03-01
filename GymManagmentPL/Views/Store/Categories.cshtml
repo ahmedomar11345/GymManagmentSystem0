@@ -2,11 +2,12 @@
 @inject IStringLocalizer<SharedResource> Localizer
 @{
     ViewData["Title"] = Localizer["Categories"];
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
 }
 
 <div class="animate-fade-in">
     <a asp-action="Index" class="btn-back">
-        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+        <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i> @Localizer["BackToStore"]
     </a>
 
     <!-- Header -->

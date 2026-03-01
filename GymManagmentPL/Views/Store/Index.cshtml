@@ -1,4 +1,4 @@
-@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel>
+@model PagedResult<GymManagmentBLL.ViewModels.StoreViewModel.StoreProductViewModel>
 @inject IStringLocalizer<SharedResource> Localizer
 @{
     ViewData["Title"] = Localizer["Store"];
@@ -120,6 +120,7 @@
                 </button>
                 <ul class="dropdown-menu border-0 shadow-lg mt-2">
                     <li><a asp-action="SalesHistory" class="dropdown-item py-2"><i class="fas fa-file-invoice-dollar me-2 text-success"></i>@Localizer["SalesHistory"]</a></li>
+                    <li><a asp-action="Purchases" class="dropdown-item py-2"><i class="fas fa-file-invoice me-2 text-info"></i>@Localizer["PurchaseHistory"]</a></li>
                     <li><hr class="dropdown-divider opacity-50" /></li>
                     <li><a asp-action="Categories" class="dropdown-item py-2"><i class="fas fa-tags me-2 text-warning"></i>@Localizer["Categories"]</a></li>
                     <li><a asp-action="Suppliers" class="dropdown-item py-2"><i class="fas fa-truck-loading me-2 text-primary"></i>@Localizer["Suppliers"]</a></li>
@@ -134,6 +135,9 @@
             <a asp-action="CreateSale" class="btn btn-success rounded-pill px-3 fw-bold shadow-sm">
                 <i class="fas fa-plus-circle me-1"></i> @Localizer["NewSale"]
             </a>
+            <a asp-action="CreatePurchase" class="btn btn-info text-white rounded-pill px-3 fw-bold shadow-sm">
+                <i class="fas fa-truck-loading me-1"></i> @Localizer["NewPurchase"]
+            </a>
             <a asp-action="CreateProduct" class="btn btn-primary rounded-pill px-3 fw-bold shadow-sm">
                 <i class="fas fa-box me-1"></i> @Localizer["AddProduct"]
             </a>
@@ -143,20 +147,22 @@
     <!-- Stats Section -->
     @if (stats != null)
     {
-        <div class="premium-card border-0 shadow-sm p-4 mb-5 overflow-hidden position-relative bg-white bg-opacity-50">
+        <div class="premium-card border-0 shadow-sm p-4 mb-5 overflow-hidden position-relative">
             <div class="d-flex flex-nowrap align-items-center justify-content-between text-center overflow-auto no-scrollbar py-2" style="-ms-overflow-style: none; scrollbar-width: none;">
                 <style>
                     .no-scrollbar::-webkit-scrollbar { display: none; }
                     .stats-block { min-width: 120px; flex: 1; }
                     .opacity-hover { transition: all 0.2s ease; }
                     .opacity-hover:hover { opacity: 0.7; transform: translateY(-2px); }
+                    .card-title-link { color: inherit; transition: color 0.2s; }
+                    .card-title-link:hover { color: var(--bs-primary) !important; }
                 </style>
                 <!-- Today Revenue -->
                 <div class="stats-block px-2">
                     <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")" 
                        class="text-decoration-none d-flex flex-column align-items-center transition-all opacity-hover">
                         <span class="badge bg-success bg-opacity-10 text-success rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["TodayRevenue"]</span>
-                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@settings.Currency @stats.TodayRevenue.ToString("N0")</div>
+                        <div class="h4 fw-bold mb-0">@settings.Currency @stats.TodayRevenue.ToString("N0")</div>
                     </a>
                 </div>
 
@@ -166,7 +172,7 @@
                 <div class="stats-block px-2">
                     <div class="d-flex flex-column align-items-center">
                         <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["MonthRevenue"]</span>
-                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@settings.Currency @stats.MonthRevenue.ToString("N0")</div>
+                        <div class="h4 fw-bold mb-0">@settings.Currency @stats.MonthRevenue.ToString("N0")</div>
                     </div>
                 </div>
 
@@ -176,7 +182,7 @@
                 <div class="stats-block px-2">
                     <div class="d-flex flex-column align-items-center">
                         <span class="badge bg-info bg-opacity-10 text-info rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["MonthProfit"]</span>
-                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@settings.Currency @stats.MonthProfit.ToString("N0")</div>
+                        <div class="h4 fw-bold mb-0">@settings.Currency @stats.MonthProfit.ToString("N0")</div>
                     </div>
                 </div>
 
@@ -186,8 +192,8 @@
                 <div class="stats-block px-2">
                     <a asp-action="SalesHistory" asp-route-from="@DateTime.Today.ToString("yyyy-MM-dd")" asp-route-to="@DateTime.Today.ToString("yyyy-MM-dd")" 
                        class="text-decoration-none d-flex flex-column align-items-center transition-all opacity-hover">
-                        <span class="badge bg-warning bg-opacity-10 text-warning-emphasis rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["SalesToday"]</span>
-                        <div class="h4 fw-bold mb-0 text-dark opacity-90">@stats.TotalSalesToday</div>
+                        <span class="badge bg-warning bg-opacity-25 text-dark rounded-pill mb-2 px-3 py-1 x-small fw-bold">@Localizer["SalesToday"]</span>
+                        <div class="h4 fw-bold mb-0 text-dark">@stats.TotalSalesToday</div>
                     </a>
                 </div>
 
@@ -196,10 +202,10 @@
                 <!-- Low Stock Alert -->
                 <div class="stats-block px-2">
                     <a asp-action="LowStockProducts" class="text-decoration-none text-center transition-all d-flex flex-column align-items-center">
-                        <span class="badge @(stats.LowStockCount > 0 ? "bg-danger" : "bg-light") bg-opacity-10 @(stats.LowStockCount > 0 ? "text-danger" : "text-secondary") rounded-pill mb-2 px-3 py-1 x-small fw-bold">
+                        <span class="badge @(stats.LowStockCount > 0 ? "bg-danger" : "bg-secondary") @(stats.LowStockCount > 0 ? "bg-opacity-25 text-danger" : "bg-opacity-10 text-muted") rounded-pill mb-2 px-3 py-1 x-small fw-bold">
                             <i class="fas fa-exclamation-triangle me-1"></i> @Localizer["LowStock"]
                         </span>
-                        <div class="h4 fw-bold mb-0 @(stats.LowStockCount > 0 ? "text-danger" : "text-dark")">@stats.LowStockCount</div>
+                        <div class="h4 fw-bold mb-0 @(stats.LowStockCount > 0 ? "text-danger" : "text-muted")">@stats.LowStockCount</div>
                     </a>
                 </div>
 
@@ -208,10 +214,11 @@
                 <!-- Expiring Alert -->
                 <div class="stats-block px-2">
                     <a asp-action="ExpiringProducts" class="text-decoration-none text-center transition-all d-flex flex-column align-items-center">
-                        <span class="badge @(stats.ExpiringCount > 0 ? "bg-warning" : "bg-light") bg-opacity-15 @(stats.ExpiringCount > 0 ? "text-warning-emphasis" : "text-secondary") rounded-pill mb-2 px-3 py-1 x-small fw-bold text-nowrap">
-                            <i class="fas fa-hourglass-half me-1"></i> @Localizer["Expiring"]
+                        <span class="badge @(stats.ExpiringCount > 0 ? "bg-warning" : "bg-secondary") @(stats.ExpiringCount > 0 ? "bg-opacity-25 text-dark" : "bg-opacity-10 text-muted") rounded-pill mb-2 px-3 py-1 x-small fw-bold text-nowrap">
+                            <i class="fas fa-hourglass-half me-1 @(stats.ExpiringCount > 0 ? "text-warning" : "text-muted")"></i> 
+                            <span class="@(stats.ExpiringCount > 0 ? "text-dark" : "text-muted")">@Localizer["Expiring"]</span>
                         </span>
-                        <div class="h4 fw-bold mb-0 @(stats.ExpiringCount > 0 ? "text-warning-emphasis" : "text-dark")">@stats.ExpiringCount</div>
+                        <div class="h4 fw-bold mb-0 @(stats.ExpiringCount > 0 ? "text-warning" : "text-muted")">@stats.ExpiringCount</div>
                     </a>
                 </div>
             </div>
@@ -222,7 +229,7 @@
     <div class="row g-3 mb-4">
         <!-- Unified Search Bar -->
         <div class="col-12 col-xl-7">
-            <div class="premium-card p-2 shadow-sm border-0 bg-white">
+            <div class="premium-card p-2 shadow-sm border-0">
                 <form method="get" asp-action="Index" class="row g-2 align-items-center">
                     <div class="col-md-7">
                         <div class="input-group input-group-merge border-0">
@@ -285,9 +292,9 @@
     </div>
 
     <!-- Products Grid -->
-    @if (!Model.Any())
+    @if (!Model.Items.Any())
     {
-        <div class="premium-card p-5 text-center text-secondary border-0 shadow-sm bg-white">
+        <div class="premium-card p-5 text-center text-secondary border-0 shadow-sm">
             <i class="fas fa-search fa-3x mb-3 opacity-25"></i>
             <h5 class="fw-bold mb-2">@Localizer["NoProductsFound"]</h5>
             <p class="small mb-0">@Localizer["TryDifferentSearch"]</p>
@@ -295,8 +302,8 @@
     }
     else
     {
-        <div class="row g-4">
-            @foreach (var p in Model)
+        <div class="row g-4 mb-5">
+            @foreach (var p in Model.Items)
             {
                 <div class="col-sm-6 col-md-4 col-xl-3">
                     <div class="premium-card product-card h-100 p-0 overflow-hidden shadow-sm border-0 transition-all hover-up">
@@ -326,11 +333,25 @@
                                 <span class="badge bg-primary bg-opacity-90 text-white rounded-pill shadow-sm small border-0 d-flex align-items-center gap-1">
                                    <i class="fas fa-chart-pie x-small text-white opacity-75"></i> @(isRtl && !string.IsNullOrEmpty(p.CategoryNameAr) ? p.CategoryNameAr : p.CategoryName)
                                 </span>
+                                @if (p.Flavor != GymManagmentDAL.Entities.Enums.ProductFlavor.None)
+                                {
+                                    <span class="badge bg-warning text-dark rounded-pill shadow-sm x-small border-0 d-flex align-items-center gap-1" style="opacity: 0.95;">
+                                       <i class="fas fa-ice-cream x-small opacity-75"></i> 
+                                       @{
+                                           var fName = p.Flavor.GetType().GetMember(p.Flavor.ToString()).FirstOrDefault()
+                                               ?.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)
+                                               .Cast<System.ComponentModel.DataAnnotations.DisplayAttribute>().FirstOrDefault()?.Name ?? p.Flavor.ToString();
+                                       }
+                                       @Localizer[fName]
+                                    </span>
+                                }
                             </div>
                         </div>
                         <div class="p-3">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="fw-bold mb-0 text-dark opacity-90 text-truncate" title="@p.Name">@p.Name</h6>
+                                <a asp-action="StockAdjustments" asp-route-productId="@p.Id" class="text-decoration-none h6 fw-bold mb-0 text-truncate card-title-link" title="@(isRtl && !string.IsNullOrEmpty(p.NameAr) ? p.NameAr : p.Name)">
+                                    @(isRtl && !string.IsNullOrEmpty(p.NameAr) ? p.NameAr : p.Name)
+                                </a>
                                 <div class="dropdown">
                                     <button class="btn btn-link link-secondary p-0" type="button" data-bs-toggle="dropdown">
                                         <i class="fas fa-ellipsis-v"></i>
@@ -380,6 +401,36 @@
                 </div>
             }
         </div>
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination pagination-rounded justify-content-center">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link shadow-none border-0" asp-action="Index" 
+                           asp-route-page="@(Model.PageNumber - 1)" asp-route-categoryId="@selectedCat" asp-route-search="@search">
+                            <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i>
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link shadow-none border-0" 
+                               asp-action="Index" asp-route-page="@i" asp-route-categoryId="@selectedCat" asp-route-search="@search">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link shadow-none border-0" asp-action="Index" 
+                           asp-route-page="@(Model.PageNumber + 1)" asp-route-categoryId="@selectedCat" asp-route-search="@search">
+                            <i class="fas @(isRtl ? "fa-chevron-left" : "fa-chevron-right")"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
     }
 </div>
 

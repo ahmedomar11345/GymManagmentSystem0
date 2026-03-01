@@ -1,15 +1,16 @@
-@model IEnumerable<GymManagmentBLL.ViewModels.StoreViewModel.SaleDetailsViewModel>
+@model PagedResult<GymManagmentBLL.ViewModels.StoreViewModel.SaleDetailsViewModel>
 @inject IStringLocalizer<SharedResource> Localizer
 @{
     ViewData["Title"] = Localizer["SalesHistory"];
     string? from   = ViewBag.From;
     string? to     = ViewBag.To;
     string? search = ViewBag.Search;
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
 }
 
 <div class="animate-fade-in">
     <a asp-action="Index" class="btn-back">
-        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+        <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i> @Localizer["BackToStore"]
     </a>
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div class="d-flex align-items-center gap-3">
@@ -18,7 +19,7 @@
             </div>
             <div>
                 <h2 class="fw-bold mb-0">@Localizer["SalesHistory"]</h2>
-                <p class="text-secondary mb-0 small">@Model.Count() @Localizer["TotalSales"]</p>
+                <p class="text-secondary mb-0 small">@Model.TotalCount @Localizer["TotalSales"]</p>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -77,7 +78,7 @@
         </form>
     </div>
 
-    @if (!Model.Any())
+    @if (!Model.Items.Any())
     {
         <div class="premium-card p-5 text-center text-secondary">
             <i class="fas fa-receipt fa-3x mb-3 opacity-25"></i>
@@ -102,10 +103,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var sale in Model)
+                        @foreach (var sale in Model.Items)
                         {
                             <tr class="sale-row" style="cursor:pointer;" onclick="window.location='@Url.Action("SaleDetails", new { id = sale.Id })'">
-                                <td class="px-4 fw-semibold text-secondary">#@sale.Id</td>
+                                <td class="px-4 fw-semibold text-secondary">
+                                    @(string.IsNullOrEmpty(sale.InvoiceNumber) ? $"#{sale.Id}" : sale.InvoiceNumber)
+                                    @if (sale.Status == GymManagmentDAL.Entities.Enums.SaleStatus.Voided)
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger ms-1" style="font-size: 0.65rem;">@Localizer["Voided"]</span>
+                                    }
+                                </td>
                                 <td>
                                     <div class="fw-semibold small">@sale.SaleDate.ToString("dd MMM yyyy")</div>
                                     <div class="text-secondary" style="font-size:.72rem;">@sale.SaleDate.ToString("hh:mm tt")</div>
@@ -146,14 +153,17 @@
                                         <a asp-action="SaleDetails" asp-route-id="@sale.Id" class="btn btn-outline-primary btn-sm rounded-pill">
                                             <i class="fas fa-eye me-1"></i>@Localizer["View"]
                                         </a>
-                                        <form asp-action="VoidSale" method="post" id="void_@sale.Id">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@sale.Id" />
-                                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
-                                                onclick="confirmSubmit(document.getElementById('void_@sale.Id'), '@Localizer["VoidSale"]', '@Localizer["VoidSaleConfirm"]', 'warning')">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        </form>
+                                        @if (sale.Status != GymManagmentDAL.Entities.Enums.SaleStatus.Voided)
+                                        {
+                                            <form asp-action="VoidSale" method="post" id="void_@sale.Id">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@sale.Id" />
+                                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
+                                                    onclick="confirmSubmit(document.getElementById('void_@sale.Id'), '@Localizer["VoidSale"]', '@Localizer["VoidSaleConfirm"]', 'warning')">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </form>
+                                        }
                                     </div>
                                 </td>
                             </tr>
@@ -162,5 +172,35 @@
                 </table>
             </div>
         </div>
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination pagination-rounded justify-content-center">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link shadow-none border-0" asp-action="SalesHistory" 
+                           asp-route-page="@(Model.PageNumber - 1)" asp-route-from="@from" asp-route-to="@to" asp-route-search="@search">
+                            <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i>
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link shadow-none border-0" 
+                               asp-action="SalesHistory" asp-route-page="@i" asp-route-from="@from" asp-route-to="@to" asp-route-search="@search">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link shadow-none border-0" asp-action="SalesHistory" 
+                           asp-route-page="@(Model.PageNumber + 1)" asp-route-from="@from" asp-route-to="@to" asp-route-search="@search">
+                            <i class="fas @(isRtl ? "fa-chevron-left" : "fa-chevron-right")"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
     }
 </div>

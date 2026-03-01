@@ -1,0 +1,280 @@
+@model GymManagmentBLL.ViewModels.StoreViewModel.StorePurchaseViewModel
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["NewPurchase"];
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+    var settings = await (ViewContext.HttpContext.RequestServices.GetService<GymManagmentBLL.Service.Interfaces.IGymSettingsService>()!).GetSettingsAsync();
+}
+
+@section Styles {
+    <style>
+        .purchase-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            padding: 2rem 2.5rem !important;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .purchase-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 60%);
+            pointer-events: none;
+        }
+
+        .icon-box-glass {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-radius: 16px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-glass-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group-premium {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-group-premium:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .input-group-premium .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            padding-inline-start: 1rem;
+            padding-inline-end: 0.5rem;
+        }
+        .input-group-premium .form-control, 
+        .input-group-premium .form-select {
+            background: transparent !important;
+            border: none !important;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            box-shadow: none !important;
+            color: var(--text-primary);
+        }
+        
+        .total-display-card {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        [data-theme='dark'] .purchase-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+        [data-theme='dark'] .input-group-premium {
+            background: var(--dark-surface);
+            border-color: var(--dark-border);
+        }
+        [data-theme='dark'] .input-group-premium .form-control, 
+        [data-theme='dark'] .input-group-premium .form-select {
+            color: #f1f5f9 !important;
+        }
+        [data-theme='dark'] .total-display-card {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+        [data-theme='dark'] .form-select option {
+            background-color: var(--dark-surface);
+            color: #f1f5f9;
+        }
+    </style>
+}
+
+<div class="container animate-fade-in py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="premium-card border-0 shadow-lg overflow-hidden">
+                <!-- Header -->
+                <div class="purchase-header text-white d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="icon-box-glass">
+                            <i class="fas fa-truck-loading fs-4"></i>
+                        </div>
+                        <div>
+                            <h2 class="h4 fw-bold mb-1 text-white">@Localizer["NewPurchase"]</h2>
+                            <p class="mb-0 opacity-80 small">@Localizer["NewPurchaseDesc"]</p>
+                        </div>
+                    </div>
+                    <a asp-action="Purchases" class="btn-glass-nav d-none d-md-flex">
+                        <i class="fas @(isRtl ? "fa-arrow-right" : "fa-arrow-left")"></i> 
+                        <span>@Localizer["BackToList"]</span>
+                    </a>
+                </div>
+
+                <div class="p-4 p-md-5">
+                    <form asp-action="CreatePurchase" method="post" id="purchaseForm" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div class="row g-4">
+                            <!-- Product Row -->
+                            <div class="col-md-8">
+                                <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["Product"]</label>
+                                <div class="input-group-premium d-flex align-items-center">
+                                    <span class="input-group-text"><i class="fas fa-box"></i></span>
+                                    <select asp-for="ProductId" asp-items="ViewBag.ProductList" class="form-select" required>
+                                        <option value="">-- @Localizer["SelectProduct"] --</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="ProductId" class="text-danger small mt-1 d-block"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["PurchaseDate"]</label>
+                                <div class="input-group-premium d-flex align-items-center">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input asp-for="PurchaseDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                                </div>
+                            </div>
+
+                            <!-- Supplier Row -->
+                            <div class="col-md-6">
+                                <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["Supplier"]</label>
+                                <div class="input-group-premium d-flex align-items-center">
+                                    <span class="input-group-text"><i class="fas fa-handshake"></i></span>
+                                    <select asp-for="SupplierId" asp-items="ViewBag.SupplierList" class="form-select">
+                                        <option value="">-- @Localizer["GeneralSupplier"] --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["Accounting"]</label>
+                                <div class="form-check form-switch h-100 d-flex align-items-center gap-3 input-group-premium p-0 px-4">
+                                    <input class="form-check-input mt-0 ms-0 cursor-pointer" type="checkbox" asp-for="CreateExpenseRecord" checked id="expenseSwitch" style="width: 2.5rem; height: 1.25rem;">
+                                    <label class="form-check-label fw-bold cursor-pointer small" for="expenseSwitch">
+                                        @Localizer["CreateExpenseRecord"]
+                                        <i class="fas fa-info-circle ms-1 opacity-50" title="@Localizer["ExpenseRecordHint"]"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Financial Box -->
+                            <div class="col-12 mt-4">
+                                <div class="p-4 rounded-4 border border-dashed" style="background: rgba(var(--bs-primary-rgb), 0.02);">
+                                    <div class="row g-4 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["Quantity"]</label>
+                                            <div class="input-group-premium d-flex align-items-center shadow-sm">
+                                                <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+                                                <input asp-for="Quantity" type="number" class="form-control text-center fw-bold" min="1" required id="qtyInp" style="font-size: 1.1rem;" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["UnitPrice"] (@(settings.Currency))</label>
+                                            <div class="input-group-premium d-flex align-items-center shadow-sm">
+                                                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                                <input asp-for="UnitPrice" type="number" step="0.01" class="form-control text-center fw-bold" min="0" required id="priceInp" style="font-size: 1.1rem;" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="total-display-card text-center shadow-sm">
+                                                <div class="x-small fw-bold text-uppercase opacity-75 mb-1">@Localizer["TotalAmount"]</div>
+                                                <div class="h4 fw-black mb-0">
+                                                    <span id="totalInp">0.00</span>
+                                                    <span class="small ms-1">@settings.Currency</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="col-12">
+                                <label class="form-label x-small fw-bold text-uppercase opacity-75 mb-2">@Localizer["Notes"]</label>
+                                <textarea asp-for="Notes" class="form-control border shadow-none p-3" rows="2" style="border-radius: var(--radius-md);" placeholder="@Localizer["OptionalNotes"]"></textarea>
+                            </div>
+
+                            <!-- Action -->
+                            <div class="col-12 text-center mt-5">
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg hover-up transition-all">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    @Localizer["RecordPurchase"]
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const qty = document.getElementById('qtyInp');
+        const price = document.getElementById('priceInp');
+        const total = document.getElementById('totalInp');
+
+        function updateTotal() {
+            const q = parseFloat(qty.value) || 0;
+            const p = parseFloat(price.value) || 0;
+            const result = (q * p);
+            total.innerText = result.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        qty.addEventListener('input', updateTotal);
+        price.addEventListener('input', updateTotal);
+        updateTotal();
+
+        // Dark mode adjustments
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            document.querySelectorAll('.bg-light').forEach(el => {
+                el.style.backgroundColor = 'rgba(255,255,255,0.03)';
+            });
+        }
+    </script>
+}
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .hover-up { transition: all 0.3s ease; }
+    .hover-up:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(var(--bs-primary-rgb), 0.3) !important; }
+    .btn-white { background: #fff; color: var(--bs-primary); border: none; }
+    .btn-white:hover { background: #f8fafc; color: var(--bs-primary); }
+</style>

@@ -115,7 +115,7 @@
                             <i class="fas fa-walking"></i> @Localizer["WalkIn"]
                         </a>
 
-                        <a asp-controller="Store" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Store" ? "active" : "")">
+                        <a asp-controller="Store" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Store" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                             <i class="fas fa-shopping-cart"></i> @Localizer["Store"]
                         </a>
 
@@ -381,6 +381,44 @@
                 }
             }
         })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        // SignalR Real-time Inventory Notifications
+        const inventoryConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/inventoryHub")
+            .withAutomaticReconnect()
+            .build();
+
+        inventoryConnection.on("ReceiveInventoryAlert", function (data) {
+            console.log("Inventory Alert:", data);
+            
+            // Show SweetAlert Toast
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: 'warning',
+                title: `@Html.Raw(Localizer["LowStock"])`,
+                html: `<strong>${data.productName}</strong>: ${data.newStock} items left.`
+            });
+
+            // If we are on the Store Index or Dashboard, we might want to refresh elements
+            if (window.location.pathname.includes('/Store')) {
+                // Future improvement: Dynamically update stock badge on page
+            }
+        });
+
+        inventoryConnection.start().catch(err => console.error(err.toString()));
     </script>
     @await RenderSectionAsync("Modals", required: false)
     @await RenderSectionAsync("Scripts", required: false)

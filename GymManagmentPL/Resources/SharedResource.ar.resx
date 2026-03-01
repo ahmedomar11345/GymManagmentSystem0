@@ -2143,7 +2143,7 @@
     <value>أسبوعياً</value>
   </data>
   <data name="Monthly" xml:space="preserve">
-    <value>شهرياً</value>
+    <value>شهري</value>
   </data>
   <data name="AttendanceHistory" xml:space="preserve">
     <value>سجل الحضور</value>
@@ -2455,7 +2455,7 @@
     <value>إجمالي المدربين</value>
   </data>
   <data name="WalkIn" xml:space="preserve">
-    <value>حصص الزوار</value>
+    <value>بدون عضوية</value>
   </data>
   <data name="WalkInBooking" xml:space="preserve">
     <value>حجز حصة زائر</value>
@@ -2584,7 +2584,7 @@
     <value>مبيعات اليوم</value>
   </data>
   <data name="LowStockProducts" xml:space="preserve">
-    <value>منتجات كميتها قليلة</value>
+    <value>نقص المخزون</value>
   </data>
   <data name="SearchProductPlaceholder" xml:space="preserve">
     <value>البحث بالاسم، الكود أو الباركود...</value>
@@ -2593,7 +2593,7 @@
     <value>كل التصنيفات</value>
   </data>
   <data name="NoProductsFound" xml:space="preserve">
-    <value>لم يتم العثور على منتجات تطابق بحثك.</value>
+    <value>لم يتم العثور على منتجات</value>
   </data>
   <data name="OnSale" xml:space="preserve">
     <value>عرض خاص</value>
@@ -2686,7 +2686,7 @@
     <value>ملخص الطلب</value>
   </data>
   <data name="WalkInCustomer" xml:space="preserve">
-    <value>عميل نقدي (بدون عضوية)</value>
+    <value>عميل عابر</value>
   </data>
   <data name="OrSelectMember" xml:space="preserve">
     <value>أو اختر عضواً</value>
@@ -2695,10 +2695,10 @@
     <value>تأكيد البيع</value>
   </data>
   <data name="BarcodeNotFound" xml:space="preserve">
-    <value>لم يتم العثور على منتج بهذا الباركود.</value>
+    <value>كود الباركود غير موجود</value>
   </data>
   <data name="ProductOutOfStock" xml:space="preserve">
-    <value>هذا المنتج غير متوفر في المخزون حالياً.</value>
+    <value>المنتج غير متوفر في المخزون</value>
   </data>
   <data name="StoreSaleNoItems" xml:space="preserve">
     <value>لا يمكن إتمام البيع بدون منتجات.</value>
@@ -2720,6 +2720,12 @@
   </data>
   <data name="AddProductDesc" xml:space="preserve">
     <value>إضافة منتج جديد للمخزون.</value>
+  </data>
+  <data name="StoreSale" xml:space="preserve">
+    <value>عملية بيع من المتجر</value>
+  </data>
+  <data name="Qty" xml:space="preserve">
+    <value>الكمية</value>
   </data>
   <data name="UnitPrice" xml:space="preserve">
     <value>سعر الوحدة</value>
@@ -2812,7 +2818,7 @@
     <value>لم يتم العثور على مبيعات في هذه الفترة.</value>
   </data>
   <data name="Subtotal" xml:space="preserve">
-    <value>المجموع الجزئي</value>
+    <value>المجموع الفرعي</value>
   </data>
   <data name="InstaPay" xml:space="preserve">
     <value>إنستا باي</value>
@@ -2827,7 +2833,7 @@
     <value>تاريخ الإصدار:</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>المنتجات</value>
+    <value>منتجات</value>
   </data>
   <data name="YesProceed" xml:space="preserve">
     <value>نعم، استمر</value>
@@ -2842,7 +2848,7 @@
     <value>العميل</value>
   </data>
   <data name="Items" xml:space="preserve">
-    <value>الأصناف</value>
+    <value>أصناف</value>
   </data>
   <data name="PaymentMethod" xml:space="preserve">
     <value>طريقة الدفع</value>
@@ -2857,7 +2863,7 @@
     <value>عرض</value>
   </data>
   <data name="Cash" xml:space="preserve">
-    <value>نقدي</value>
+    <value>كاش</value>
   </data>
   <data name="From" xml:space="preserve">
     <value>من</value>
@@ -2914,13 +2920,13 @@
     <value>إلغاء الفاتورة</value>
   </data>
   <data name="VoidSaleConfirm" xml:space="preserve">
-    <value>هل أنت متأكد من إلغاء هذه الفاتورة؟ سيتم استعادة المخزون ولا يمكن التراجع عن هذا الإجراء.</value>
+    <value>هل أنت متأكد من إلغاء هذه الفاتورة؟ سيتم إرجاع المنتجات للمخزون.</value>
   </data>
   <data name="SaleVoided" xml:space="preserve">
-    <value>تم إلغاء الفاتورة بنجاح واستعادة المخزون.</value>
+    <value>تم إلغاء الفاتورة بنجاح.</value>
   </data>
   <data name="SaleVoidFailed" xml:space="preserve">
-    <value>تعذّر إلغاء الفاتورة. ربما تكون ملغاة مسبقاً.</value>
+    <value>فشل إلغاء الفاتورة.</value>
   </data>
   <data name="Manage" xml:space="preserve">
     <value>إدارة</value>
@@ -2965,7 +2971,7 @@
     <value>تعديل جديد</value>
   </data>
   <data name="SelectProduct" xml:space="preserve">
-    <value>اختر المنتج</value>
+    <value>اختر المنتج المراد توريده</value>
   </data>
   <data name="AdjustmentType" xml:space="preserve">
     <value>النوع</value>
@@ -3076,7 +3082,7 @@
     <value>مثال: WP-1KG-001</value>
   </data>
   <data name="GrandTotal" xml:space="preserve">
-    <value>المبلغ الإجمالي</value>
+    <value>الإجمالي النهائي</value>
   </data>
   <data name="HaveANiceDay" xml:space="preserve">
     <value>نتمنى لك يوماً سعيداً!</value>
@@ -3096,27 +3102,6 @@
   <data name="AllowedDomainsTip" xml:space="preserve">
     <value>مسموح فقط بروابط من: Unsplash, Imgur, Cloudinary, Google.</value>
   </data>
-  <data name="Price" xml:space="preserve">
-    <value>سعر</value>
-  </data>
-  <data name="Waitlisted" xml:space="preserve">
-    <value>قائمة الانتظار</value>
-  </data>
-  <data name="CustomerName" xml:space="preserve">
-    <value>اسم العميل</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>الوصف</value>
-  </data>
-  <data name="CategoryPresets" xml:space="preserve">
-    <value>اختصارات الأقسام</value>
-  </data>
-  <data name="ExpiryDate" xml:space="preserve">
-    <value>تاريخ الانتهاء</value>
-  </data>
-  <data name="GenerateSKU" xml:space="preserve">
-    <value>توليد كود تلقائياً</value>
-  </data>
   <data name="IncreaseStock" xml:space="preserve">
     <value>زيادة الكمية</value>
   </data>
@@ -3131,15 +3116,6 @@
   </data>
   <data name="InStock" xml:space="preserve">
     <value>في المخزون</value>
-  </data>
-  <data name="SalesHistory" xml:space="preserve">
-    <value>سجل المبيعات</value>
-  </data>
-  <data name="LowStockProducts" xml:space="preserve">
-    <value>نقص المخزون</value>
-  </data>
-  <data name="Monthly" xml:space="preserve">
-    <value>شهري</value>
   </data>
   <data name="Yearly" xml:space="preserve">
     <value>سنوي</value>
@@ -3174,7 +3150,190 @@
   <data name="MultipleImagesNote" xml:space="preserve">
     <value>يمكنك تحديد أكثر من صورة لرفعها معاً.</value>
   </data>
-  <data name="ConfirmDeleteImage" xml:space="preserve">
-    <value>هل أنت متأكد من حذف هذه الصورة؟</value>
+  <data name="Inventory" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="Sell" xml:space="preserve">
+    <value>بيع</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+  <data name="Cashier" xml:space="preserve">
+    <value>الكاشير</value>
+  </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>رقم الفاتورة</value>
+  </data>
+  <data name="Voided" xml:space="preserve">
+    <value>ملغاة</value>
+  </data>
+  <data name="Flavor" xml:space="preserve">
+    <value>النكهة</value>
+  </data>
+  <data name="CategoryAndFlavor" xml:space="preserve">
+    <value>القسم والنكهة</value>
+  </data>
+  <data name="AddNewCategory" xml:space="preserve">
+    <value>إضافة قسم جديد</value>
+  </data>
+  <data name="NewCategoryName" xml:space="preserve">
+    <value>اسم القسم الجديد</value>
+  </data>
+  <data name="EnterNewCategoryName" xml:space="preserve">
+    <value>ادخل اسم القسم الجديد</value>
+  </data>
+  <data name="QuickPresets" xml:space="preserve">
+    <value>اختصارات سريعة</value>
+  </data>
+  <data name="CategoryPresets" xml:space="preserve">
+    <value>اختصارات الأقسام</value>
+  </data>
+  <data name="Chocolate" xml:space="preserve">
+    <value>شوكولاتة</value>
+  </data>
+  <data name="Vanilla" xml:space="preserve">
+    <value>فانيليا</value>
+  </data>
+  <data name="Cookies &amp; Cream" xml:space="preserve">
+    <value>كوكيز وكريمة</value>
+  </data>
+  <data name="Strawberry" xml:space="preserve">
+    <value>فراولة</value>
+  </data>
+  <data name="Banana" xml:space="preserve">
+    <value>موز</value>
+  </data>
+  <data name="Salted Caramel" xml:space="preserve">
+    <value>سولتيد كراميل</value>
+  </data>
+  <data name="Blue Raspberry" xml:space="preserve">
+    <value>توت أزرق</value>
+  </data>
+  <data name="Fruit Punch" xml:space="preserve">
+    <value>فواكه مشكلة</value>
+  </data>
+  <data name="Watermelon" xml:space="preserve">
+    <value>بطيخ</value>
+  </data>
+  <data name="Mango" xml:space="preserve">
+    <value>مانجو</value>
+  </data>
+  <data name="Peanut Butter" xml:space="preserve">
+    <value>زبدة الفول السوداني</value>
+  </data>
+  <data name="Caramel" xml:space="preserve">
+    <value>كراميل</value>
+  </data>
+  <data name="PurchaseHistory" xml:space="preserve">
+    <value>سجل المشتريات</value>
+  </data>
+  <data name="PurchaseHistoryDesc" xml:space="preserve">
+    <value>تتبع وإدارة عمليات توريد المخزون واستثمارات المتجر.</value>
+  </data>
+  <data name="RecordNewPurchase" xml:space="preserve">
+    <value>تسجيل مشتريات جديدة</value>
+  </data>
+  <data name="NewPurchase" xml:space="preserve">
+    <value>شراء مخزون</value>
+  </data>
+  <data name="NewPurchaseDesc" xml:space="preserve">
+    <value>قم بتوريد بضاعة جديدة للمخزون وتسجيل تكلفتها.</value>
+  </data>
+  <data name="RecordPurchase" xml:space="preserve">
+    <value>حفظ المشتريات</value>
+  </data>
+  <data name="PurchaseRecordedSuccess" xml:space="preserve">
+    <value>تم تسجيل المشتريات بنجاح وتحديث المخزون.</value>
+  </data>
+  <data name="TotalInvestment" xml:space="preserve">
+    <value>إجمالي الاستثمار</value>
+  </data>
+  <data name="AvgUnitCost" xml:space="preserve">
+    <value>متوسط سعر القطعة</value>
+  </data>
+  <data name="TotalPurchasesCount" xml:space="preserve">
+    <value>عدد العمليات</value>
+  </data>
+  <data name="NoPurchasesFound" xml:space="preserve">
+    <value>لا توجد سجلات مشتريات تطابق البحث.</value>
+  </data>
+  <data name="ViewExpense" xml:space="preserve">
+    <value>عرض المصروف المالي</value>
+  </data>
+  <data name="CreateExpenseRecord" xml:space="preserve">
+    <value>تسجيل كمصروف في الحسابات</value>
+  </data>
+  <data name="ExpenseRecordHint" xml:space="preserve">
+    <value>سيتم إضافة هذا المبلغ تلقائياً لمصاريف الجيم العامة.</value>
+  </data>
+  <data name="GeneralSupplier" xml:space="preserve">
+    <value>مورد عام / بدون مورد</value>
+  </data>
+  <data name="Accounting" xml:space="preserve">
+    <value>الحسابات والمالية</value>
+  </data>
+  <data name="OptionalNotes" xml:space="preserve">
+    <value>اكتب أي تفاصيل إضافية عن هذه العملية (اختياري)...</value>
+  </data>
+  <data name="TryDifferentFilters" xml:space="preserve">
+    <value>حاول تغيير كلمة البحث أو الفلاتر للعثور على ما تبحث عنه.</value>
+  </data>
+  <data name="Cat_StorePurchase" xml:space="preserve">
+    <value>شراء مخزون</value>
+  </data>
+  <data name="AllProducts" xml:space="preserve">
+    <value>كل المنتجات</value>
+  </data>
+  <data name="AllSuppliers" xml:space="preserve">
+    <value>كل الموردين</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>سعر</value>
+  </data>
+  <data name="Waitlisted" xml:space="preserve">
+    <value>قائمة الانتظار</value>
+  </data>
+  <data name="CustomerName" xml:space="preserve">
+    <value>اسم العميل</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="ExpiryDate" xml:space="preserve">
+    <value>تاريخ الانتهاء</value>
+  </data>
+  <data name="GenerateSKU" xml:space="preserve">
+    <value>توليد كود تلقائياً</value>
+  </data>
+  <data name="CouponCode" xml:space="preserve">
+    <value>كود الخصم</value>
+  </data>
+  <data name="EnterCoupon" xml:space="preserve">
+    <value>أدخل الكود</value>
+  </data>
+  <data name="TotalDiscount" xml:space="preserve">
+    <value>إجمالي الخصم</value>
+  </data>
+  <data name="LoyaltyPoints" xml:space="preserve">
+    <value>نقاط الولاء</value>
+  </data>
+  <data name="Redeem" xml:space="preserve">
+    <value>استبدال</value>
+  </data>
+  <data name="PointsEarned" xml:space="preserve">
+    <value>نقاط مكتسبة</value>
+  </data>
+  <data name="PointsRedeemed" xml:space="preserve">
+    <value>نقاط مستبدلة</value>
+  </data>
+  <data name="CouponApplied" xml:space="preserve">
+    <value>تم تطبيق الكوبون بنجاح!</value>
+  </data>
+  <data name="InvalidCoupon" xml:space="preserve">
+    <value>كوبون غير صالح أو منتهي</value>
+  </data>
+  <data name="BarcodeScan" xml:space="preserve">
+    <value>مسح الباركود (F4)</value>
   </data>
 </root>

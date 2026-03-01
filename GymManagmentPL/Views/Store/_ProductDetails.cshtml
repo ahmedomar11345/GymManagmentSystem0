@@ -38,6 +38,15 @@
         border-radius: 24px;
         border: 1px solid var(--qv-border);
     }
+
+    .label-text {
+        color: #4a5568; /* Solid slate color for visibility */
+        letter-spacing: 0.5px;
+    }
+
+    [data-theme='dark'] .label-text {
+        color: var(--qv-text-muted);
+    }
 </style>
 
 <div class="quick-view-container row g-0">
@@ -52,7 +61,7 @@
             @if (hasGallery || hasMainImage)
             {
                 <div id="productGallery" class="carousel slide h-100" data-bs-ride="carousel">
-                    @if (hasGallery && Model.GalleryImages.Count > 0)
+                    @if (hasGallery && Model.GalleryImages?.Count > 0)
                     {
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#productGallery" data-bs-slide-to="0" class="active"></button>
@@ -72,14 +81,14 @@
                             }
                             else if (hasGallery)
                             {
-                                <img src="@Model.GalleryImages.First().ImageUrl" class="d-block w-100 h-100" style="object-fit: contain; padding: 5px;" alt="@Model.Name">
+                                <img src="@Model.GalleryImages!.First().ImageUrl" class="d-block w-100 h-100" style="object-fit: contain; padding: 5px;" alt="@Model.Name">
                             }
                         </div>
 
                         <!-- Gallery Images -->
                         @if (hasGallery)
                         {
-                            @foreach (var img in Model.GalleryImages)
+                            @foreach (var img in Model.GalleryImages!)
                             {
                                 if (img.ImageUrl == Model.ImageUrl) continue;
                                 <div class="carousel-item h-100">
@@ -89,7 +98,7 @@
                         }
                     </div>
 
-                    @if (hasGallery && Model.GalleryImages.Count > 0)
+                    @if (hasGallery && Model.GalleryImages?.Count > 0)
                     {
                         <button class="carousel-control-prev" type="button" data-bs-target="#productGallery" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
@@ -133,20 +142,33 @@
                         SKU: <span class="ms-1 fw-bold" style="color: var(--qv-text-main);">@Model.SKU</span>
                     </span>
                 }
+                @if (Model.Flavor != GymManagmentDAL.Entities.Enums.ProductFlavor.None)
+                {
+                    var flavorName = Model.Flavor.GetType()
+                        .GetMember(Model.Flavor.ToString())
+                        .FirstOrDefault()
+                        ?.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)
+                        .Cast<System.ComponentModel.DataAnnotations.DisplayAttribute>()
+                        .FirstOrDefault()?.Name ?? Model.Flavor.ToString();
+
+                    <span class="badge rounded-pill px-3 py-2 fw-bold shadow-none" style="background: var(--qv-info-bg); border: 1px solid var(--qv-border); color: #f59e0b;">
+                        <i class="fas fa-ice-cream me-1"></i> @Localizer["Flavor"]: <span class="ms-1 fw-bold" style="color: var(--qv-text-main);">@Localizer[flavorName]</span>
+                    </span>
+                }
             </div>
 
             @if (!string.IsNullOrEmpty(Model.Description))
             {
                 <div class="mb-4">
-                    <h6 class="text-uppercase x-small fw-black mb-2 opacity-50" style="color: var(--qv-text-muted); letter-spacing: 0.5px;">@Localizer["Description"]</h6>
-                    <p style="color: var(--qv-text-main); line-height: 1.6; opacity: 0.85;">@Model.Description</p>
+                    <h6 class="text-uppercase x-small fw-bold mb-2 label-text">@Localizer["Description"]</h6>
+                    <p style="color: var(--qv-text-main); line-height: 1.6; opacity: 0.95;">@Model.Description</p>
                 </div>
             }
 
             <div class="row g-3 mb-4">
                 <div class="col-6">
                     <div class="qv-info-card p-3 rounded-4 border-start border-primary border-4 shadow-sm h-100 d-flex flex-column justify-content-center">
-                        <span class="x-small fw-black text-uppercase mb-1 opacity-50" style="color: var(--qv-text-muted);">@Localizer["Price"]</span>
+                        <span class="x-small fw-bold text-uppercase mb-1 label-text">@Localizer["Price"]</span>
                         <div class="h3 fw-black mb-0 text-primary">@currency @Model.EffectivePrice.ToString("N0")</div>
                         @if (Model.IsOnSale)
                         {
@@ -156,9 +178,9 @@
                 </div>
                 <div class="col-6">
                     <div class="qv-info-card p-3 rounded-4 border-start border-success border-4 shadow-sm h-100 d-flex flex-column justify-content-center">
-                        <span class="x-small fw-black text-uppercase mb-1 opacity-50" style="color: var(--qv-text-muted);">@Localizer["Stock"]</span>
+                        <span class="x-small fw-bold text-uppercase mb-1 label-text">@Localizer["Stock"]</span>
                         <div class="h3 fw-black mb-0 @(Model.IsLowStock ? "text-warning" : "text-success")">@Model.StockQuantity</div>
-                        <div class="x-small opacity-60" style="color: var(--qv-text-muted);">@Localizer["UnitsInHand"]</div>
+                        <div class="x-small opacity-75 fw-medium" style="color: var(--qv-text-muted);">@Localizer["UnitsInHand"]</div>
                     </div>
                 </div>
             </div>

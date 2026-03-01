@@ -38,8 +38,34 @@ namespace GymManagmentDAL.Entities
         [MaxLength(500)]
         public string? Notes { get; set; }
 
-        /// <summary>True if this sale has been voided/cancelled and stock restored.</summary>
-        public bool IsVoided { get; set; } = false;
+        /// <summary>Snapshot of member name at time of sale</summary>
+        [MaxLength(200)]
+        public string? MemberNameSnapshot { get; set; }
+
+        /// <summary>Snapshot of member status at time of sale (Active/Expired/etc)</summary>
+        [MaxLength(50)]
+        public string? MemberStatusSnapshot { get; set; }
+
+        /// <summary>Status of the sale (Completed, PartiallyRefunded, Voided)</summary>
+        public SaleStatus Status { get; set; } = SaleStatus.Completed;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PointsEarned { get; set; } = 0;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PointsRedeemedValue { get; set; } = 0;
+
+        [MaxLength(100)]
+        public string? CouponCode { get; set; }
+
+        [MaxLength(50)]
+        public string? InvoiceNumber { get; set; }
+
+        [MaxLength(200)]
+        public string? CashierName { get; set; }
+
+        [MaxLength(200)]
+        public string? CashierEmail { get; set; }
 
         public ICollection<SaleItem> Items { get; set; } = new List<SaleItem>();
     }

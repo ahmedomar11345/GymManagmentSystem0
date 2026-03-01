@@ -32,17 +32,17 @@ namespace GymManagmentBLL.ViewModels.AnalyticsViewModel
     public class ExpiringMemberViewModel
     {
         public int MemberId { get; set; }
-        public string MemberName { get; set; }
-        public string PlanName { get; set; }
+        public required string MemberName { get; set; }
+        public required string PlanName { get; set; }
         public DateTime EndDate { get; set; }
         public int DaysRemaining { get; set; }
     }
 
     public class RecentActivityViewModel
     {
-        public string Action { get; set; }
-        public string EntityName { get; set; }
+        public required string Action { get; set; }
+        public required string EntityName { get; set; }
         public DateTime Timestamp { get; set; }
-        public string UserEmail { get; set; }
+        public required string UserEmail { get; set; }
     }
 }

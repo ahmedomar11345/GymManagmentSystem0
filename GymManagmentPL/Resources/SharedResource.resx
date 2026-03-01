@@ -577,7 +577,7 @@
     <value>Membership Plan</value>
   </data>
   <data name="Optional" xml:space="preserve">
-    <value>(Optional)</value>
+    <value>Optional</value>
   </data>
   <data name="Requirements" xml:space="preserve">
     <value>Requirements</value>
@@ -697,7 +697,7 @@
     <value>cm</value>
   </data>
   <data name="KG" xml:space="preserve">
-    <value>kg</value>
+    <value>KG</value>
   </data>
   <data name="NoActiveMembershipForNow" xml:space="preserve">
     <value>-- No Active Membership For Now --</value>
@@ -981,7 +981,6 @@
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
-
   <data name="ViewDetails" xml:space="preserve">
     <value>View Details</value>
   </data>
@@ -1037,7 +1036,7 @@
     <value>Notifications</value>
   </data>
   <data name="NotificationsEmpty" xml:space="preserve">
-    <value>You're all caught up!</value>
+    <value>All caught up!</value>
   </data>
   <data name="Administrator" xml:space="preserve">
     <value>Administrator</value>
@@ -1063,7 +1062,6 @@
   <data name="NoHealthRecord" xml:space="preserve">
     <value>No health record available</value>
   </data>
-
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
@@ -1239,7 +1237,7 @@
     <value>Showing plans expiring within the next</value>
   </data>
   <data name="Days" xml:space="preserve">
-    <value>Days</value>
+    <value>days</value>
   </data>
   <data name="SendReminders" xml:space="preserve">
     <value>Send Reminders</value>
@@ -1367,8 +1365,6 @@
   <data name="CustomRange" xml:space="preserve">
     <value>Custom Range</value>
   </data>
-
-
   <data name="NoCheckIns" xml:space="preserve">
     <value>No check-ins for this day</value>
   </data>
@@ -2218,7 +2214,6 @@
   <data name="CheckIns" xml:space="preserve">
     <value>Check-ins</value>
   </data>
-
   <data name="ReviewWeeklyAttendanceAnalytics" xml:space="preserve">
     <value>Review detailed attendance analytics and logs</value>
   </data>
@@ -2228,7 +2223,6 @@
   <data name="TotalCheckIns" xml:space="preserve">
     <value>Total Check-ins</value>
   </data>
-
   <data name="BusyTime" xml:space="preserve">
     <value>Busy Time</value>
   </data>
@@ -2265,7 +2259,6 @@
   <data name="NoRecordsFound" xml:space="preserve">
     <value>No records found</value>
   </data>
-
   <data name="DailyAttendanceReport" xml:space="preserve">
     <value>Daily Attendance Report</value>
   </data>
@@ -2437,9 +2430,6 @@
   <data name="Progression" xml:space="preserve">
     <value>Progression</value>
   </data>
-  <data name="CurrentStatus" xml:space="preserve">
-    <value>Current Status</value>
-  </data>
   <data name="CurrentWeight" xml:space="preserve">
     <value>Current Weight</value>
   </data>
@@ -2460,18 +2450,6 @@
   </data>
   <data name="FromInBodyDevice" xml:space="preserve">
     <value>Enter value from gym device (InBody)</value>
-  </data>
-  <data name="KG" xml:space="preserve">
-    <value>KG</value>
-  </data>
-  <data name="NA" xml:space="preserve">
-    <value>N/A</value>
-  </data>
-  <data name="Notes" xml:space="preserve">
-    <value>Notes</value>
-  </data>
-  <data name="Details" xml:space="preserve">
-    <value>Details</value>
   </data>
   <data name="TotalCategories" xml:space="preserve">
     <value>Total Categories</value>
@@ -2549,7 +2527,7 @@
     <value>Default price for each walk-in session.</value>
   </data>
   <data name="ThankYouForChoosing" xml:space="preserve">
-    <value>Thank you for choosing us</value>
+    <value>Thank you for choosing</value>
   </data>
   <data name="UseSessionConfirmMessage" xml:space="preserve">
     <value>Are you sure you want to log attendance for this guest?</value>
@@ -2626,9 +2604,6 @@
   <data name="LowStock" xml:space="preserve">
     <value>Low Stock</value>
   </data>
-  <data name="Expired" xml:space="preserve">
-    <value>Expired</value>
-  </data>
   <data name="Unavailable" xml:space="preserve">
     <value>Unavailable</value>
   </data>
@@ -2654,10 +2629,7 @@
     <value>Product Name (Arabic)</value>
   </data>
   <data name="ProductDescriptionPlaceholder" xml:space="preserve">
-    <value>Enter product details, usage, etc.</value>
-  </data>
-  <data name="SelectCategory" xml:space="preserve">
-    <value>Select Category</value>
+    <value>Brief description (optional)...</value>
   </data>
   <data name="SKU" xml:space="preserve">
     <value>SKU</value>
@@ -2678,7 +2650,7 @@
     <value>Low Stock Threshold</value>
   </data>
   <data name="LowStockThresholdHelper" xml:space="preserve">
-    <value>Get notified when stock drops below this value.</value>
+    <value>We will notify you when stock drops below this.</value>
   </data>
   <data name="IsAvailable" xml:space="preserve">
     <value>Available for Sale</value>
@@ -2690,7 +2662,7 @@
     <value>Product Image</value>
   </data>
   <data name="NoImageYet" xml:space="preserve">
-    <value>No image uploaded yet.</value>
+    <value>No image yet</value>
   </data>
   <data name="ChangeImage" xml:space="preserve">
     <value>Change Image</value>
@@ -2699,13 +2671,13 @@
     <value>Click to upload image</value>
   </data>
   <data name="ImageUploadNote" xml:space="preserve">
-    <value>Recommended size: 500x500px. Max size 2MB.</value>
+    <value>JPG, PNG or WEBP. Max 2MB.</value>
   </data>
   <data name="BarcodeScanner" xml:space="preserve">
     <value>Barcode Scanner</value>
   </data>
   <data name="ScanOrTypeBarcode" xml:space="preserve">
-    <value>Scan item barcode or type manually...</value>
+    <value>Scan or type barcode...</value>
   </data>
   <data name="BarcodeScannerHelper" xml:space="preserve">
     <value>Scanning will automatically add the product to the sale list.</value>
@@ -2717,7 +2689,7 @@
     <value>Order Summary</value>
   </data>
   <data name="WalkInCustomer" xml:space="preserve">
-    <value>Walk-in Customer</value>
+    <value>Walk-in Customer (No Membership)</value>
   </data>
   <data name="OrSelectMember" xml:space="preserve">
     <value>Or Select Member</value>
@@ -2732,19 +2704,16 @@
     <value>This product is currently out of stock.</value>
   </data>
   <data name="StoreSaleNoItems" xml:space="preserve">
-    <value>Please add at least one item to the sale.</value>
+    <value>Please select at least one product.</value>
   </data>
   <data name="StoreSaleCreated" xml:space="preserve">
-    <value>Sale recorded successfully.</value>
+    <value>Sale created successfully.</value>
   </data>
   <data name="TotalSales" xml:space="preserve">
-    <value>Total Sales</value>
-  </data>
-  <data name="TotalRevenue" xml:space="preserve">
-    <value>Total Revenue</value>
+    <value>records</value>
   </data>
   <data name="NoSalesInRange" xml:space="preserve">
-    <value>No sales found in the selected date range.</value>
+    <value>No sales found for the selected period.</value>
   </data>
   <data name="SaleSummary" xml:space="preserve">
     <value>Sale Summary</value>
@@ -2753,7 +2722,7 @@
     <value>Sale ID</value>
   </data>
   <data name="AddProductDesc" xml:space="preserve">
-    <value>Create a new product for the store.</value>
+    <value>Add a new product to your inventory.</value>
   </data>
   <data name="StoreSale" xml:space="preserve">
     <value>Store Sale</value>
@@ -2763,9 +2732,6 @@
   </data>
   <data name="Qty" xml:space="preserve">
     <value>Qty</value>
-  </data>
-  <data name="ThankYouForChoosing" xml:space="preserve">
-    <value>Thank you for choosing</value>
   </data>
   <data name="UnitPrice" xml:space="preserve">
     <value>Unit Price</value>
@@ -2781,9 +2747,6 @@
   </data>
   <data name="Profit" xml:space="preserve">
     <value>Profit</value>
-  </data>
-  <data name="NetProfit" xml:space="preserve">
-    <value>Net Profit</value>
   </data>
   <data name="MonthProfit" xml:space="preserve">
     <value>Month Profit</value>
@@ -2806,9 +2769,6 @@
   <data name="BestSellers" xml:space="preserve">
     <value>Best Sellers</value>
   </data>
-  <data name="Address" xml:space="preserve">
-    <value>Address</value>
-  </data>
   <data name="ContactPerson" xml:space="preserve">
     <value>Contact Person</value>
   </data>
@@ -2828,7 +2788,7 @@
     <value>Add Supplier</value>
   </data>
   <data name="ManageSuppliersDesc" xml:space="preserve">
-    <value>View and manage your product suppliers</value>
+    <value>Manage your product suppliers and their contact info.</value>
   </data>
   <data name="SupplierName" xml:space="preserve">
     <value>Supplier Name</value>
@@ -2840,10 +2800,10 @@
     <value>View Products</value>
   </data>
   <data name="NoSuppliersFound" xml:space="preserve">
-    <value>No suppliers found</value>
+    <value>No suppliers found.</value>
   </data>
   <data name="StartByAddingSupplier" xml:space="preserve">
-    <value>Start by adding your first supplier now.</value>
+    <value>Start by adding your first supplier.</value>
   </data>
   <data name="SelectSupplier" xml:space="preserve">
     <value>Select Supplier</value>
@@ -2854,17 +2814,14 @@
   <data name="QtySold" xml:space="preserve">
     <value>Qty Sold</value>
   </data>
-  <data name="Revenue" xml:space="preserve">
-    <value>Revenue</value>
-  </data>
   <data name="ProfitMargin" xml:space="preserve">
-    <value>Profit Margin</value>
+    <value>Margin %</value>
   </data>
   <data name="GenerateReport" xml:space="preserve">
     <value>Generate Report</value>
   </data>
   <data name="NoSalesFoundInPeriod" xml:space="preserve">
-    <value>No sales found in this period</value>
+    <value>No sales found in this period.</value>
   </data>
   <data name="Subtotal" xml:space="preserve">
     <value>Subtotal</value>
@@ -2874,9 +2831,6 @@
   </data>
   <data name="VodafoneCash" xml:space="preserve">
     <value>Vodafone Cash</value>
-  </data>
-  <data name="WalkIn" xml:space="preserve">
-    <value>Walk-in</value>
   </data>
   <data name="Success" xml:space="preserve">
     <value>Success</value>
@@ -2893,151 +2847,225 @@
   <data name="NoMatchingRecords" xml:space="preserve">
     <value>No matching records found</value>
   </data>
-  <data name="NotificationsEmpty" xml:space="preserve">
-    <value>All caught up!</value>
-  </data>
   <data name="FailedDeleteNotification" xml:space="preserve">
     <value>Failed to delete notification. Please refresh.</value>
   </data>
-  <data name="StoreSaleNoItems" xml:space="preserve"><value>Cannot create sale with no items.</value></data>
-  <data name="StoreSaleCreated" xml:space="preserve"><value>Sale recorded successfully!</value></data>
-  <data name="SupplierName" xml:space="preserve"><value>Supplier Name</value></data>
-  <data name="AddSupplier" xml:space="preserve"><value>Add Supplier</value></data>
-  <data name="ManageSuppliersDesc" xml:space="preserve"><value>Manage your product suppliers and their contact info.</value></data>
-  <data name="EditSupplier" xml:space="preserve"><value>Edit Supplier</value></data>
-  <data name="ViewProducts" xml:space="preserve"><value>View Products</value></data>
-  <data name="NoSuppliersFound" xml:space="preserve"><value>No suppliers found.</value></data>
-  <data name="StartByAddingSupplier" xml:space="preserve"><value>Start by adding your first supplier.</value></data>
-  <data name="SelectSupplier" xml:space="preserve"><value>Select Supplier</value></data>
-  <data name="QtySold" xml:space="preserve"><value>Qty Sold</value></data>
-  <data name="Revenue" xml:space="preserve"><value>Revenue</value></data>
-  <data name="ProfitMargin" xml:space="preserve"><value>Profit Margin</value></data>
-  <data name="GenerateReport" xml:space="preserve"><value>Generate Report</value></data>
-  <data name="NoSalesFoundInPeriod" xml:space="preserve"><value>No sales found in this period.</value></data>
-  <data name="ProductDescriptionPlaceholder" xml:space="preserve"><value>Enter product details, usage, etc.</value></data>
-  <data name="SelectCategory" xml:space="preserve"><value>Select Category</value></data>
-  <data name="SKU" xml:space="preserve"><value>SKU</value></data>
-  <data name="PricingAndStock" xml:space="preserve"><value>Pricing &amp; Stock</value></data>
-  <data name="CostPrice" xml:space="preserve"><value>Cost Price</value></data>
-  <data name="SalePrice" xml:space="preserve"><value>Sale Price</value></data>
-  <data name="LowStockThreshold" xml:space="preserve"><value>Low Stock Threshold</value></data>
-  <data name="LowStockThresholdHelper" xml:space="preserve"><value>Alert when stock falls below this level.</value></data>
-  <data name="SaveProduct" xml:space="preserve"><value>Save Product</value></data>
-  <data name="ProductImage" xml:space="preserve"><value>Product Image</value></data>
-  <data name="NoImageYet" xml:space="preserve"><value>No image yet</value></data>
-  <data name="ChangeImage" xml:space="preserve"><value>Change Image</value></data>
-  <data name="ClickToUploadImage" xml:space="preserve"><value>Click to upload image</value></data>
-  <data name="ImageUploadNote" xml:space="preserve"><value>JPG, PNG or WEBP. Max 2MB.</value></data>
-  <data name="BarcodeScanner" xml:space="preserve"><value>Barcode Scanner</value></data>
-  <data name="ScanOrTypeBarcode" xml:space="preserve"><value>Scan or type barcode...</value></data>
-  <data name="TotalSales" xml:space="preserve"><value>Total Sales</value></data>
-  <data name="NoSalesInRange" xml:space="preserve"><value>No sales found in the selected range.</value></data>
-  <data name="SaleSummary" xml:space="preserve"><value>Sale Summary</value></data>
-  <data name="SaleID" xml:space="preserve"><value>Sale ID</value></data>
-  <data name="AddProductDesc" xml:space="preserve"><value>Add a new product to your inventory.</value></data>
-  <data name="UnitPrice" xml:space="preserve"><value>Unit Price</value></data>
-  <data name="SearchProducts" xml:space="preserve"><value>Search Products</value></data>
-  <data name="UploadImage" xml:space="preserve"><value>Upload Image</value></data>
-  <data name="BackToStore" xml:space="preserve"><value>Back to Store</value></data>
-  <data name="Customer" xml:space="preserve"><value>Customer</value></data>
-  <data name="Items" xml:space="preserve"><value>Items</value></data>
-  <data name="PaymentMethod" xml:space="preserve"><value>Payment Method</value></data>
-  <data name="Date" xml:space="preserve"><value>Date</value></data>
-  <data name="Total" xml:space="preserve"><value>Total</value></data>
-  <data name="Profit" xml:space="preserve"><value>Profit</value></data>
-  <data name="Actions" xml:space="preserve"><value>Actions</value></data>
-  <data name="Filter" xml:space="preserve"><value>Filter</value></data>
-  <data name="Reset" xml:space="preserve"><value>Reset</value></data>
-  <data name="View" xml:space="preserve"><value>View</value></data>
-  <data name="WalkIn" xml:space="preserve"><value>Walk-In</value></data>
-  <data name="InstaPay" xml:space="preserve"><value>InstaPay</value></data>
-  <data name="VodafoneCash" xml:space="preserve"><value>Vodafone Cash</value></data>
-  <data name="Cash" xml:space="preserve"><value>Cash</value></data>
-  <data name="From" xml:space="preserve"><value>From</value></data>
-  <data name="To" xml:space="preserve"><value>To</value></data>
-  <data name="DateFrom" xml:space="preserve"><value>From</value></data>
-  <data name="DateTo" xml:space="preserve"><value>To</value></data>
-  <data name="FinancialReports" xml:space="preserve"><value>Financial Reports</value></data>
-  <data name="DailyReport" xml:space="preserve"><value>Daily Report</value></data>
-  <data name="MonthlyReport" xml:space="preserve"><value>Monthly Report</value></data>
-  <data name="CustomPeriod" xml:space="preserve"><value>Custom Period</value></data>
-  <data name="FinancialStats" xml:space="preserve"><value>Financial Stats</value></data>
-  <data name="Revenue" xml:space="preserve"><value>Revenue</value></data>
-  <data name="Discounts" xml:space="preserve"><value>Discounts</value></data>
-  <data name="ProfitMargin" xml:space="preserve"><value>Profit Margin</value></data>
-  <data name="TopSellingProducts" xml:space="preserve"><value>Top Selling Products</value></data>
-  <data name="GenerateReport" xml:space="preserve"><value>Generate Report</value></data>
-  <data name="PrintReport" xml:space="preserve"><value>Print Report</value></data>
-  <data name="QuickPeriods" xml:space="preserve"><value>Quick Periods</value></data>
-  <data name="Yesterday" xml:space="preserve"><value>Yesterday</value></data>
-  <data name="Last7Days" xml:space="preserve"><value>Last 7 Days</value></data>
-  <data name="ThisMonth" xml:space="preserve"><value>This Month</value></data>
-  <data name="BasedOnQuantity" xml:space="preserve"><value>Based on Quantity</value></data>
-  <data name="QtySold" xml:space="preserve"><value>Qty Sold</value></data>
-  <data name="NoDataAvailable" xml:space="preserve"><value>No data available for this period</value></data>
-  <!-- Store Module Improvements (2026-02-19) -->
-  <data name="VoidSale" xml:space="preserve"><value>Void Sale</value></data>
-  <data name="VoidSaleConfirm" xml:space="preserve"><value>Are you sure you want to void this sale? Stock will be restored and this action cannot be undone.</value></data>
-  <data name="SaleVoided" xml:space="preserve"><value>Sale has been voided and stock has been restored.</value></data>
-  <data name="SaleVoidFailed" xml:space="preserve"><value>Could not void this sale. It may have already been voided.</value></data>
-  <data name="Manage" xml:space="preserve"><value>Manage</value></data>
-  <data name="TodaySalesCount" xml:space="preserve"><value>Today's Sales</value></data>
-  <data name="SearchCustomer" xml:space="preserve"><value>Customer Search</value></data>
-  <data name="SearchCustomerPlaceholder" xml:space="preserve"><value>Name or member…</value></data>
-  <data name="ProfitMargin" xml:space="preserve"><value>Margin %</value></data>
-  <data name="ConfirmSaleModalDesc" xml:space="preserve"><value>Please review your order before confirming the sale.</value></data>
-  <data name="TotalSales" xml:space="preserve"><value>records</value></data>
-  <data name="WalkIn" xml:space="preserve"><value>Walk-in</value></data>
-  <data name="Subtotal" xml:space="preserve"><value>Subtotal</value></data>
-  <data name="Reset" xml:space="preserve"><value>Reset</value></data>
-  <data name="Today" xml:space="preserve"><value>Today</value></data>
-  <data name="DateFrom" xml:space="preserve"><value>From</value></data>
-  <data name="DateTo" xml:space="preserve"><value>To</value></data>
-  <data name="ExpectedProfitPerUnit" xml:space="preserve"><value>Expected Profit / Unit</value></data>
-  <data name="NoSalesInRange" xml:space="preserve"><value>No sales found for the selected period.</value></data>
-  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
-  <data name="SalesCount" xml:space="preserve"><value>Total Sales</value></data>
-  <data name="AvgOrderValue" xml:space="preserve"><value>Avg. Order Value</value></data>
-  <data name="DailyBreakdown" xml:space="preserve"><value>Daily Breakdown</value></data>
-  <data name="DeletedProduct" xml:space="preserve"><value>(Deleted Product)</value></data>
-  <data name="StockAdjustments" xml:space="preserve"><value>Stock Adjustments</value></data>
-  <data name="StockAdjustmentsDesc" xml:space="preserve"><value>Add or deduct stock manually (supply, damage, loss, returns)</value></data>
-  <data name="NewAdjustment" xml:space="preserve"><value>New Adjustment</value></data>
-  <data name="SelectProduct" xml:space="preserve"><value>Select Product</value></data>
-  <data name="AdjustmentType" xml:space="preserve"><value>Type</value></data>
-  <data name="Addition" xml:space="preserve"><value>Addition</value></data>
-  <data name="Damage" xml:space="preserve"><value>Damage</value></data>
-  <data name="Loss" xml:space="preserve"><value>Loss</value></data>
-  <data name="Return" xml:space="preserve"><value>Return</value></data>
-  <data name="Correction" xml:space="preserve"><value>Correction</value></data>
-  <data name="AdjustmentLog" xml:space="preserve"><value>Adjustment Log</value></data>
-  <data name="AdjustmentQtyHint" xml:space="preserve"><value>Enter the quantity to adjust</value></data>
-  <data name="QtyWillBeDeducted" xml:space="preserve"><value>This quantity will be deducted from stock</value></data>
-  <data name="QtyWillBeAdded" xml:space="preserve"><value>This quantity will be added to stock</value></data>
-  <data name="StockAdjustmentSaved" xml:space="preserve"><value>Stock adjustment saved successfully</value></data>
-  <data name="Optional" xml:space="preserve"><value>Optional</value></data>
-  <data name="ExpiringProducts" xml:space="preserve"><value>Expiring Products</value></data>
-  <data name="ExpiringProductsDesc" xml:space="preserve"><value>Products expiring within the next 30 days</value></data>
-  <data name="DaysLeft" xml:space="preserve"><value>Days Left</value></data>
-  <data name="Days" xml:space="preserve"><value>days</value></data>
-  <data name="NoExpiringProducts" xml:space="preserve"><value>No Products Expiring Soon</value></data>
-  <data name="NoExpiringProductsDesc" xml:space="preserve"><value>All products have valid expiry dates or no expiry set.</value></data>
-  <data name="CategoryBreakdown" xml:space="preserve"><value>Profit by Category</value></data>
-  <data name="Products" xml:space="preserve"><value>Products</value></data>
-  <data name="Product" xml:space="preserve"><value>Product</value></data>
-  <data name="Quantity" xml:space="preserve"><value>Quantity</value></data>
-  <data name="Reason" xml:space="preserve"><value>Reason</value></data>
-  <data name="Category" xml:space="preserve"><value>Category</value></data>
-  <data name="NearExpiry" xml:space="preserve"><value>Near Expiry</value></data>
-  <data name="All" xml:space="preserve"><value>All</value></data>
-  <data name="Expiring" xml:space="preserve"><value>Expiring</value></data>
-  <data name="SalesToday" xml:space="preserve"><value>Sales Today</value></data>
-  <data name="LowStockProducts" xml:space="preserve"><value>Low Stock Products</value></data>
-  <data name="LowStockProductsDesc" xml:space="preserve"><value>Products that have reached their reorder threshold</value></data>
-  <data name="Threshold" xml:space="preserve"><value>Threshold</value></data>
-  <data name="OutOfStock" xml:space="preserve"><value>Out of Stock</value></data>
-  <data name="AllStockHealthy" xml:space="preserve"><value>Inventory Healthy</value></data>
-  <data name="AllStockHealthyDesc" xml:space="preserve"><value>All products are available in sufficient quantities</value></data>
+  <data name="Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Items</value>
+  </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>Payment Method</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Cash" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="DateFrom" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="DateTo" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="DailyReport" xml:space="preserve">
+    <value>Daily Report</value>
+  </data>
+  <data name="MonthlyReport" xml:space="preserve">
+    <value>Monthly Report</value>
+  </data>
+  <data name="CustomPeriod" xml:space="preserve">
+    <value>Custom Period</value>
+  </data>
+  <data name="FinancialStats" xml:space="preserve">
+    <value>Financial Stats</value>
+  </data>
+  <data name="Discounts" xml:space="preserve">
+    <value>Discounts</value>
+  </data>
+  <data name="TopSellingProducts" xml:space="preserve">
+    <value>Top Selling Products</value>
+  </data>
+  <data name="PrintReport" xml:space="preserve">
+    <value>Print Report</value>
+  </data>
+  <data name="QuickPeriods" xml:space="preserve">
+    <value>Quick Periods</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="Last7Days" xml:space="preserve">
+    <value>Last 7 Days</value>
+  </data>
+  <data name="ThisMonth" xml:space="preserve">
+    <value>This Month</value>
+  </data>
+  <data name="BasedOnQuantity" xml:space="preserve">
+    <value>Based on Quantity</value>
+  </data>
+  <data name="NoDataAvailable" xml:space="preserve">
+    <value>No data available for this period</value>
+  </data>
+  <data name="VoidSale" xml:space="preserve">
+    <value>Void Sale</value>
+  </data>
+  <data name="VoidSaleConfirm" xml:space="preserve">
+    <value>Are you sure you want to void this sale? Products will be returned to stock.</value>
+  </data>
+  <data name="SaleVoided" xml:space="preserve">
+    <value>Sale has been voided successfully.</value>
+  </data>
+  <data name="SaleVoidFailed" xml:space="preserve">
+    <value>Failed to void the sale.</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+  <data name="TodaySalesCount" xml:space="preserve">
+    <value>Today's Sales</value>
+  </data>
+  <data name="SearchCustomer" xml:space="preserve">
+    <value>Customer Search</value>
+  </data>
+  <data name="SearchCustomerPlaceholder" xml:space="preserve">
+    <value>Name or member…</value>
+  </data>
+  <data name="ConfirmSaleModalDesc" xml:space="preserve">
+    <value>Please review your order before confirming the sale.</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="ExpectedProfitPerUnit" xml:space="preserve">
+    <value>Expected Profit / Unit</value>
+  </data>
+  <data name="SalesCount" xml:space="preserve">
+    <value>Total Sales</value>
+  </data>
+  <data name="AvgOrderValue" xml:space="preserve">
+    <value>Avg. Order Value</value>
+  </data>
+  <data name="DailyBreakdown" xml:space="preserve">
+    <value>Daily Breakdown</value>
+  </data>
+  <data name="DeletedProduct" xml:space="preserve">
+    <value>(Deleted Product)</value>
+  </data>
+  <data name="StockAdjustments" xml:space="preserve">
+    <value>Stock Adjustments</value>
+  </data>
+  <data name="StockAdjustmentsDesc" xml:space="preserve">
+    <value>Add or deduct stock manually (supply, damage, loss, returns)</value>
+  </data>
+  <data name="NewAdjustment" xml:space="preserve">
+    <value>New Adjustment</value>
+  </data>
+  <data name="SelectProduct" xml:space="preserve">
+    <value>Select a product to supply</value>
+  </data>
+  <data name="AdjustmentType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Addition" xml:space="preserve">
+    <value>Addition</value>
+  </data>
+  <data name="Damage" xml:space="preserve">
+    <value>Damage</value>
+  </data>
+  <data name="Loss" xml:space="preserve">
+    <value>Loss</value>
+  </data>
+  <data name="Return" xml:space="preserve">
+    <value>Return</value>
+  </data>
+  <data name="Correction" xml:space="preserve">
+    <value>Correction</value>
+  </data>
+  <data name="AdjustmentLog" xml:space="preserve">
+    <value>Adjustment Log</value>
+  </data>
+  <data name="AdjustmentQtyHint" xml:space="preserve">
+    <value>Enter the quantity to adjust</value>
+  </data>
+  <data name="QtyWillBeDeducted" xml:space="preserve">
+    <value>This quantity will be deducted from stock</value>
+  </data>
+  <data name="QtyWillBeAdded" xml:space="preserve">
+    <value>This quantity will be added to stock</value>
+  </data>
+  <data name="StockAdjustmentSaved" xml:space="preserve">
+    <value>Stock adjustment saved successfully</value>
+  </data>
+  <data name="ExpiringProducts" xml:space="preserve">
+    <value>Expiring Products</value>
+  </data>
+  <data name="ExpiringProductsDesc" xml:space="preserve">
+    <value>Products expiring within the next 30 days</value>
+  </data>
+  <data name="NoExpiringProducts" xml:space="preserve">
+    <value>No Products Expiring Soon</value>
+  </data>
+  <data name="NoExpiringProductsDesc" xml:space="preserve">
+    <value>All products have valid expiry dates or no expiry set.</value>
+  </data>
+  <data name="CategoryBreakdown" xml:space="preserve">
+    <value>Profit by Category</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="NearExpiry" xml:space="preserve">
+    <value>Near Expiry</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Expiring" xml:space="preserve">
+    <value>Expiring</value>
+  </data>
+  <data name="SalesToday" xml:space="preserve">
+    <value>Sales Today</value>
+  </data>
+  <data name="LowStockProductsDesc" xml:space="preserve">
+    <value>Products that have reached their reorder threshold</value>
+  </data>
+  <data name="Threshold" xml:space="preserve">
+    <value>Threshold</value>
+  </data>
+  <data name="OutOfStock" xml:space="preserve">
+    <value>Out of Stock</value>
+  </data>
+  <data name="AllStockHealthy" xml:space="preserve">
+    <value>Inventory Healthy</value>
+  </data>
+  <data name="AllStockHealthyDesc" xml:space="preserve">
+    <value>All products are available in sufficient quantities</value>
+  </data>
   <data name="OneTapSell" xml:space="preserve">
     <value>Sell with a single tap</value>
   </data>
@@ -3047,38 +3075,223 @@
   <data name="PrintReceiptAfterConfirm" xml:space="preserve">
     <value>Print receipt after confirm</value>
   </data>
-  <data name="SaleNotesPlaceholder" xml:space="preserve"><value>Enter any extra notes here (e.g. phone number or client details)...</value></data>
-  <data name="WalkInCustomer" xml:space="preserve"><value>Walk-in Customer (No Membership)</value></data>
-  <data name="ProductNamePlaceholder" xml:space="preserve"><value>e.g. Whey Protein 1kg</value></data>
-  <data name="ProductNameArPlaceholder" xml:space="preserve"><value>e.g. واي بروتين</value></data>
-  <data name="ProductDescriptionPlaceholder" xml:space="preserve"><value>Brief description (optional)...</value></data>
-  <data name="SKUPlaceholder" xml:space="preserve"><value>e.g. WP-1KG-001</value></data>
-  <data name="LowStockThresholdHelper" xml:space="preserve"><value>We will notify you when stock drops below this.</value></data>
-  <data name="GrandTotal" xml:space="preserve"><value>Grand Total</value></data>
-  <data name="HaveANiceDay" xml:space="preserve"><value>Have a nice day!</value></data>
-  <data name="ImageSource" xml:space="preserve"><value>Image Source</value></data>
-  <data name="FromDevice" xml:space="preserve"><value>From Device</value></data>
-  <data name="FromUrl" xml:space="preserve"><value>External URL</value></data>
-  <data name="UrlInvalid" xml:space="preserve"><value>URL is invalid or from unallowed domain.</value></data>
-  <data name="AllowedDomainsTip" xml:space="preserve"><value>Allowed from: Unsplash, Imgur, Cloudinary, Google.</value></data>
-  <data name="IncreaseStock" xml:space="preserve"><value>Increase Quantity</value></data>
-  <data name="QuickAdd" xml:space="preserve"><value>Quick Add</value></data>
-  <data name="AddStockConfirmTitle" xml:space="preserve"><value>Confirm Stock Replenishment</value></data>
-  <data name="AddStockConfirmMsg" xml:space="preserve"><value>Are you sure you want to add {0} units to this product?</value></data>
-  <data name="InStock" xml:space="preserve"><value>In Stock</value></data>
-  <data name="SalesHistory" xml:space="preserve"><value>Sales History</value></data>
-  <data name="LowStockProducts" xml:space="preserve"><value>Low Stock Products</value></data>
-  <data name="Monthly" xml:space="preserve"><value>Monthly</value></data>
-  <data name="Yearly" xml:space="preserve"><value>Yearly</value></data>
-  <data name="ReportPeriod" xml:space="preserve"><value>Report Period</value></data>
-  <data name="Available" xml:space="preserve"><value>Available</value></data>
-  <data name="UnitsInHand" xml:space="preserve"><value>Units in Hand</value></data>
-  <data name="Expires" xml:space="preserve"><value>Expires</value></data>
-  <data name="NoImage" xml:space="preserve"><value>No Image</value></data>
-  <data name="QuickView" xml:space="preserve"><value>Quick View</value></data>
-  <data name="ErrorLoadingDetails" xml:space="preserve"><value>Error loading product details</value></data>
-  <data name="GalleryImages" xml:space="preserve"><value>Gallery Images</value></data>
-  <data name="AddMoreImages" xml:space="preserve"><value>Add More Images</value></data>
-  <data name="MultipleImagesNote" xml:space="preserve"><value>You can select multiple images to upload at once.</value></data>
-  <data name="ConfirmDeleteImage" xml:space="preserve"><value>Are you sure you want to delete this image?</value></data>
+  <data name="SaleNotesPlaceholder" xml:space="preserve">
+    <value>Enter any extra notes here (e.g. phone number or client details)...</value>
+  </data>
+  <data name="ProductNamePlaceholder" xml:space="preserve">
+    <value>e.g. Whey Protein 1kg</value>
+  </data>
+  <data name="ProductNameArPlaceholder" xml:space="preserve">
+    <value>e.g. واي بروتين</value>
+  </data>
+  <data name="SKUPlaceholder" xml:space="preserve">
+    <value>e.g. WP-1KG-001</value>
+  </data>
+  <data name="GrandTotal" xml:space="preserve">
+    <value>Grand Total</value>
+  </data>
+  <data name="HaveANiceDay" xml:space="preserve">
+    <value>Have a nice day!</value>
+  </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value>Image Source</value>
+  </data>
+  <data name="FromDevice" xml:space="preserve">
+    <value>From Device</value>
+  </data>
+  <data name="FromUrl" xml:space="preserve">
+    <value>External URL</value>
+  </data>
+  <data name="UrlInvalid" xml:space="preserve">
+    <value>URL is invalid or from unallowed domain.</value>
+  </data>
+  <data name="AllowedDomainsTip" xml:space="preserve">
+    <value>Allowed from: Unsplash, Imgur, Cloudinary, Google.</value>
+  </data>
+  <data name="IncreaseStock" xml:space="preserve">
+    <value>Increase Quantity</value>
+  </data>
+  <data name="QuickAdd" xml:space="preserve">
+    <value>Quick Add</value>
+  </data>
+  <data name="AddStockConfirmTitle" xml:space="preserve">
+    <value>Confirm Stock Replenishment</value>
+  </data>
+  <data name="AddStockConfirmMsg" xml:space="preserve">
+    <value>Are you sure you want to add {0} units to this product?</value>
+  </data>
+  <data name="InStock" xml:space="preserve">
+    <value>In Stock</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>Yearly</value>
+  </data>
+  <data name="ReportPeriod" xml:space="preserve">
+    <value>Report Period</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="UnitsInHand" xml:space="preserve">
+    <value>Units in Hand</value>
+  </data>
+  <data name="Expires" xml:space="preserve">
+    <value>Expires</value>
+  </data>
+  <data name="NoImage" xml:space="preserve">
+    <value>No Image</value>
+  </data>
+  <data name="QuickView" xml:space="preserve">
+    <value>Quick View</value>
+  </data>
+  <data name="ErrorLoadingDetails" xml:space="preserve">
+    <value>Error loading product details</value>
+  </data>
+  <data name="GalleryImages" xml:space="preserve">
+    <value>Gallery Images</value>
+  </data>
+  <data name="AddMoreImages" xml:space="preserve">
+    <value>Add More Images</value>
+  </data>
+  <data name="MultipleImagesNote" xml:space="preserve">
+    <value>You can select multiple images to upload at once.</value>
+  </data>
+  <data name="ConfirmDeleteImage" xml:space="preserve">
+    <value>Are you sure you want to delete this image?</value>
+  </data>
+  <data name="StoreSaleFailed" xml:space="preserve">
+    <value>Failed to create sale. Please try again.</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>Inventory</value>
+  </data>
+  <data name="Sell" xml:space="preserve">
+    <value>Sell</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Sale</value>
+  </data>
+  <data name="Cashier" xml:space="preserve">
+    <value>Cashier</value>
+  </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Invoice #</value>
+  </data>
+  <data name="Voided" xml:space="preserve">
+    <value>Voided</value>
+  </data>
+  <data name="Flavor" xml:space="preserve">
+    <value>Flavor</value>
+  </data>
+  <data name="CategoryAndFlavor" xml:space="preserve">
+    <value>Category &amp; Flavor</value>
+  </data>
+  <data name="AddNewCategory" xml:space="preserve">
+    <value>Add New Category</value>
+  </data>
+  <data name="NewCategoryName" xml:space="preserve">
+    <value>New Category Name</value>
+  </data>
+  <data name="EnterNewCategoryName" xml:space="preserve">
+    <value>Enter new category name</value>
+  </data>
+  <data name="QuickPresets" xml:space="preserve">
+    <value>Quick Presets</value>
+  </data>
+  <data name="CategoryPresets" xml:space="preserve">
+    <value>Category Presets</value>
+  </data>
+  <data name="Chocolate" xml:space="preserve">
+    <value>Chocolate</value>
+  </data>
+  <data name="Vanilla" xml:space="preserve">
+    <value>Vanilla</value>
+  </data>
+  <data name="Cookies &amp; Cream" xml:space="preserve">
+    <value>Cookies &amp; Cream</value>
+  </data>
+  <data name="Strawberry" xml:space="preserve">
+    <value>Strawberry</value>
+  </data>
+  <data name="Banana" xml:space="preserve">
+    <value>Banana</value>
+  </data>
+  <data name="Salted Caramel" xml:space="preserve">
+    <value>Salted Caramel</value>
+  </data>
+  <data name="Blue Raspberry" xml:space="preserve">
+    <value>Blue Raspberry</value>
+  </data>
+  <data name="Fruit Punch" xml:space="preserve">
+    <value>Fruit Punch</value>
+  </data>
+  <data name="Watermelon" xml:space="preserve">
+    <value>Watermelon</value>
+  </data>
+  <data name="Mango" xml:space="preserve">
+    <value>Mango</value>
+  </data>
+  <data name="Peanut Butter" xml:space="preserve">
+    <value>Peanut Butter</value>
+  </data>
+  <data name="Caramel" xml:space="preserve">
+    <value>Caramel</value>
+  </data>
+  <data name="PurchaseHistory" xml:space="preserve">
+    <value>Purchase History</value>
+  </data>
+  <data name="PurchaseHistoryDesc" xml:space="preserve">
+    <value>Track and manage your stock procurement and inventory investments.</value>
+  </data>
+  <data name="RecordNewPurchase" xml:space="preserve">
+    <value>Record New Purchase</value>
+  </data>
+  <data name="NewPurchase" xml:space="preserve">
+    <value>New Purchase</value>
+  </data>
+  <data name="NewPurchaseDesc" xml:space="preserve">
+    <value>Add stock to your inventory and record it as a financial expense.</value>
+  </data>
+  <data name="RecordPurchase" xml:space="preserve">
+    <value>Record Purchase</value>
+  </data>
+  <data name="PurchaseRecordedSuccess" xml:space="preserve">
+    <value>Purchase recorded successfully and stock updated.</value>
+  </data>
+  <data name="TotalInvestment" xml:space="preserve">
+    <value>Total Investment</value>
+  </data>
+  <data name="AvgUnitCost" xml:space="preserve">
+    <value>Avg. Unit Cost</value>
+  </data>
+  <data name="TotalPurchasesCount" xml:space="preserve">
+    <value>Total Purchases</value>
+  </data>
+  <data name="NoPurchasesFound" xml:space="preserve">
+    <value>No purchase records found with specified filters.</value>
+  </data>
+  <data name="ViewExpense" xml:space="preserve">
+    <value>View Financial Expense</value>
+  </data>
+  <data name="CreateExpenseRecord" xml:space="preserve">
+    <value>Create Financial Expense Record</value>
+  </data>
+  <data name="ExpenseRecordHint" xml:space="preserve">
+    <value>Automatically add this purchase amount to the gym's main expenses.</value>
+  </data>
+  <data name="GeneralSupplier" xml:space="preserve">
+    <value>General / No Supplier</value>
+  </data>
+  <data name="Accounting" xml:space="preserve">
+    <value>Accounting &amp; Finance</value>
+  </data>
+  <data name="OptionalNotes" xml:space="preserve">
+    <value>Write any additional details about this purchase (Optional)...</value>
+  </data>
+  <data name="TryDifferentFilters" xml:space="preserve">
+    <value>Try adjusting your search or filters to find what you're looking for.</value>
+  </data>
+  <data name="Cat_StorePurchase" xml:space="preserve">
+    <value>Store Purchase</value>
+  </data>
 </root>

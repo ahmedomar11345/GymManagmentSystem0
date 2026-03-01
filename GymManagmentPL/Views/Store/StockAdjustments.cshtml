@@ -3,11 +3,12 @@
 @using GymManagmentDAL.Entities.Enums
 @{
     ViewData["Title"] = Localizer["StockAdjustments"];
+    var isRtl = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
 }
 
 <div class="animate-fade-in">
     <a asp-action="Index" class="btn-back">
-        <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+        <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i> @Localizer["BackToStore"]
     </a>
 
     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -36,7 +37,7 @@
                             <option value="">-- @Localizer["SelectProduct"] --</option>
                             @foreach (SelectListItem item in (SelectList)ViewBag.Products)
                             {
-                                <option value="@item.Value">@item.Text</option>
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
                             }
                         </select>
                     </div>
@@ -73,8 +74,14 @@
         <!-- ── Adjustment Log ── -->
         <div class="col-lg-8">
             <div class="premium-card">
-                <div class="p-3 border-bottom">
+                <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-bold mb-0"><i class="fas fa-history text-secondary me-2"></i>@Localizer["AdjustmentLog"]</h6>
+                    @if (ViewBag.SelectedProductId != null)
+                    {
+                        <a asp-action="StockAdjustments" class="btn btn-sm btn-link text-decoration-none py-0">
+                            <i class="fas fa-list me-1"></i> @Localizer["ShowAll"]
+                        </a>
+                    }
                 </div>
                 @if (Model.Any())
                 {
@@ -143,25 +150,22 @@
         const type = parseInt(document.getElementById('adjType').value);
         const qtyInput = document.getElementById('adjQty');
         const hint = document.getElementById('qtyHint');
-        // Damage(1) and Loss(2) should be negative
-        if (type === 1 || type === 2) {
-            if (qtyInput.value && parseInt(qtyInput.value) > 0) {
-                qtyInput.value = -Math.abs(parseInt(qtyInput.value));
-            }
-            qtyInput.max = "-1";
-            qtyInput.min = "";
+        
+        // Always allow positive input, service handles the sign
+        qtyInput.min = "1";
+        
+        if (type === 1 || type === 2) { // Damage or Loss
             hint.textContent = _qtyDeducted;
             hint.classList.add('text-danger');
             hint.classList.remove('text-success');
-        } else {
-            if (qtyInput.value && parseInt(qtyInput.value) < 0) {
-                qtyInput.value = Math.abs(parseInt(qtyInput.value));
-            }
-            qtyInput.min = "1";
-            qtyInput.max = "";
+        } else if (type === 0 || type === 3) { // Addition or Return
             hint.textContent = _qtyAdded;
             hint.classList.add('text-success');
             hint.classList.remove('text-danger');
+        } else { // Correction
+            qtyInput.min = ""; // Allow both for correction
+            hint.textContent = "@Localizer["AdjustmentQtyHint"]";
+            hint.classList.remove('text-success', 'text-danger');
         }
     }
     updateQtySign();

@@ -1,5 +1,6 @@
 using GymManagmentDAL.Entities.Enums;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -101,6 +102,11 @@ namespace GymManagmentBLL.ViewModels.StoreViewModel
         public string? CategoryName { get; set; }
         public string? CategoryNameAr { get; set; }
 
+        public ProductFlavor Flavor { get; set; } = ProductFlavor.None;
+
+        // Support for "Other" category
+        public string? NewCategoryName { get; set; }
+
         public int? SupplierId { get; set; }
         public string? SupplierName { get; set; }
 
@@ -113,6 +119,20 @@ namespace GymManagmentBLL.ViewModels.StoreViewModel
 
         public List<StoreProductImageViewModel> GalleryImages { get; set; } = new();
         public List<IFormFile>? AdditionalImages { get; set; }
+        
+        public List<StoreProductVariantViewModel> Variants { get; set; } = new();
+    }
+
+    public class StoreProductVariantViewModel
+    {
+        public int Id { get; set; }
+        public string VariantName { get; set; } = null!;
+        public string? SKU { get; set; }
+        public decimal PriceAdjustment { get; set; }
+        public int StockQuantity { get; set; }
+        
+        // Helper
+        public decimal FinalPrice(decimal basePrice) => basePrice + PriceAdjustment;
     }
 
     public class StoreProductImageViewModel
@@ -140,11 +160,20 @@ namespace GymManagmentBLL.ViewModels.StoreViewModel
         public List<SaleItemInputViewModel> Items { get; set; } = new();
 
         public bool PrintReceipt { get; set; } = true;
+
+        [MaxLength(100)]
+        public string? CouponCode { get; set; }
+
+        public bool RedeemPoints { get; set; } = false;
+
+        public string? CashierName { get; set; }
+        public string? CashierEmail { get; set; }
     }
 
     public class SaleItemInputViewModel
     {
         public int StoreProductId { get; set; }
+        public int? StoreProductVariantId { get; set; } // Added variant support
         public int Quantity { get; set; }
     }
 
@@ -162,17 +191,29 @@ namespace GymManagmentBLL.ViewModels.StoreViewModel
         public PaymentMethod PaymentMethod { get; set; }
         public string? Notes { get; set; }
         public List<SaleItemDetailViewModel> Items { get; set; } = new();
+
+        public decimal PointsEarned { get; set; }
+        public decimal PointsRedeemedValue { get; set; }
+        public string? CouponCode { get; set; }
+
+        public string? InvoiceNumber { get; set; }
+        public string? CashierName { get; set; }
+        public string? CashierEmail { get; set; }
+        public GymManagmentDAL.Entities.Enums.SaleStatus Status { get; set; }
     }
 
     public class SaleItemDetailViewModel
     {
+        public int Id { get; set; } // Database ID for refund selection
         public string ProductName { get; set; } = null!;
+        public string? VariantName { get; set; } // Added variant name snapshot
         public string? ProductImageUrl { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal SnapshotCostPrice { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal ItemProfit { get; set; }
+        public int RefundedQuantity { get; set; } // Added for partial refund view
     }
 
     // ── Dashboard stats ───────────────────────────────────────
@@ -185,6 +226,11 @@ namespace GymManagmentBLL.ViewModels.StoreViewModel
         public int LowStockCount { get; set; }
         public int TotalSalesToday { get; set; }
         public int ExpiringCount { get; set; }
+
+        // Analytics Data
+        public Dictionary<string, decimal> DailyRevenueLast30Days { get; set; } = new();
+        public Dictionary<string, int> CategorySalesDistribution { get; set; } = new();
+        public List<BestSellerViewModel> TopProductsByProfit { get; set; } = new();
     }
 
     // ── Reporting ─────────────────────────────────────────────
@@ -233,11 +279,82 @@ namespace GymManagmentBLL.ViewModels.StoreViewModel
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
+        [ValidateNever]
         public string ProductName { get; set; } = null!;
         public int Quantity { get; set; }
         public GymManagmentDAL.Entities.Enums.StockAdjustmentType AdjustmentType { get; set; }
         public string? Reason { get; set; }
+        [ValidateNever]
         public DateTime AdjustmentDate { get; set; }
     }
 
+    // ── Bulk Import ───────────────────────────────────────────
+    public class BulkImportRequestViewModel
+    {
+        [Required]
+        public IFormFile File { get; set; } = null!;
+        public bool IsDryRun { get; set; } = true;
+    }
+
+    public class BulkImportResultViewModel
+    {
+        public int TotalRows { get; set; }
+        public int SuccessCount { get; set; }
+        public int FailureCount { get; set; }
+        public bool IsDryRun { get; set; }
+        public List<ImportRowError> Errors { get; set; } = new();
+    }
+
+    public class ImportRowError
+    {
+        public int RowIndex { get; set; }
+        public string ProductName { get; set; } = "";
+        public List<string> Messages { get; set; } = new();
+    }
+    // ── Purchases ─────────────────────────────────────────────
+    public class StorePurchaseViewModel
+    {
+        [Required]
+        [Display(Name = "Product")]
+        public int ProductId { get; set; }
+        public string? ProductName { get; set; }
+
+        [Display(Name = "Supplier")]
+        public int? SupplierId { get; set; }
+        public string? SupplierName { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int Quantity { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        [Display(Name = "Unit Cost")]
+        public decimal UnitPrice { get; set; }
+
+        [Display(Name = "Total Cost")]
+        public decimal TotalPrice => Quantity * UnitPrice;
+
+        [Required]
+        [Display(Name = "Purchase Date")]
+        public DateTime PurchaseDate { get; set; } = DateTime.Now;
+
+        public string? Notes { get; set; }
+
+        [Display(Name = "Create Financial Expense Record")]
+        public bool CreateExpenseRecord { get; set; } = true;
+    }
+
+    public class StorePurchaseHistoryViewModel
+    {
+        public int Id { get; set; }
+        public string ProductName { get; set; } = null!;
+        public string? SupplierName { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
+        public decimal TotalPrice { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public string? Notes { get; set; }
+        public int? ExpenseId { get; set; }
+    }
 }

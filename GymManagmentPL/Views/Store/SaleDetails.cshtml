@@ -6,6 +6,7 @@
     var gymName   = settings?.GymName ?? "IronPulse Gym";
     var currency  = settings?.Currency ?? "EGP";
     var logoUrl   = settings?.LogoUrl;
+    var isRtl     = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
     ViewData["Title"] = $"#{Model.Id}";
 
     var (pmIcon, pmColor, pmLabel) = Model.PaymentMethod switch {
@@ -14,6 +15,7 @@
         _                                                           => ("fas fa-money-bill-wave", "success", Localizer["Cash"].Value)
     };
 }
+
 
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -35,13 +37,13 @@
                       border-radius: 1.25rem; padding: 1.5rem; position: relative; overflow: hidden; }
 .receipt-total-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--primary-color); }
 [data-theme="dark"] .receipt-total-box { background: rgba(59,130,246,.14); }
-.receipt-footer     { text-align: center; color: var(--text-muted); font-size: .82rem; padding: 1.5rem 2rem; }
+.receipt-footer     { text-align: center; color: var(--text-main); font-size: .9rem; padding: 2rem; border-top: 1px dashed var(--glass-border); }
 
 /* items table */
-.receipt-items th   { font-size: .75rem; text-transform: uppercase; letter-spacing:.08em;
-                      color: var(--text-muted); font-weight: 800; padding: 1rem 0; border: none;
+.receipt-items th   { font-size: .8rem; text-transform: uppercase; letter-spacing:.08em;
+                      color: var(--text-main); font-weight: 800; padding: 1.25rem 0; border: none;
                       border-bottom: 2px solid var(--glass-border); }
-.receipt-items td   { padding: 1.25rem 0; border-bottom: 1px solid var(--glass-border); vertical-align: middle; }
+.receipt-items td   { padding: 1.5rem 0; border-bottom: 1px solid var(--glass-border); vertical-align: middle; color: var(--text-main); }
 .receipt-items tr:last-child td { border: none; }
 
 @@keyframes slideUp {
@@ -64,58 +66,90 @@
         margin: 0; padding: 0;
         background: white !important;
         color: black !important;
-        font-family: 'Cairo', 'Courier New', monospace !important;
-        font-size: 11px !important;
-        line-height: 1.35 !important;
+        font-family: 'Cairo', 'Inter', sans-serif !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
         width: 80mm !important;
     }
 
     /* 3 — position the receipt block */
     .receipt-print-root {
-        position: fixed !important;
+        position: absolute !important;
         left: 0 !important; top: 0 !important;
-        width: 80mm !important;
-        padding: 4mm 4mm 8mm !important;
-        margin: 0 !important;
+        width: 72mm !important; /* Slightly less than 80mm for margins */
+        padding: 5mm !important;
+        margin: 0 auto !important;
         background: white !important;
         color: black !important;
     }
 
     /* 4 — hide UI elements */
     .no-print { display: none !important; }
-    .receipt-card { border: none !important; box-shadow: none !important; border-radius: 0 !important; }
+    .receipt-card { border: none !important; box-shadow: none !important; border-radius: 0 !important; background: white !important; }
 
     /* 5 — header */
     .receipt-head {
         background: white !important;
         color: black !important;
-        padding: 0 0 6px !important;
+        padding: 0 0 10px !important;
         border-bottom: 2px dashed black !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 15px !important;
     }
+    .receipt-head h3 { font-size: 16pt !important; font-weight: 800 !important; }
 
     /* 6 — body */
-    .receipt-body { padding: 4px 0 !important; }
-    .receipt-divider { border-top: 1px dashed black !important; margin: 5px 0 !important; }
+    .receipt-body { padding: 5px 0 !important; }
+    .receipt-divider { border-top: 1px dashed black !important; margin: 8px 0 !important; }
+    
     .receipt-total-box {
-        background: transparent !important; border: none !important;
-        border-top: 2px dashed black !important; border-radius: 0 !important;
-        padding: 5px 0 0 !important; margin-top: 5px !important;
+        background: transparent !important; 
+        border: none !important;
+        border-top: 2px solid black !important; 
+        border-radius: 0 !important;
+        padding: 10px 0 !important; 
+        margin-top: 10px !important;
     }
-    .receipt-footer { padding: 5px 0 0 !important; border-top: 1px dashed black !important; font-size: 10px !important; }
+    
+    .receipt-footer { 
+        padding-top: 15px !important; 
+        border-top: 1px dashed black !important; 
+        font-size: 10pt !important; 
+        margin-top: 15px !important;
+        text-align: center !important;
+    }
 
     /* 7 — table */
-    .receipt-items th, .receipt-items td {
-        font-size: 10px !important; padding: 2px 0 !important;
-        border-bottom: none !important; border: none !important;
+    .receipt-items { width: 100% !important; margin-bottom: 10px !important; border-collapse: collapse !important; }
+    .receipt-items th {
+        font-size: 10pt !important; 
+        padding: 5px 0 !important;
+        border-bottom: 1px solid black !important;
+        color: black !important;
+        font-weight: 900 !important;
+    }
+    .receipt-items td {
+        font-size: 11pt !important; 
+        padding: 8px 0 !important;
+        border-bottom: none !important;
         color: black !important;
     }
-    .receipt-items tbody tr:not(:last-child) td { border-bottom: 1px dashed #888 !important; }
+    .receipt-items tbody tr:not(:last-child) td { border-bottom: 1px dashed #ccc !important; }
+    .receipt-items .fw-semibold { font-weight: 700 !important; }
 
     /* 8 — badges & colors */
-    .badge { border: 1px solid black !important; background: transparent !important; color: black !important; }
+    .badge { border: 1px solid black !important; background: transparent !important; color: black !important; font-weight: bold !important; }
     [class*="text-"] { color: black !important; }
-    img { max-height: 38px !important; filter: grayscale(100%) !important; }
+    .text-secondary, .text-muted { color: #333 !important; } /* Darker text for print */
+    
+    img { max-height: 50px !important; filter: contrast(150%) grayscale(100%) !important; margin-bottom: 5px !important; }
+
+    /* Labels */
+    .small.text-secondary.fw-bold { font-size: 10pt !important; color: black !important; font-weight: 800 !important; }
+    .h6 { font-size: 12pt !important; font-weight: 700 !important; }
+    
+    /* Total Amounts */
+    .receipt-total-box .h5 { font-size: 14pt !important; font-weight: 800 !important; }
+    .receipt-total-box .fw-black { font-size: 24pt !important; font-weight: 900 !important; }
 }
 </style>
 
@@ -123,20 +157,29 @@
 <div class="no-print animate-fade-in">
     <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
         <a asp-action="Index" class="btn-back mb-0">
-            <i class="fas fa-chevron-left"></i> @Localizer["BackToStore"]
+            <i class="fas @(isRtl ? "fa-chevron-right" : "fa-chevron-left")"></i> @Localizer["BackToStore"]
         </a>
         <a asp-action="SalesHistory" class="btn btn-outline-secondary rounded-pill px-4">
             <i class="fas fa-history me-1"></i> @Localizer["SalesHistory"]
         </a>
         <div class="ms-auto d-flex gap-2">
-            <form asp-action="VoidSale" method="post" id="voidSaleForm_@Model.Id">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="id" value="@Model.Id" />
-                <button type="button" class="btn btn-outline-danger rounded-pill px-4"
-                        onclick="confirmSubmit(document.getElementById('voidSaleForm_@Model.Id'), '@Localizer["VoidSale"]', '@Localizer["VoidSaleConfirm"]', 'warning')">
-                    <i class="fas fa-ban me-1"></i> @Localizer["VoidSale"]
-                </button>
-            </form>
+            @if (Model.Status != GymManagmentDAL.Entities.Enums.SaleStatus.Voided)
+            {
+                <form asp-action="VoidSale" method="post" id="voidSaleForm_@Model.Id">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4"
+                            onclick="confirmSubmit(document.getElementById('voidSaleForm_@Model.Id'), '@Localizer["VoidSale"]', '@Localizer["VoidSaleConfirm"]', 'warning')">
+                        <i class="fas fa-ban me-1"></i> @Localizer["VoidSale"]
+                    </button>
+                </form>
+            }
+            else
+            {
+                <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 d-flex align-items-center">
+                    <i class="fas fa-ban me-1"></i> @Localizer["Voided"]
+                </span>
+            }
             <button onclick="window.print()" class="btn btn-success rounded-pill px-4 shadow-sm">
                 <i class="fas fa-print me-1"></i> @Localizer["Print"]
             </button>
@@ -166,7 +209,15 @@
         </p>
         <div class="mt-4 pt-4 border-top border-white border-opacity-10" style="font-size:.78rem;opacity:.7;">
             <span class="bg-white bg-opacity-10 rounded-pill px-3 py-1">
-                <i class="fas fa-hashtag me-1 small"></i>@Model.Id &nbsp;&bull;&nbsp; <i class="far fa-calendar-alt me-1 ms-2 small"></i>@Model.SaleDate.ToString("dd MMM yyyy") &nbsp;&bull;&nbsp; <i class="far fa-clock me-1 ms-2 small"></i>@Model.SaleDate.ToString("hh:mm tt")
+                @if (!string.IsNullOrEmpty(Model.InvoiceNumber))
+                {
+                    <i class="fas fa-file-invoice me-1 small"></i>@Model.InvoiceNumber @:&nbsp;&bull;&nbsp;
+                }
+                else
+                {
+                    <i class="fas fa-hashtag me-1 small"></i>@Model.Id @:&nbsp;&bull;&nbsp;
+                }
+                <i class="far fa-calendar-alt me-1 ms-2 small"></i>@Model.SaleDate.ToString("dd MMM yyyy") &nbsp;&bull;&nbsp; <i class="far fa-clock me-1 ms-2 small"></i>@Model.SaleDate.ToString("hh:mm tt")
             </span>
         </div>
     </div>
@@ -201,6 +252,14 @@
                 </div>
             </div>
         </div>
+
+        @if (!string.IsNullOrEmpty(Model.CashierName))
+        {
+            <div class="no-print mt-3 p-2 rounded-3 border bg-light text-muted small d-flex align-items-center gap-2">
+                <i class="fas fa-user-shield opacity-50"></i>
+                <span>@Localizer["Cashier"]: <strong>@Model.CashierName</strong> (@(Model.CashierEmail ?? "N/A"))</span>
+            </div>
+        }
 
         <hr class="receipt-divider" />
 
@@ -237,29 +296,56 @@
                     <span>@Localizer["Subtotal"]</span>
                     <span class="fw-semibold">@Model.TotalBeforeDiscount.ToString("N2")</span>
                 </div>
+                
+                @if (!string.IsNullOrEmpty(Model.CouponCode))
+                {
+                    <div class="d-flex justify-content-between x-small text-success px-2 mb-1">
+                        <span><i class="fas fa-ticket-alt me-1"></i>@Localizer["CouponCode"] (@Model.CouponCode)</span>
+                        <span>-@((Model.TotalBeforeDiscount - Model.NetTotal - Model.PointsRedeemedValue).ToString("N2"))</span>
+                    </div>
+                }
+
+                @if (Model.PointsRedeemedValue > 0)
+                {
+                    <div class="d-flex justify-content-between x-small text-info px-2 mb-1">
+                        <span><i class="fas fa-star me-1"></i>@Localizer["PointsRedeemed"]</span>
+                        <span>-@Model.PointsRedeemedValue.ToString("N2")</span>
+                    </div>
+                }
+
                 <div class="d-flex justify-content-between small text-danger px-2 mb-3">
-                    <span class="fw-bold"><i class="fas fa-arrow-down me-1"></i>@Localizer["Discount"]</span>
+                    <span class="fw-bold"><i class="fas fa-arrow-down me-1"></i>@Localizer["TotalDiscount"]</span>
                     <span class="fw-bold bg-danger bg-opacity-10 px-2 rounded">-@Model.TotalDiscount.ToString("N2")</span>
                 </div>
             }
 
             <!-- Total -->
-            <div class="receipt-total-box d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="small text-secondary fw-bold text-uppercase" style="font-size:.65rem;letter-spacing:.1em;margin-bottom:2px;">@Localizer["TotalAmount"]</div>
-                    <div class="h5 mb-0 fw-black text-primary">@Localizer["GrandTotal"]</div>
+            <div class="receipt-total-box">
+                <div class="d-flex justify-content-between align-items-center mb-0">
+                    <div>
+                        <div class="small text-secondary fw-bolder text-uppercase" style="font-size:.7rem;letter-spacing:.1em;margin-bottom:2px;">@Localizer["TotalAmount"]</div>
+                        <div class="h4 mb-0 fw-black text-primary">@Localizer["GrandTotal"]</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-black text-primary lh-1" style="font-size:2.5rem;">@Model.NetTotal.ToString("N2")</div>
+                        <div class="small fw-bold text-secondary text-uppercase" style="font-size:.8rem; letter-spacing: 1px;">@currency</div>
+                    </div>
                 </div>
-                <div class="text-end">
-                    <div class="fw-black text-primary lh-1" style="font-size:2.2rem;">@Model.NetTotal.ToString("N2")</div>
-                    <div class="small fw-bold text-secondary" style="font-size:.75rem;">@currency</div>
-                </div>
+                
+                @if (Model.PointsEarned > 0)
+                {
+                    <div class="border-top border-primary border-opacity-10 pt-2 mt-2 d-flex justify-content-between align-items-center">
+                        <span class="x-small fw-bold text-primary"><i class="fas fa-gift me-1"></i>@Localizer["PointsEarned"]</span>
+                        <span class="badge bg-primary rounded-pill">+@Model.PointsEarned.ToString("N0") pts</span>
+                    </div>
+                }
             </div>
         </div>
 
         @if (!string.IsNullOrEmpty(Model.Notes))
         {
-            <div class="p-3 bg-light bg-opacity-50 rounded-3 mt-4 border">
-                <div class="small text-muted fw-bold mb-1 text-uppercase" style="font-size:.6rem;">@Localizer["Notes"]</div>
+            <div class="p-3 rounded-3 mt-4 border" style="background:rgba(var(--bs-secondary-rgb),0.07);border-color:var(--glass-border)!important;">
+                <div class="small text-secondary fw-bold mb-1 text-uppercase" style="font-size:.6rem;">@Localizer["Notes"]</div>
                 <div class="small text-secondary italic">
                     <i class="fas fa-quote-left me-1 small opacity-50"></i>@Model.Notes
                 </div>

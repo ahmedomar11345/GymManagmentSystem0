@@ -24,5 +24,12 @@ namespace GymManagmentDAL.Entities
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal ItemProfit { get; set; } = 0;
+
+        /// <summary>Quantity that has been refunded (for partial refunds)</summary>
+        public int RefundedQuantity { get; set; } = 0;
+
+        /// <summary>Backlink to specific variant if applicable</summary>
+        public int? StoreProductVariantId { get; set; }
+        public StoreProductVariant? StoreProductVariant { get; set; }
     }
 }

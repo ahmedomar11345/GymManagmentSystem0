@@ -1,6 +1,7 @@
 using GymManagmentDAL.Data.Context;
 using GymManagmentDAL.Entities;
 using GymManagmentDAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using System;
@@ -88,52 +89,76 @@ namespace GymManagmentDAL.Repositories.Classes
 
         public bool ExecuteInTransaction(Func<bool> operation)
         {
-            using var transaction = _dbContext.Database.BeginTransaction();
+            var strategy = _dbContext.Database.CreateExecutionStrategy();
             try
             {
-                var success = operation();
-                if (!success)
+                return strategy.Execute<bool>(() =>
                 {
-                    transaction.Rollback();
-                    _logger.LogWarning("Transaction rolled back due to operation returning false");
-                    return false;
-                }
+                    using var transaction = _dbContext.Database.BeginTransaction();
+                    try
+                    {
+                        var success = operation();
+                        if (!success)
+                        {
+                            transaction.Rollback();
+                            _logger.LogWarning("Transaction rolled back due to operation returning false");
+                            return false;
+                        }
 
-                _dbContext.SaveChanges();
-                transaction.Commit();
-                _logger.LogDebug("Transaction committed successfully");
-                return true;
+                        _dbContext.SaveChanges();
+                        transaction.Commit();
+                        _logger.LogDebug("Transaction committed successfully");
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        _logger.LogWarning(ex, "Transaction attempt failed, might retry...");
+                        throw;
+                    }
+                });
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
-                _logger.LogError(ex, "Transaction rolled back due to exception");
+                _logger.LogError(ex, "Transaction failed after retries.");
                 return false;
             }
         }
 
         public async Task<bool> ExecuteInTransactionAsync(Func<Task<bool>> operation)
         {
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            var strategy = _dbContext.Database.CreateExecutionStrategy();
             try
             {
-                var success = await operation();
-                if (!success)
+                return await strategy.ExecuteAsync<bool>(async () =>
                 {
-                    await transaction.RollbackAsync();
-                    _logger.LogWarning("Async transaction rolled back due to operation returning false");
-                    return false;
-                }
+                    await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+                    try
+                    {
+                        var success = await operation();
+                        if (!success)
+                        {
+                            await transaction.RollbackAsync();
+                            _logger.LogWarning("Async transaction rolled back due to operation returning false");
+                            return false;
+                        }
 
-                await _dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-                _logger.LogDebug("Async transaction committed successfully");
-                return true;
+                        await _dbContext.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        _logger.LogDebug("Async transaction committed successfully");
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        _logger.LogWarning(ex, "Async transaction attempt failed, might retry...");
+                        throw; 
+                    }
+                });
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Async transaction rolled back due to exception");
+                _logger.LogError(ex, "Async transaction failed after retries.");
                 return false;
             }
         }

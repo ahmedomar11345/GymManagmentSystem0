@@ -17,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
+using GymManagmentPL.Hubs;
+using GymManagmentPL.Services;
 
 namespace GymManagmentPL
 {
@@ -132,6 +134,7 @@ builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IGymSettingsService, GymSettingsService>();
 builder.Services.AddScoped<IWalkInService, WalkInService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IBroadcastService, BroadcastService>();
 
 // Hosted Services
 builder.Services.AddHostedService<GymManagmentPL.Services.MembershipRenewalWorker>();
@@ -142,6 +145,8 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-XSRF-TOKEN";
 });
+
+builder.Services.AddSignalR();
 
                 // Identity Configuration
                 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
@@ -283,6 +288,8 @@ builder.Services.AddAntiforgery(options =>
 
                 // Health check endpoint
                 app.MapHealthChecks("/health");
+
+                app.MapHub<InventoryHub>("/inventoryHub");
 
                 app.MapControllerRoute(
                     name: "default",

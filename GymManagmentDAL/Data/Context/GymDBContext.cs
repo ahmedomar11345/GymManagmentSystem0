@@ -56,6 +56,29 @@ namespace GymManagmentDAL.Data.Context
             {
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(ConvertFilterExpression(entityType.ClrType));
             }
+
+            modelBuilder.Entity<StoreProduct>(e =>
+            {
+                e.HasIndex(p => p.SKU).IsUnique().HasFilter("[IsDeleted] = 0");
+                e.HasIndex(p => p.Barcode);
+            });
+
+            modelBuilder.Entity<StoreProductVariant>(e =>
+            {
+                e.HasIndex(v => v.SKU).IsUnique().HasFilter("[IsDeleted] = 0");
+            });
+
+            modelBuilder.Entity<Sale>(e =>
+            {
+                e.HasIndex(s => s.SaleDate);
+                e.HasIndex(s => s.MemberId);
+                e.HasIndex(s => s.CouponCode);
+            });
+
+            modelBuilder.Entity<Coupon>(e =>
+            {
+                e.HasIndex(c => c.Code).IsUnique().HasFilter("[IsDeleted] = 0");
+            });
         }
 
         private static dynamic ConvertFilterExpression(Type type)
@@ -73,6 +96,8 @@ namespace GymManagmentDAL.Data.Context
                 .Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted));
 
             var now = DateTime.Now;
+            var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+
             foreach (var entry in entries)
             {
                 var entity = (BaseEntity)entry.Entity;
@@ -81,16 +106,22 @@ namespace GymManagmentDAL.Data.Context
                 {
                     entity.CreatedAt = now;
                     entity.UpdatedAt = now;
+                    entity.CreatedByUserId = userId;
+                    entity.UpdatedByUserId = userId;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     entity.UpdatedAt = now;
+                    entity.UpdatedByUserId = userId;
                 }
                 else if (entry.State == EntityState.Deleted)
                 {
                     entry.State = EntityState.Modified;
                     entity.IsDeleted = true;
+                    entity.DeletedAt = now;
+                    entity.DeletedByUserId = userId;
                     entity.UpdatedAt = now;
+                    entity.UpdatedByUserId = userId;
                 }
             }
         }
@@ -216,11 +247,14 @@ namespace GymManagmentDAL.Data.Context
         // Store Module
         public DbSet<StoreCategory> StoreCategories { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
+        public DbSet<StoreProductVariant> StoreProductVariants { get; set; }
         public DbSet<StoreProductImage> StoreProductImages { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleItem> SaleItems { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<StorePurchase> StorePurchases { get; set; }
         #endregion
     }
 }
